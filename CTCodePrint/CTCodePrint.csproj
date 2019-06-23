@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3606E056-82FC-4AA3-9661-58D4FB69D5D3}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CTCodePrint</RootNamespace>
+    <AssemblyName>CTCodePrint</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Interop.LabelManager2">
+      <HintPath>..\..\..\..\..\Source\Repos\mylifein\CPSscan\CPSscan\obj\Debug\Interop.LabelManager2.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>G:\mysqlDriverForDonet\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Auxiliary.cs" />
+    <Compile Include="common\BarCodePrint.cs" />
+    <Compile Include="common\BCPrint.cs" />
+    <Compile Include="CreateRules.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateRules.Designer.cs">
+      <DependentUpon>CreateRules.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CTCodeLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CTCodeLogin.Designer.cs">
+      <DependentUpon>CTCodeLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CusConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CusConfig.Designer.cs">
+      <DependentUpon>CusConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GenerateCTCode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GenerateCTCode.Designer.cs">
+      <DependentUpon>GenerateCTCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainMenu.Designer.cs">
+      <DependentUpon>MainMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuleConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RuleConfig.Designer.cs">
+      <DependentUpon>RuleConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SQLHelper.cs" />
+    <EmbeddedResource Include="CreateRules.resx">
+      <DependentUpon>CreateRules.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CTCodeLogin.resx">
+      <DependentUpon>CTCodeLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CusConfig.resx">
+      <DependentUpon>CusConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GenerateCTCode.resx">
+      <DependentUpon>GenerateCTCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainMenu.resx">
+      <DependentUpon>MainMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="RuleConfig.resx">
+      <DependentUpon>RuleConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BLL\BLL.csproj">
+      <Project>{06021739-abaa-4e30-b2a9-9c3c342bbf3e}</Project>
+      <Name>BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GenerateCTCode\GenerateCTCode.csproj">
+      <Project>{19f0ab2f-976e-42c7-9dd2-fba983235ec5}</Project>
+      <Name>GenerateCTCode</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="LabelManager">
+      <Guid>{FDCF6309-0127-11D2-A5B0-00A02455FFDC}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
