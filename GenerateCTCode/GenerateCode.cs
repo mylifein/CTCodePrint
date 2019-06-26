@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DBUtility;
+using Model;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -11,27 +13,31 @@ namespace GenerateCTCode
     public class GenerateCode
     {
         private readonly BLL.SelectQuery selectControl = new BLL.SelectQuery();
+        private readonly BLL.PrintModelQ printM = new BLL.PrintModelQ();
 
-        public StringBuilder generateCTNumber(string po,string cusNo,string workNo,string macType,string cusMatNo,string officialNo,string verNo)
+        //string po,string cusNo,string workNo,string macType,string cusMatNo,string officialNo,string verNo
+        public List<CTCode> generateCTNumber(CTCode ctCodeInfo)
         {
+            List<CTCode> listCode = new List<CTCode>();
             StringBuilder ctCode = new StringBuilder();
-            DataSet ds = selectControl.getRulesByNo(cusNo,macType);
+            DataSet ds = selectControl.getRulesByNo(ctCodeInfo.Cusno, ctCodeInfo.Mactype);
             foreach (DataRow dr in ds.Tables[0].Rows)
             {
                 string ruleType = dr["rule_type"].ToString();
+                ctCodeInfo.Ruleno = dr["rule_no"].ToString();
                 int ruleLength = Convert.ToInt32(dr["rule_length"].ToString().Trim());
                 string ruleValue = dr["rule_value"].ToString().Trim();
                 switch (ruleType.Trim())
                 {
                     case "T001":
                         string poOrWorkNo = "";
-                        if (po != null && po.Trim() != "")
+                        if (ctCodeInfo.Cuspo != null && ctCodeInfo.Cuspo != "")
                         {
-                            poOrWorkNo = po.Trim();
+                            poOrWorkNo = ctCodeInfo.Cuspo;
                         }
                         else
                         {
-                            poOrWorkNo = workNo.Trim();
+                            poOrWorkNo = ctCodeInfo.Workno;
                         }
                         ctCode.Append(poOrWorkNo.Substring(0, ruleLength));
                         break;
@@ -39,15 +45,59 @@ namespace GenerateCTCode
                         ctCode.Append(GenerateTimeCode(ruleLength));
                         break;
                     case "T003":
-                        ctCode.Append(cusMatNo.Trim().Substring(0, ruleLength));
+                        ctCode.Append(ctCodeInfo.Cusmatno.Trim().Substring(0, ruleLength));
                         break;
                     case "T004":
-                        ctCode.Append(officialNo.Trim().Substring(0, ruleLength));
+                        ctCode.Append(ctCodeInfo.Offino.Trim().Substring(0, ruleLength));
                         break;
                     case "T005":
-                        ctCode.Append(verNo.Trim().Substring(0, ruleLength));
+                        ctCode.Append(ctCodeInfo.Verno.Trim().Substring(0, ruleLength));
                         break;
                     case "T006":
+                        string maxCode = printM.getMaxCTCode(ctCode.ToString());
+                        string prefixCT = ctCode.ToString();
+                        if (maxCode == null || maxCode == "")
+                        {
+                            for (int i = 1; i <= int.Parse(ctCodeInfo.Woquantity.Trim());i++)
+                            {
+                                CTCode ctCodeIn = new CTCode();
+                                ctCodeIn = exchangeCT(ctCodeIn, ctCodeInfo);
+                                string seqNo = "";
+                                string tempCT = "";
+                                for (int numLength = i.ToString().Length ; numLength < ruleLength; numLength++)
+                                {
+                                    seqNo += "0";
+                                }
+                                seqNo += i;
+                                tempCT = prefixCT + seqNo;
+                                ctCodeIn.Ctcode = tempCT;
+                                listCode.Add(ctCodeIn);
+                            }
+                        }
+                        else
+                        {
+                            //獲取流水號
+                            string subCode = maxCode.Substring(maxCode.Length - ruleLength);
+                            int ctNo = convert34CodeTo10(subCode);
+                            for (int i=0;i < int.Parse(ctCodeInfo.Woquantity.Trim());i++)
+                            {
+                                CTCode ctCodeIn = new CTCode();
+                                ctCodeIn = exchangeCT(ctCodeIn, ctCodeInfo);
+                                ctNo++;
+                                string ct34Code = Convert34Code(ctNo);
+                                string temStr = "";
+                                string tempCT = "";
+                                for(int j = ct34Code.Length; j < ruleLength; j++)
+                                {
+                                    temStr += 0;
+                                }
+                                ct34Code = temStr + ct34Code;
+                                tempCT = prefixCT + ct34Code;
+                                ctCodeIn.Ctcode = tempCT;
+                                listCode.Add(ctCodeIn);
+                            }
+
+                        }
                         ctCode.Append(GenerateRandom(ruleLength));
                         break;
                     case "T007":
@@ -56,7 +106,7 @@ namespace GenerateCTCode
 
                 }
             }
-            return ctCode;
+            return listCode;
 
         }
 
@@ -197,14 +247,33 @@ namespace GenerateCTCode
         }
 
         /// <summary>
+        /// 设置34进制编码 
+        /// </summary>
+        public static Dictionary<int, string> Base34Code = new Dictionary<int, string>() {
+            {   0  ,"0"}, {   1  ,"1"}, {   2  ,"2"}, {   3  ,"3"}, {   4  ,"4"}, {   5  ,"5"}, {   6  ,"6"}, {   7  ,"7"}, {   8  ,"8"}, {   9  ,"9"},
+            {   10  ,"A"}, {   11  ,"B"}, {   12  ,"C"}, {   13  ,"D"}, {   14  ,"E"}, {   15  ,"F"}, {   16  ,"G"}, {   17  ,"H"}, {   18  ,"J"}, {   19  ,"K"},
+            {   20  ,"L"}, {   21  ,"M"}, {   22  ,"N"}, {   23  ,"P"}, {   24  ,"Q"}, {   25  ,"R"}, {   26  ,"S"}, {   27  ,"T"}, {   28  ,"U"}, {   29  ,"V"},
+            {   30  ,"W"}, {   31  ,"X"}, { 32,"Y"},{33,"Z" }
+        };
+
+        public static Dictionary<string, int> InverseBase34Code = new Dictionary<string, int>() {
+            {   "0",0}, {   "1"  ,1}, {   "2"  ,2}, {   "3" ,3}, {   "4",4}, {   "5"  ,5}, {   "6" ,6}, {   "7",7}, {   "8" ,8}, {   "9"  ,9},
+            {   "A",10  }, {   "B",11}, {   "C",12 }, {   "D",13  }, {   "E",14  }, {   "F",15  }, {   "G",16 }, {   "H",17 }, {   "J",18  }, {   "K",19  },
+            {   "L",20  }, {   "M",21  }, {   "N",22  }, {   "P",23  }, {   "Q",24  }, {   "R",25  }, {   "S",26  }, {   "T",27  }, {   "U",28  }, {   "V",29  },
+            {   "W",30  }, {   "X",31  }, { "Y",32},{"Z",33 }
+        };
+
+        /// <summary>
         /// 设置日期和月份的Dictionary 
         /// </summary>
         public static Dictionary<int, string> Base32Code = new Dictionary<int, string>() {
-            {   0  ,"z"}, {   1  ,"1"}, {   2  ,"2"}, {   3  ,"3"}, {   4  ,"4"}, {   5  ,"5"}, {   6  ,"6"}, {   7  ,"7"}, {   8  ,"8"}, {   9  ,"9"},
+            {   0  ,"0"}, {   1  ,"1"}, {   2  ,"2"}, {   3  ,"3"}, {   4  ,"4"}, {   5  ,"5"}, {   6  ,"6"}, {   7  ,"7"}, {   8  ,"8"}, {   9  ,"9"},
             {   10  ,"A"}, {   11  ,"B"}, {   12  ,"C"}, {   13  ,"D"}, {   14  ,"E"}, {   15  ,"F"}, {   16  ,"G"}, {   17  ,"H"}, {   18  ,"I"}, {   19  ,"J"},
             {   20  ,"K"}, {   21  ,"L"}, {   22  ,"M"}, {   23  ,"N"}, {   24  ,"O"}, {   25  ,"P"}, {   26  ,"Q"}, {   27  ,"R"}, {   28  ,"S"}, {   29  ,"T"},
             {   30  ,"U"}, {   31  ,"V"}
         };
+
+
 
 
         /// <summary>
@@ -217,7 +286,74 @@ namespace GenerateCTCode
             return Base32Code[convertValue];
         }
 
-        
 
+        /// <summary>
+        /// 将数字转换为34进制
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static string Convert34Code(int num)
+        {
+            if (num < 0)
+            {
+                return "";
+            }
+            //10进制数所对应的34进制数
+            char[] rule = new char[] {'0','1','2','3','4','5','6','7','8','9',
+                              'A','B','C','D','E','F','G','H','J','K',
+                              'L','M','N','P','Q','R','S','T','U','V',
+                              'W','X','Y','Z',};
+
+            //保存除34后的余数
+            List<int> list = new List<int>();
+            while (num >= 34)
+            {
+                int a = num % 34;
+                num /= 34;
+                list.Add(a);
+            }
+            list.Add(num);
+
+            StringBuilder sb = new StringBuilder();
+            //结果要从后往前排
+            for (int i = list.Count - 1; i >= 0; i--)
+            {
+                sb.Append(rule[list[i]]);
+            }
+            return sb.ToString();
+        }
+
+        public static int convert34CodeTo10(string convertCode)
+        {
+            int tenCode = 0;
+            for(int i = 0; i <= convertCode.Length - 1; i++)
+            {
+                int loop = InverseBase34Code[convertCode[i].ToString()];
+                for (int j = 1; j < convertCode.Length - i ; j++)
+                {
+                    loop *= 34;
+                }
+                tenCode += loop;
+            }
+            return tenCode;
+        }
+        
+        public CTCode exchangeCT(CTCode ctCode1, CTCode ctCode2)
+        {
+            ctCode1.Uuid = Auxiliary.Get_UUID();
+            ctCode1.Workno = ctCode2.Workno;
+            ctCode1.Cusno = ctCode2.Cusno;
+            ctCode1.Cuspo = ctCode2.Cuspo;
+            ctCode1.Cusmatno = ctCode2.Cusmatno;
+            ctCode1.Opuser = Auxiliary.loginName;
+            ctCode1.Woquantity = ctCode2.Woquantity;
+            ctCode1.Mactype = ctCode2.Mactype;
+            ctCode1.Offino = ctCode2.Offino;
+            ctCode1.Delmatno = ctCode2.Delmatno;
+            ctCode1.Ruleno = ctCode2.Ruleno;
+            ctCode1.Verno = ctCode2.Verno;
+            ctCode1.Createtime = DateTime.Now.ToString();
+            return ctCode1;
+        } 
     }
 }

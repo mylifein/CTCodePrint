@@ -1,4 +1,5 @@
 ﻿using CTCodePrint.common;
+using DBUtility;
 using GenerateCTCode;
 using MySql.Data.MySqlClient;
 using System;
@@ -22,6 +23,8 @@ namespace CTCodePrint
             InitializeComponent();
         }
 
+        private readonly BLL.User userBLL = new BLL.User();
+
         private void label1_Click(object sender, EventArgs e)
         {
 
@@ -29,84 +32,44 @@ namespace CTCodePrint
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string username = this.textBox1.Text;
-            string password = this.textBox2.Text;
-            GregorianCalendar gc = new GregorianCalendar();
-            DateTime dt = new DateTime(2019, 1, 1);
-            string week = "";
-            if(gc.GetWeekOfYear(dt, CalendarWeekRule.FirstDay, DayOfWeek.Monday).ToString().Length < 2)
+            string username = this.textBox1.Text.Trim();
+            string password = this.textBox2.Text.Trim();
+            if(username == "" || password == "")
             {
-                week = "0" + gc.GetWeekOfYear(dt, CalendarWeekRule.FirstDay, DayOfWeek.Monday).ToString();
+                MessageBox.Show("用戶名或密碼不能為空", "提示", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
             }
-            else
+            if (!userBLL.checkLogin(username, password))
             {
-                week = gc.GetWeekOfYear(dt, CalendarWeekRule.FirstDay, DayOfWeek.Monday).ToString();
+                MessageBox.Show("用戶名或密碼錯誤", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.textBox2.Text = "";
+                this.textBox2.Focus();
+                return;
             }
-            string yearString = DateTime.Now.Year.ToString();
-            yearString.Substring(yearString.Length - 1);
-            //test connection mysql
-            string connectString = "server=127.0.0.1;port=3306;database=datahub;user=root;password=root;";
-            MySqlConnection conn = new MySqlConnection(connectString);
-            DataTable dtable = new DataTable();
+            Auxiliary.loginName = username;
+            MainMenu mainMenu = new MainMenu();
+            mainMenu.Show();
+            this.Hide();
 
-            DataSet ds = new DataSet();
-            ds = new BLL.SelectQuery().getCusSelect();
-            ds = new BLL.SelectQuery().getRulesByNo("C001", "BU6");
-            ds = new BLL.SelectQuery().getMacByCus("C001");
-            string templateFileName = System.IO.Directory.GetCurrentDirectory() + "\\SH17003H0161401-00CT.lab";            //“System.IO.Directory.GetCurrentDirectory”:获取当前应用程序的路径，最后不包含“\”；
-            //判斷文件存在否
-            if (!File.Exists(templateFileName))
-            {
-                MessageBox.Show("打印模板文件不存在,無法打印外箱貼紙", "信息", MessageBoxButtons.OK,
-                    MessageBoxIcon.Exclamation);
-                return ;
-            }
-            BarCodePrint bc = new BarCodePrint();
-            String[] sA = new String[27];
-            for (int c = 0; c < 27; c++)
-            {
-                sA[c] = "";                             //為數組賦值為空串""
-            }
-            sA[0] = "123";
-            bc.PrintBC(templateFileName, sA);
-            string ctcode = new GenerateCode().generateCTNumber("PO123", "C001", "W001", "BU6", "CM001", "O001", "01").ToString();
-            
-            try
-            {
-                conn.Open();
-                string sqlStr = "select * from t_user where user_id = '1'";
-                MySqlCommand cmd = new MySqlCommand(sqlStr,conn);
-                cmd.CommandType = CommandType.Text;
-                MySqlDataAdapter msda = new MySqlDataAdapter(cmd);
-                msda.Fill(ds);
-                dtable = ds.Tables[0];
-
-
-            }
-            catch (MySqlException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }finally
-            {
-                conn.Close();
-            }
-     
-            //end test mysql connection
-            this.textBox1.Text = week;
-            this.textBox2.Text = System.Guid.NewGuid().ToString("N"); 
-            
-            
-            //判斷
-            if (username != "admin" || password != "123")
-            {
-                MessageBox.Show("密碼或者用戶名錯誤！");
-            }else
-            {
-                MainMenu mainMenu = new MainMenu();
-                mainMenu.Show();
-                this.Hide();
-            }
-
+            //string templateFileName = System.IO.Directory.GetCurrentDirectory() + "\\SH17003H0161401-00CT.lab";            //“System.IO.Directory.GetCurrentDirectory”:获取当前应用程序的路径，最后不包含“\”；
+            ////判斷文件存在否
+            //if (!File.Exists(templateFileName))
+            //{
+            //    MessageBox.Show("打印模板文件不存在,無法打印外箱貼紙", "信息", MessageBoxButtons.OK,
+            //        MessageBoxIcon.Exclamation);
+            //    return ;
+            //}
+            //BarCodePrint bc = new BarCodePrint();
+            //String[] sA = new String[27];
+            //for (int c = 0; c < 27; c++)
+            //{
+            //    sA[c] = "";                             //為數組賦值為空串""
+            //}
+            //sA[0] = "123";
+            //bc.PrintBC(templateFileName, sA);
+            //string ctcode = new GenerateCode().generateCTNumber("PO123", "C001", "W001", "BU6", "CM001", "O001", "01").ToString();
+         
         }
     }
 }
