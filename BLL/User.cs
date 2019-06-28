@@ -13,5 +13,11 @@ namespace BLL
         {
             return userDAL.exists(username, password);
         }
+
+        public bool saveLoginInfo(string username,string ipAddress)
+        {
+            return userDAL.saveLoginInfo(username,ipAddress);
+        }
     }
+
 }

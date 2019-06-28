@@ -37,5 +37,35 @@ namespace DAL
             }
             return loginJudge;
         }
+
+
+        public bool saveLoginInfo(string userId,string ipAddress)
+        {
+            bool saveMark = true;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into t_login_info (uuid,user_id,ip_address,create_time) values(@uuid,@userId,@ipAddress,@createTime)");
+          
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@userId", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@ipAddress", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@createTime", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = Auxiliary.Get_UUID();
+            parameters[1].Value = userId;
+            parameters[2].Value = ipAddress;
+            parameters[3].Value = DateTime.Now.ToString();
+            int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                saveMark = true;
+            }
+            else
+            {
+                saveMark = false;
+            }
+
+            return saveMark;
+        }
     }
 }

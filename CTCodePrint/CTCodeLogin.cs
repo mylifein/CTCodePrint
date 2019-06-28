@@ -47,6 +47,8 @@ namespace CTCodePrint
                 this.textBox2.Focus();
                 return;
             }
+            string ipAddress = LocalIP.GetLocalIP();
+            userBLL.saveLoginInfo(username, ipAddress);
             Auxiliary.loginName = username;
             MainMenu mainMenu = new MainMenu();
             mainMenu.Show();

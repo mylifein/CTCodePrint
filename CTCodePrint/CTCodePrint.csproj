@@ -57,6 +57,7 @@
     <Compile Include="Auxiliary.cs" />
     <Compile Include="common\BarCodePrint.cs" />
     <Compile Include="common\BCPrint.cs" />
+    <Compile Include="common\LocalIP.cs" />
     <Compile Include="CreateRules.cs">
       <SubType>Form</SubType>
     </Compile>
