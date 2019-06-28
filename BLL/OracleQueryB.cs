@@ -1,4 +1,5 @@
-﻿using DAL;
+﻿using BLL;
+using DAL;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +11,7 @@ namespace BLL
 {
     public class OracleQueryB
     {
-        private readonly OracleQuery oracleQ = new OracleQuery();
+        private readonly OracleQuery oracleQ = new OracleQueryB();
 
         /// <summary>
         /// 查詢工單信息
