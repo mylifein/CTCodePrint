@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MySql.Data">
-      <HintPath>G:\mysqlDriverForDonet\MySql.Data.dll</HintPath>
+      <HintPath>D:\DriverPackage\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OracleQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SelectControl.cs" />
   </ItemGroup>

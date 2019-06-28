@@ -1,4 +1,5 @@
-﻿using CTCodePrint.common;
+﻿using BLL;
+using CTCodePrint.common;
 using GenerateCTCode;
 using MySql.Data.MySqlClient;
 using System;
@@ -31,6 +32,17 @@ namespace CTCodePrint
         {
             string username = this.textBox1.Text;
             string password = this.textBox2.Text;
+            //判斷
+            if (username != "admin" || password != "123")
+            {
+                MessageBox.Show("密碼或者用戶名錯誤！");
+            }
+            else
+            {
+                MainMenu mainMenu = new MainMenu();
+                mainMenu.Show();
+                this.Hide();
+            }
             GregorianCalendar gc = new GregorianCalendar();
             DateTime dt = new DateTime(2019, 1, 1);
             string week = "";
@@ -50,9 +62,7 @@ namespace CTCodePrint
             DataTable dtable = new DataTable();
 
             DataSet ds = new DataSet();
-            ds = new BLL.SelectQuery().getCusSelect();
-            ds = new BLL.SelectQuery().getRulesByNo("C001", "BU6");
-            ds = new BLL.SelectQuery().getMacByCus("C001");
+            ds = new OracleQueryB().getWorkInfoByNo("K1927483");
             string templateFileName = System.IO.Directory.GetCurrentDirectory() + "\\SH17003H0161401-00CT.lab";            //“System.IO.Directory.GetCurrentDirectory”:获取当前应用程序的路径，最后不包含“\”；
             //判斷文件存在否
             if (!File.Exists(templateFileName))
@@ -96,16 +106,6 @@ namespace CTCodePrint
             this.textBox2.Text = System.Guid.NewGuid().ToString("N"); 
             
             
-            //判斷
-            if (username != "admin" || password != "123")
-            {
-                MessageBox.Show("密碼或者用戶名錯誤！");
-            }else
-            {
-                MainMenu mainMenu = new MainMenu();
-                mainMenu.Show();
-                this.Hide();
-            }
 
         }
     }
