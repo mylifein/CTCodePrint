@@ -9,6 +9,7 @@ namespace DBUtility
 {
     public static class Auxiliary
     {
+        public static string loginName;
         public static string Get_SQLConnStr()
         {
             string sqlConnStr = ConfigurationManager.ConnectionStrings["ConnectionMySqlString"].ConnectionString.ToString();

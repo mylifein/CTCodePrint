@@ -73,6 +73,7 @@
     <Compile Include="Auxiliary.cs" />
     <Compile Include="common\BarCodePrint.cs" />
     <Compile Include="common\BCPrint.cs" />
+    <Compile Include="common\LocalIP.cs" />
     <Compile Include="CreateRules.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,9 +160,17 @@
       <Project>{06021739-abaa-4e30-b2a9-9c3c342bbf3e}</Project>
       <Name>BLL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DBUtility\DBUtility.csproj">
+      <Project>{706ECC32-96B9-4218-95BF-25000AB4588E}</Project>
+      <Name>DBUtility</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GenerateCTCode\GenerateCTCode.csproj">
       <Project>{19f0ab2f-976e-42c7-9dd2-fba983235ec5}</Project>
       <Name>GenerateCTCode</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{D7F73F21-E199-4866-B818-4830D6A1934A}</Project>
+      <Name>Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

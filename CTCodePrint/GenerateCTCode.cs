@@ -1,5 +1,7 @@
 ﻿using BLL;
+using CTCodePrint.common;
 using GenerateCTCode;
+using Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,11 +21,23 @@ namespace CTCodePrint
             InitializeComponent();
         }
         private readonly SelectQuery selectQ = new SelectQuery();
-        private readonly OracleQueryB queryB = new OracleQueryB();
+        private readonly PrintModelQ printQ = new PrintModelQ();
+        private readonly BarCodePrint barPrint = BarCodePrint.getInstance();
         private GenerateCode generateC = new GenerateCode();
 
         private void GenerateCTCode_Load(object sender, EventArgs e)
         {
+
+            //設置combox 初始值
+            DataSet ds = selectQ.getCusSelect();
+            DataTable itemTable = null;
+            if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0) 
+            {
+                itemTable = ds.Tables[0];
+            }
+            this.comboBox1.DisplayMember = "cus_name";
+            this.comboBox1.ValueMember = "cus_no";
+            this.comboBox1.DataSource = itemTable;
            
             
         }
@@ -36,59 +50,72 @@ namespace CTCodePrint
         private void button1_Click(object sender, EventArgs e)
         {
             //獲得界面信息
-            string workNo = this.textBox1.Text;
-            string po = this.textBox2.Text;
-            string cusNo = this.textBox11.Text;
-            string officialNo = this.textBox6.Text;
-            string macType = this.comboBox2.SelectedValue.ToString();
+            CTCode ctCodeInfo = new CTCode();
+            ctCodeInfo.Workno = this.textBox1.Text.Trim();    //workNo
+            ctCodeInfo.Cuspo = this.textBox2.Text.Trim();    //Cuspo
+            ctCodeInfo.Delmatno = this.textBox3.Text.Trim(); //string deliveryMat
+            ctCodeInfo.Cusno = this.comboBox1.SelectedValue.ToString(); //cusNo
+            ctCodeInfo.Cusmatno = this.textBox5.Text.Trim();    //cusMatNo
+            ctCodeInfo.Offino = this.textBox6.Text.Trim();  //officialNo
+            ctCodeInfo.Verno = this.textBox7.Text.Trim();       //verNo
+            ctCodeInfo.Mactype = this.comboBox2.SelectedValue.ToString().Trim();  //macType
+            ctCodeInfo.Woquantity = this.textBox4.Text.Trim();  //wnquantity
+            List<CTCode> ctList = new List<CTCode>();
+            ctList = generateC.generateCTNumber(ctCodeInfo);
+            
+            /// Check 必填項
+            ///流水碼自增  並調用打印 
+            ///查詢模板號
+            string modelNo = printQ.checkPrintModelRel(ctCodeInfo.Cusno, ctCodeInfo.Delmatno);
+            if(modelNo == null || modelNo == "")
+            {
+                MessageBox.Show("未找到該客戶出貨料號對應的打印模板", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.textBox2.Focus();
+                return;
+            }
+           DataSet ds = printQ.getModelInfo(modelNo);
+           if(ds == null || ds.Tables[0].Rows.Count < 1)
+            {
+                MessageBox.Show("未找到該客戶出貨料號對應的打印模板信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.textBox2.Focus();
+                return;
+            }
+            string templateFile = System.IO.Directory.GetCurrentDirectory() + "\\" + ds.Tables[0].Rows[0]["model_name"].ToString();
+            ///查詢該模板必填字段
+            MandatoryField manF = printQ.getMandInfoByMod(modelNo);
+
+            if (manF != null)
+            {
+                foreach(CTCode ctTemp in ctList)
+                {
+                    PrintContent printContent = new PrintContent();
+                    printContent.CtCode = ctTemp.Ctcode;
+                    this.textBox8.Text = ctTemp.Ctcode;
+                    bool judge = barPrint.PrintBC(templateFile, printContent, manF);
+                    if (judge)
+                    {
+                        printQ.saveCTCodeInfo(ctTemp);
+                    }
+                    else
+                    {
+                        MessageBox.Show("打印失敗請聯係管理員！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+                }
+
+            }
+
 
 
         }
 
-
-
-        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
         {
-            string workno = this.textBox1.Text;
-            DataSet ds = queryB.getWorkInfoByNo(workno);
-            if(ds != null && ds.Tables.Count > 0 )
+            string comboxValue = "";
+            if(this.comboBox1.SelectedValue != null)
             {
-                if(ds.Tables[0].Rows.Count > 0)
-                {
-                this.textBox2.Text = ds.Tables[0].Rows[0]["CUST_PO_NUMBER"].ToString();     //PO
-                this.textBox11.Text = ds.Tables[0].Rows[0]["CUSTOMER_ID"].ToString();      //customer number 
-                this.textBox10.Text = ds.Tables[0].Rows[0]["CUST_NAME"].ToString();     //customer name
-                this.textBox4.Text = ds.Tables[0].Rows[0]["START_QUANTITY"].ToString();      //work number quantity
-                this.textBox9.Text = ds.Tables[0].Rows[0]["QUANTITY_COMPLETED"].ToString();      //completed quantity
-                this.textBox3.Text = ds.Tables[0].Rows[0]["ITEM_CODE"].ToString();          //delivery code
-                }
+                comboxValue = this.comboBox1.SelectedValue.ToString();
             }
-            ds = queryB.getCusMatInfo(workno);
-            if (ds != null && ds.Tables.Count > 0)
-            {
-                if (ds.Tables[0].Rows.Count > 0)
-                {
-                    this.comboBox4.DisplayMember = "CUSTOMER_ITEM_DESC";
-                    this.comboBox4.ValueMember = "CUSTOMER_ITEM_NUMBER";
-                    this.comboBox4.DataSource = ds.Tables[0];
-                }
-            }
-            ds = queryB.getRevisionInfo(workno);
-            if (ds != null && ds.Tables.Count > 0)
-            {
-                if (ds.Tables[0].Rows.Count > 0)
-                {
-                    this.comboBox3.DisplayMember = "ITEM_DESC";
-                    this.comboBox3.ValueMember = "ITEM_CODE";
-                    this.comboBox3.DataSource = ds.Tables[0];
-                }
-            }
-
-        }
-
-        private void textBox11_TextChanged(object sender, EventArgs e)
-        {
-            string comboxValue = this.textBox11.Text;
             DataSet ds = selectQ.getMacByCus(comboxValue);
             DataTable itemTable = null;
             if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
@@ -98,6 +125,9 @@ namespace CTCodePrint
             this.comboBox2.DisplayMember = "cus_mactype";
             this.comboBox2.ValueMember = "cus_mactype";
             this.comboBox2.DataSource = itemTable;
+
         }
+
+
     }
 }
