@@ -80,6 +80,7 @@
             this.重印CTToolStripMenuItem.Name = "重印CTToolStripMenuItem";
             this.重印CTToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.重印CTToolStripMenuItem.Text = "重印CT";
+            this.重印CTToolStripMenuItem.Click += new System.EventHandler(this.重印CTToolStripMenuItem_Click);
             // 
             // cT配置ToolStripMenuItem
             // 
@@ -93,7 +94,7 @@
             // 客戶配置ToolStripMenuItem
             // 
             this.客戶配置ToolStripMenuItem.Name = "客戶配置ToolStripMenuItem";
-            this.客戶配置ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.客戶配置ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.客戶配置ToolStripMenuItem.Text = "客戶配置";
             this.客戶配置ToolStripMenuItem.Click += new System.EventHandler(this.客戶配置ToolStripMenuItem_Click);
             // 
@@ -103,20 +104,20 @@
             this.編碼規則查詢ToolStripMenuItem,
             this.編碼規則創建ToolStripMenuItem});
             this.編碼規則配置ToolStripMenuItem.Name = "編碼規則配置ToolStripMenuItem";
-            this.編碼規則配置ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.編碼規則配置ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.編碼規則配置ToolStripMenuItem.Text = "編碼規則配置";
             this.編碼規則配置ToolStripMenuItem.Click += new System.EventHandler(this.編碼規則配置ToolStripMenuItem_Click);
             // 
             // 編碼規則查詢ToolStripMenuItem
             // 
             this.編碼規則查詢ToolStripMenuItem.Name = "編碼規則查詢ToolStripMenuItem";
-            this.編碼規則查詢ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.編碼規則查詢ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.編碼規則查詢ToolStripMenuItem.Text = "編碼規則查詢";
             // 
             // 編碼規則創建ToolStripMenuItem
             // 
             this.編碼規則創建ToolStripMenuItem.Name = "編碼規則創建ToolStripMenuItem";
-            this.編碼規則創建ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.編碼規則創建ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.編碼規則創建ToolStripMenuItem.Text = "編碼規則創建";
             this.編碼規則創建ToolStripMenuItem.Click += new System.EventHandler(this.編碼規則創建ToolStripMenuItem_Click);
             // 

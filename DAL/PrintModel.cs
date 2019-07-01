@@ -68,6 +68,41 @@ namespace DAL
         }
 
         /// <summary>
+        /// 根據工單查詢CT碼信息
+        /// </summary>
+        /// <param name="workNo"></param>
+        /// <returns></returns>
+        public DataSet queryCodeInfoByWorkNo(string workNo)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_code_info where work_no =@workno");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@workno", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = workNo;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
+        }
+
+        /// <summary>
+        /// 根據CT碼查詢CT碼信息
+        /// </summary>
+        /// <param name="ctCode"></param>
+        /// <returns></returns>
+        public DataSet queryCodeInfoByCT(string ctCode)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_code_info where ct_code =@ctCode");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@ctCode", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = ctCode;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
+        }
+
+
+        /// <summary>
         /// 保存生成的ctcode 数据
         /// </summary>
         /// <param name="ctCode"></param>
@@ -76,8 +111,8 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_code_info (uuid,ct_code,rule_no,work_no,cus_no,cus_po,cus_matno,del_matno,mac_type,offi_no,ver_no,wo_quantity,op_user,create_time)");
-            strSql.Append("values(@uuid,@ctcode,@ruleno,@workno,@cusno,@cuspo,@cusmatno,@delmatno,@mac_type,@offino,@verno,@woquantity,@opuser,@createtime)");
+            strSql.Append("insert into t_code_info (uuid,ct_code,rule_no,work_no,cus_no,cus_po,cus_matno,del_matno,mac_type,offi_no,ver_no,wo_quantity,completed_qty,model_no,op_user,create_time)");
+            strSql.Append("values(@uuid,@ctcode,@ruleno,@workno,@cusno,@cuspo,@cusmatno,@delmatno,@mac_type,@offino,@verno,@woquantity,@completedQty,@model_no,@opuser,@createtime)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@ctcode", MySqlDbType.VarChar, 900),
@@ -92,7 +127,9 @@ namespace DAL
                 new MySqlParameter("@verno", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@woquantity", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),           
+                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@completedQty", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@model_no", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = ctCode.Uuid;
             parameters[1].Value = ctCode.Ctcode;
@@ -108,6 +145,8 @@ namespace DAL
             parameters[11].Value = ctCode.Woquantity;
             parameters[12].Value = ctCode.Opuser;
             parameters[13].Value = ctCode.Createtime;
+            parameters[14].Value = ctCode.Completedqty;
+            parameters[15].Value = ctCode.Modelno;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
@@ -121,7 +160,7 @@ namespace DAL
         }
 
         /// <summary>
-        /// 
+        /// 獲得當前規則最大的ct碼
         /// </summary>
         /// <param name="ctCode"></param>
         /// <returns></returns>
@@ -141,6 +180,55 @@ namespace DAL
             return maxCtCode;
         }
 
+        /// <summary>
+        /// 獲得生成的CT碼數量
+        /// </summary>
+        /// <param name="workno"></param>
+        /// <returns></returns>
+        public string getCTCount(string workno)
+        {
+            string countNo = "";
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from t_code_info where work_no =@workno");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@workno", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = workno;
+            Object countDB = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (countDB != null && countDB != DBNull.Value)
+            {
+                countNo = countDB.ToString();
+            }
+            return countNo;
+        }
+
+        public bool savePrintRecord(PrintRecord record) 
+        {
+            bool saveMark = true;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into t_print_record (uuid,ct_code,op_user,create_time)");
+            strSql.Append("values(@uuid,@ctcode,@opuser,@createtime)");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@ctcode", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = record.Uuid;
+            parameters[1].Value = record.Ctcode;
+            parameters[2].Value = record.Opuser;
+            parameters[3].Value = record.Createtime;
+            int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                saveMark = true;
+            }
+            else
+            {
+                saveMark = false;
+            }
+            return saveMark;
+        }
 
     }
 }

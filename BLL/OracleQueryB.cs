@@ -11,7 +11,7 @@ namespace BLL
 {
     public class OracleQueryB
     {
-        private readonly OracleQuery oracleQ = new OracleQueryB();
+        private readonly OracleQuery oracleQ = new OracleQuery();
 
         /// <summary>
         /// 查詢工單信息

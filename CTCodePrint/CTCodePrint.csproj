@@ -106,6 +106,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReprintCT.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReprintCT.Designer.cs">
+      <DependentUpon>ReprintCT.cs</DependentUpon>
+    </Compile>
     <Compile Include="RuleConfig.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -137,6 +143,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ReprintCT.resx">
+      <DependentUpon>ReprintCT.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RuleConfig.resx">
       <DependentUpon>RuleConfig.cs</DependentUpon>
     </EmbeddedResource>
@@ -159,6 +168,10 @@
     <ProjectReference Include="..\BLL\BLL.csproj">
       <Project>{06021739-abaa-4e30-b2a9-9c3c342bbf3e}</Project>
       <Name>BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DAL\DAL.csproj">
+      <Project>{0DD83604-5EA7-4E58-BFC9-DFD2152D99E4}</Project>
+      <Name>DAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\DBUtility\DBUtility.csproj">
       <Project>{706ECC32-96B9-4218-95BF-25000AB4588E}</Project>

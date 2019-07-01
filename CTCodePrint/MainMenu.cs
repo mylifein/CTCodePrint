@@ -52,5 +52,11 @@ namespace CTCodePrint
             CreateRules createRule = new CreateRules();
             createRule.Show();
         }
+
+        private void 重印CTToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ReprintCT printCT = new ReprintCT();
+            printCT.Show();
+        }
     }
 }

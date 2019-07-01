@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OracleQueryB.cs" />
+    <Compile Include="PrintModelQ.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SelectQuery.cs" />
     <Compile Include="User.cs" />

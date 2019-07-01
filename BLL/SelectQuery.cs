@@ -65,10 +65,12 @@ namespace BLL
             DataSet ds = selectControl.getRulesByRuleNo(ruleNo);
             return ds;
         }
-
-        public void getOracleConn()
+        public DataSet getAllRuleTypes()
         {
-            selectControl.getOracleConnection();
+            DataSet ds = selectControl.getRuleTypes();
+            return ds;
         }
+
+
     }
 }

@@ -92,5 +92,44 @@ namespace BLL
         {
             return printM.queryCodeNo(ctCode);
         }
+
+        /// <summary>
+        /// 根據工單號查詢已經生成的CT碼數量
+        /// </summary>
+        /// <param name="workno"></param>
+        /// <returns></returns>
+        public string getGeneratedCTCount(string workno)
+        {
+            return printM.getCTCount(workno);
+        }
+
+        /// <summary>
+        /// 保存打印CT碼記錄
+        /// </summary>
+        /// <param name="record"></param>
+        /// <returns></returns>
+        public bool savePrintRecord(PrintRecord record)
+        {
+            record.Uuid = Auxiliary.Get_UUID();
+            record.Createtime = DateTime.Now.ToString();
+            record.Opuser = Auxiliary.loginName;
+            return printM.savePrintRecord(record);
+        }
+
+
+        public DataSet getCTInfo(string condition,string conditionV)
+        {
+            DataSet ds = null;
+            if (condition == "1")
+            {
+                ds = printM.queryCodeInfoByWorkNo(conditionV);
+            }
+            else
+            {
+                ds = printM.queryCodeInfoByCT(conditionV);
+            }
+
+            return ds;
+        }
     }
 }

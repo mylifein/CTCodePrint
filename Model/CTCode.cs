@@ -20,6 +20,8 @@ namespace Model
         private string _offino;
         private string _verno;
         private string _woquantity;
+        private string _completedqty;
+        private string _modelno;
         private string _opuser;
         private string _createtime;
         private string _updatetime;
@@ -230,6 +232,32 @@ namespace Model
             set
             {
                 _mactype = value;
+            }
+        }
+
+        public string Completedqty
+        {
+            get
+            {
+                return _completedqty;
+            }
+
+            set
+            {
+                _completedqty = value;
+            }
+        }
+
+        public string Modelno
+        {
+            get
+            {
+                return _modelno;
+            }
+
+            set
+            {
+                _modelno = value;
             }
         }
     }
