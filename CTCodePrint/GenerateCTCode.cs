@@ -61,8 +61,8 @@ namespace CTCodePrint
                 MessageBox.Show("請在本系統維護客戶和幾種類型關係！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            int printQty = int.Parse(this.textBox4.Text.Trim().ToString()) - int.Parse(this.textBox7.Text.Trim().ToString());
-            if (printQty < 0)
+            int printQty = int.Parse(this.textBox4.Text.Trim().ToString()) - int.Parse(printQ.getGeneratedCTCount(this.textBox1.Text.Trim()));
+            if (printQty <= 0)
             {
                 MessageBox.Show("此工單已經生成所需數量的CT碼！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
@@ -220,7 +220,7 @@ namespace CTCodePrint
             {
                 if (ds.Tables[0].Rows.Count > 0)
                 {
-                    this.comboBox4.DisplayMember = "CUSTOMER_ITEM_DESC";
+                    this.comboBox4.DisplayMember = "CUSTOMER_ITEM_NUMBER";
                     this.comboBox4.ValueMember = "CUSTOMER_ITEM_NUMBER";
                     this.comboBox4.DataSource = ds.Tables[0];
                 }
@@ -230,8 +230,8 @@ namespace CTCodePrint
             {
                 if (ds.Tables[0].Rows.Count > 0)
                 {
-                    this.comboBox3.DisplayMember = "ITEM_CODE";
-                    this.comboBox3.ValueMember = "ITEM_CODE";
+                    this.comboBox3.DisplayMember = "REVISION";
+                    this.comboBox3.ValueMember = "REVISION";
                     this.comboBox3.DataSource = ds.Tables[0];
                 }
             }

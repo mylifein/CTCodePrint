@@ -72,11 +72,12 @@ namespace GenerateCTCode
                                 ctCodeIn = exchangeCT(ctCodeIn, ctCodeInfo);
                                 string seqNo = "";
                                 string tempCT = "";
-                                for (int numLength = i.ToString().Length ; numLength < ruleLength; numLength++)
+                                string seqCode = Convert34Code(i);
+                                for (int numLength = seqCode.Length ; numLength < ruleLength; numLength++)
                                 {
                                     seqNo += "0";
                                 }
-                                seqNo += i;
+                                seqNo += seqCode;
                                 tempCT = prefixCT + seqNo;
                                 ctCodeIn.Ctcode = tempCT;
                                 listCode.Add(ctCodeIn);

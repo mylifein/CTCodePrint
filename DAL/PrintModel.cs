@@ -202,6 +202,11 @@ namespace DAL
             return countNo;
         }
 
+        /// <summary>
+        /// 保存打印記錄
+        /// </summary>
+        /// <param name="record"></param>
+        /// <returns></returns>
         public bool savePrintRecord(PrintRecord record) 
         {
             bool saveMark = true;
@@ -230,5 +235,102 @@ namespace DAL
             return saveMark;
         }
 
+        /// <summary>
+        /// 保存規則條目
+        /// </summary>
+        /// <param name="ruleItem"></param>
+        /// <returns></returns>
+        public bool saveSaveRuleItem(RuleItem ruleItem)
+        {
+            bool saveMark = true;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into t_code_rule (uuid,rule_no,seq_no,rule_type,rule_value,rule_length,op_user,create_time)");
+            strSql.Append("values(@uuid,@ruleno,@seqno,@ruletype,@rulevalue,@rulelength,@opuser,@createtime)");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@ruleno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@seqno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@ruletype", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@rulevalue", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@rulelength", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = ruleItem.Uuid;
+            parameters[1].Value = ruleItem.Ruleno;
+            parameters[2].Value = ruleItem.Seqno;
+            parameters[3].Value = ruleItem.Ruletype;
+            parameters[4].Value = ruleItem.Rulevalue;
+            parameters[5].Value = ruleItem.Rulelength;
+            parameters[6].Value = ruleItem.Opuser;
+            parameters[7].Value = ruleItem.Createtime;
+            int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                saveMark = true;
+            }
+            else
+            {
+                saveMark = false;
+            }
+            return saveMark;
+        }
+
+        /// <summary>
+        /// 保存規則信息
+        /// </summary>
+        /// <param name="codeRule"></param>
+        /// <returns></returns>
+        public bool saveRuleInfo(CodeRule codeRule)
+        {
+            bool saveMark = true;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into t_rule_info (uuid,rule_no,rule_desc,op_user,create_time)");
+            strSql.Append("values(@uuid,@ruleno,@ruledesc,@opuser,@createtime)");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@ruleno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@ruledesc", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = codeRule.Uuid;
+            parameters[1].Value = codeRule.Ruleno;
+            parameters[2].Value = codeRule.RuleDesc;
+            parameters[3].Value = codeRule.Opuser;
+            parameters[4].Value = codeRule.Createtime;
+            int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                saveMark = true;
+            }
+            else
+            {
+                saveMark = false;
+            }
+            return saveMark;
+        }
+
+        /// <summary>
+        /// 根據uuid查詢規則號
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <returns></returns>
+        public String queryRuleByID(string uuid)
+        {
+            string ruleNo = "";
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_rule_info where uuid =@uuid");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = uuid;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if(ds != null && ds.Tables.Count > 0)
+            {
+                ruleNo = ds.Tables[0].Rows[0]["rule_no"].ToString();
+            }
+            return ruleNo;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BLL;
+using Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,7 +22,7 @@ namespace CTCodePrint
         private readonly SelectQuery selectQ = new SelectQuery();
         private void button1_Click(object sender, EventArgs e)
         {
-
+            this.dataGridView1.Rows.Add();
         }
 
         private void CreateRules_Load(object sender, EventArgs e)
@@ -70,7 +71,8 @@ namespace CTCodePrint
             column5.Width = 80;
             this.dataGridView1.Columns.Add(column5);
 
-
+            this.dataGridView1.Columns[0].ReadOnly = true;
+            this.dataGridView1.Columns[1].ReadOnly = true;
             //this.dataGridView1.ColumnCount = 10;
             //this.dataGridView1.ColumnHeadersVisible = true;
             //this.dataGridView1.Columns[0].Name = "uuid";
@@ -94,6 +96,31 @@ namespace CTCodePrint
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (this.dataGridView1.CurrentRow == null)
+            {
+                MessageBox.Show("請選中需要刪除的行！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            this.dataGridView1.Rows.Remove(this.dataGridView1.CurrentRow);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            CodeRule codeR = new CodeRule();
+            codeR.RuleDesc = this.textBox2.Text;
+            List<RuleItem> list = new List<RuleItem>();
+            for (int i=0; i < this.dataGridView1.Rows.Count; i++)
+            {
+                RuleItem ruleItem = new RuleItem();
+                ruleItem.Seqno = this.dataGridView1.Rows[i].Cells[2].Value.ToString();
+                ruleItem.Ruletype = this.dataGridView1.Rows[i].Cells[3].Value.ToString();
+                ruleItem.Rulevalue = this.dataGridView1.Rows[i].Cells[4].Value.ToString();
+                ruleItem.Rulelength = this.dataGridView1.Rows[i].Cells[5].Value.ToString();
+            }
         }
     }
 }
