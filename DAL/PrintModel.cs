@@ -285,20 +285,18 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_rule_info (uuid,rule_no,rule_desc,op_user,create_time)");
-            strSql.Append("values(@uuid,@ruleno,@ruledesc,@opuser,@createtime)");
+            strSql.Append("insert into t_rule_info (uuid,rule_desc,op_user,create_time)");
+            strSql.Append("values(@uuid,@ruledesc,@opuser,@createtime)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@ruleno", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@ruledesc", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
             };
             parameters[0].Value = codeRule.Uuid;
-            parameters[1].Value = codeRule.Ruleno;
-            parameters[2].Value = codeRule.RuleDesc;
-            parameters[3].Value = codeRule.Opuser;
-            parameters[4].Value = codeRule.Createtime;
+            parameters[1].Value = codeRule.RuleDesc;
+            parameters[2].Value = codeRule.Opuser;
+            parameters[3].Value = codeRule.Createtime;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
@@ -316,7 +314,7 @@ namespace DAL
         /// </summary>
         /// <param name="uuid"></param>
         /// <returns></returns>
-        public String queryRuleByID(string uuid)
+        public string queryRuleByID(string uuid)
         {
             string ruleNo = "";
             StringBuilder strSql = new StringBuilder();
@@ -326,11 +324,82 @@ namespace DAL
             };
             parameters[0].Value = uuid;
             DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
-            if(ds != null && ds.Tables.Count > 0)
+            if(ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
                 ruleNo = ds.Tables[0].Rows[0]["rule_no"].ToString();
             }
             return ruleNo;
+        }
+
+        /// <summary>
+        /// 根據規則號模糊查詢
+        /// </summary>
+        /// <param name="ruleNo"></param>
+        /// <returns></returns>
+        public DataSet queryRules(string ruleNo)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_rule_info where rule_no like @ruleNo");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@ruleNo", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = "%"+ruleNo+"%";
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
+        }
+
+        /// <summary>
+        /// 根據規則號精確查詢
+        /// </summary>
+        /// <param name="ruleNo"></param>
+        /// <returns></returns>
+        public DataSet queryRule(string ruleNo)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_rule_info where rule_no=@ruleNo");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@ruleNo", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = ruleNo;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
+        }
+
+        /// <summary>
+        /// 將客戶幾種綁定編碼規則
+        /// </summary>
+        /// <param name="cusRule"></param>
+        /// <returns></returns>
+        public bool saveRuleRelation(CusRule cusRule)
+        {
+            bool saveMark = true;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into t_cus_codrule (uuid,cus_no,cus_mactype,rule_no,op_user,create_time)");
+            strSql.Append("values(@uuid,@cus_no,@cus_mactype,@rule_no,@opuser,@createtime)");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cus_no", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cus_mactype", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@rule_no", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = cusRule.Uuid;
+            parameters[1].Value = cusRule.Cusno;
+            parameters[2].Value = cusRule.Cusmactype;
+            parameters[3].Value = cusRule.Ruleno;
+            parameters[4].Value = cusRule.Opuser;
+            parameters[5].Value = cusRule.Createtime;
+            int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                saveMark = true;
+            }
+            else
+            {
+                saveMark = false;
+            }
+            return saveMark;
         }
     }
 }

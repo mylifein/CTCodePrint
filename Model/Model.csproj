@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="CodeRule.cs" />
     <Compile Include="CTCode.cs" />
+    <Compile Include="CusRule.cs" />
     <Compile Include="MandatoryField.cs" />
     <Compile Include="PrintContent.cs" />
     <Compile Include="PrintRecord.cs" />

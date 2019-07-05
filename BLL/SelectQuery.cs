@@ -65,6 +65,11 @@ namespace BLL
             DataSet ds = selectControl.getRulesByRuleNo(ruleNo);
             return ds;
         }
+
+        /// <summary>
+        /// 獲得所有規則類型
+        /// </summary>
+        /// <returns></returns>
         public DataSet getAllRuleTypes()
         {
             DataSet ds = selectControl.getRuleTypes();

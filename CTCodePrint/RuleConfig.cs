@@ -1,4 +1,5 @@
 ﻿using BLL;
+using Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,13 +20,18 @@ namespace CTCodePrint
         }
 
         private readonly SelectQuery selectQ = new SelectQuery();
+        private readonly PrintModelQ printM = new PrintModelQ();
         private void button1_Click(object sender, EventArgs e)
         {
             string queryValue = this.textBox1.Text;
+            CodeRule codeR = printM.queryCodeByNo(queryValue);
             DataSet ds = selectQ.getRulesByRuleNo(queryValue);
-            if (ds != null && ds.Tables.Count > 0)
+            if (codeR != null )
             {
-                this.dataGridView1.DataSource = ds.Tables[0];
+                this.textBox2.Text = codeR.RuleDesc;
+                this.textBox3.Text = codeR.Opuser;
+                this.textBox4.Text = codeR.Createtime;
+                this.dataGridView1.DataSource = codeR.RuleItem;
 
 
                 //DGV 改變列名,列寬
@@ -51,5 +57,7 @@ namespace CTCodePrint
                 this.dataGridView1.Columns[9].Width = 0;
             }
         }
+
+
     }
 }

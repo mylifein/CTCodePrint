@@ -18,6 +18,7 @@ namespace CTCodePrint
         {
             InitializeComponent();
         }
+        private readonly PrintModelQ printQ = new PrintModelQ();
 
         private readonly SelectQuery selectQ = new SelectQuery();
         private void button1_Click(object sender, EventArgs e)
@@ -116,11 +117,22 @@ namespace CTCodePrint
             for (int i=0; i < this.dataGridView1.Rows.Count; i++)
             {
                 RuleItem ruleItem = new RuleItem();
-                ruleItem.Seqno = this.dataGridView1.Rows[i].Cells[2].Value.ToString();
-                ruleItem.Ruletype = this.dataGridView1.Rows[i].Cells[3].Value.ToString();
-                ruleItem.Rulevalue = this.dataGridView1.Rows[i].Cells[4].Value.ToString();
-                ruleItem.Rulelength = this.dataGridView1.Rows[i].Cells[5].Value.ToString();
+                ruleItem.Seqno = this.dataGridView1.Rows[i].Cells[2].Value == null ? "": this.dataGridView1.Rows[i].Cells[2].Value.ToString();
+                ruleItem.Ruletype = this.dataGridView1.Rows[i].Cells[3].Value == null ? "":this.dataGridView1.Rows[i].Cells[3].Value.ToString();
+                ruleItem.Rulevalue = this.dataGridView1.Rows[i].Cells[4].Value == null ? "" : this.dataGridView1.Rows[i].Cells[4].Value.ToString();
+                ruleItem.Rulelength = this.dataGridView1.Rows[i].Cells[5].Value == null ? "": this.dataGridView1.Rows[i].Cells[5].Value.ToString();
+                list.Add(ruleItem);
             }
+            codeR.RuleItem = list;
+            if (printQ.saveRuleInfo(codeR))
+            {
+                MessageBox.Show("保存成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("保存失敗！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+                
         }
     }
 }

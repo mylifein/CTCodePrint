@@ -200,39 +200,42 @@ namespace CTCodePrint
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
-            string workno = this.textBox1.Text;
-            DataSet ds = queryB.getWorkInfoByNo(workno);
-            if (ds != null && ds.Tables.Count > 0)
+            if(e.KeyCode == Keys.Enter)
             {
-                if (ds.Tables[0].Rows.Count > 0)
+                string workno = this.textBox1.Text;
+                DataSet ds = queryB.getWorkInfoByNo(workno);
+                if (ds != null && ds.Tables.Count > 0)
                 {
-                    this.textBox2.Text = ds.Tables[0].Rows[0]["CUST_PO_NUMBER"].ToString();     //PO
-                    this.textBox11.Text = ds.Tables[0].Rows[0]["CUSTOMER_ID"].ToString();      //customer number 
-                    this.textBox10.Text = ds.Tables[0].Rows[0]["CUST_NAME"].ToString();     //customer name
-                    this.textBox4.Text = ds.Tables[0].Rows[0]["START_QUANTITY"].ToString();      //work number quantity
-                    this.textBox9.Text = ds.Tables[0].Rows[0]["QUANTITY_COMPLETED"].ToString();      //completed quantity
-                    this.textBox3.Text = ds.Tables[0].Rows[0]["ITEM_CODE"].ToString();          //delivery code
-                    this.textBox7.Text = printQ.getGeneratedCTCount(workno);
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        this.textBox2.Text = ds.Tables[0].Rows[0]["CUST_PO_NUMBER"].ToString();     //PO
+                        this.textBox11.Text = ds.Tables[0].Rows[0]["CUSTOMER_ID"].ToString();      //customer number 
+                        this.textBox10.Text = ds.Tables[0].Rows[0]["CUST_NAME"].ToString();     //customer name
+                        this.textBox4.Text = ds.Tables[0].Rows[0]["START_QUANTITY"].ToString();      //work number quantity
+                        this.textBox9.Text = ds.Tables[0].Rows[0]["QUANTITY_COMPLETED"].ToString();      //completed quantity
+                        this.textBox3.Text = ds.Tables[0].Rows[0]["ITEM_CODE"].ToString();          //delivery code
+                        this.textBox7.Text = printQ.getGeneratedCTCount(workno);
+                    }
                 }
-            }
-            ds = queryB.getCusMatInfo(workno);
-            if (ds != null && ds.Tables.Count > 0)
-            {
-                if (ds.Tables[0].Rows.Count > 0)
+                ds = queryB.getCusMatInfo(workno);
+                if (ds != null && ds.Tables.Count > 0)
                 {
-                    this.comboBox4.DisplayMember = "CUSTOMER_ITEM_NUMBER";
-                    this.comboBox4.ValueMember = "CUSTOMER_ITEM_NUMBER";
-                    this.comboBox4.DataSource = ds.Tables[0];
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        this.comboBox4.DisplayMember = "CUSTOMER_ITEM_NUMBER";
+                        this.comboBox4.ValueMember = "CUSTOMER_ITEM_NUMBER";
+                        this.comboBox4.DataSource = ds.Tables[0];
+                    }
                 }
-            }
-            ds = queryB.getRevisionInfo(workno);
-            if (ds != null && ds.Tables.Count > 0)
-            {
-                if (ds.Tables[0].Rows.Count > 0)
+                ds = queryB.getRevisionInfo(workno);
+                if (ds != null && ds.Tables.Count > 0)
                 {
-                    this.comboBox3.DisplayMember = "REVISION";
-                    this.comboBox3.ValueMember = "REVISION";
-                    this.comboBox3.DataSource = ds.Tables[0];
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        this.comboBox3.DisplayMember = "REVISION";
+                        this.comboBox3.ValueMember = "REVISION";
+                        this.comboBox3.DataSource = ds.Tables[0];
+                    }
                 }
             }
         }

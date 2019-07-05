@@ -41,11 +41,7 @@ namespace CTCodePrint
             cusConfig.Show();
         }
 
-        private void 編碼規則配置ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            RuleConfig ruleConfig = new RuleConfig();
-            ruleConfig.Show();
-        }
+
 
         private void 編碼規則創建ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -57,6 +53,18 @@ namespace CTCodePrint
         {
             ReprintCT printCT = new ReprintCT();
             printCT.Show();
+        }
+
+        private void 編碼規則查詢ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RuleConfig ruleConfig = new RuleConfig();
+            ruleConfig.Show();
+        }
+
+        private void 編碼規則綁定ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BoundRule boundRule = new BoundRule();
+            boundRule.Show();
         }
     }
 }

@@ -72,6 +72,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auxiliary.cs" />
+    <Compile Include="BoundRule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BoundRule.Designer.cs">
+      <DependentUpon>BoundRule.cs</DependentUpon>
+    </Compile>
     <Compile Include="common\BarCodePrint.cs" />
     <Compile Include="common\BCPrint.cs" />
     <Compile Include="common\LocalIP.cs" />
@@ -120,6 +126,9 @@
       <DependentUpon>RuleConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="SQLHelper.cs" />
+    <EmbeddedResource Include="BoundRule.resx">
+      <DependentUpon>BoundRule.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CreateRules.resx">
       <DependentUpon>CreateRules.cs</DependentUpon>
     </EmbeddedResource>
