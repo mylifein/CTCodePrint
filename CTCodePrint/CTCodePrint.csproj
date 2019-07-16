@@ -105,11 +105,29 @@
     <Compile Include="GenerateCTCode.Designer.cs">
       <DependentUpon>GenerateCTCode.cs</DependentUpon>
     </Compile>
+    <Compile Include="MachineTypeConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MachineTypeConfig.Designer.cs">
+      <DependentUpon>MachineTypeConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainMenu.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainMenu.Designer.cs">
       <DependentUpon>MainMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MandatoryConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MandatoryConfig.Designer.cs">
+      <DependentUpon>MandatoryConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModelConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModelConfig.Designer.cs">
+      <DependentUpon>ModelConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -141,8 +159,17 @@
     <EmbeddedResource Include="GenerateCTCode.resx">
       <DependentUpon>GenerateCTCode.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MachineTypeConfig.resx">
+      <DependentUpon>MachineTypeConfig.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainMenu.resx">
       <DependentUpon>MainMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MandatoryConfig.resx">
+      <DependentUpon>MandatoryConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModelConfig.resx">
+      <DependentUpon>ModelConfig.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

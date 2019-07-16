@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    public class CusRule
+    public class MacTypeInfo
     {
         private string _uuid;
-        private string _cusno;
-        private string _delmatno;
         private string _mactypeno;
+        private string _mactypename;
+        private string _mactypedesc;
+        private string _ruleno;
         private string _opuser;
         private string _createtime;
         private string _updatetime;
@@ -30,22 +31,57 @@ namespace Model
             }
         }
 
-        public string Cusno
+        public string Mactypeno
         {
             get
             {
-                return _cusno;
+                return _mactypeno;
             }
 
             set
             {
-                _cusno = value;
+                _mactypeno = value;
             }
         }
 
+        public string Mactypename
+        {
+            get
+            {
+                return _mactypename;
+            }
 
+            set
+            {
+                _mactypename = value;
+            }
+        }
 
+        public string Mactypedesc
+        {
+            get
+            {
+                return _mactypedesc;
+            }
 
+            set
+            {
+                _mactypedesc = value;
+            }
+        }
+
+        public string Ruleno
+        {
+            get
+            {
+                return _ruleno;
+            }
+
+            set
+            {
+                _ruleno = value;
+            }
+        }
 
         public string Opuser
         {
@@ -96,32 +132,6 @@ namespace Model
             set
             {
                 _delflag = value;
-            }
-        }
-
-        public string Delmatno
-        {
-            get
-            {
-                return _delmatno;
-            }
-
-            set
-            {
-                _delmatno = value;
-            }
-        }
-
-        public string Mactypeno
-        {
-            get
-            {
-                return _mactypeno;
-            }
-
-            set
-            {
-                _mactypeno = value;
             }
         }
     }

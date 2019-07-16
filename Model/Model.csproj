@@ -43,7 +43,10 @@
     <Compile Include="CodeRule.cs" />
     <Compile Include="CTCode.cs" />
     <Compile Include="CusRule.cs" />
+    <Compile Include="MacTypeInfo.cs" />
     <Compile Include="MandatoryField.cs" />
+    <Compile Include="MandatoryInfo.cs" />
+    <Compile Include="ModelInfo.cs" />
     <Compile Include="PrintContent.cs" />
     <Compile Include="PrintRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -78,7 +78,7 @@ namespace CTCodePrint
             ctCodeInfo.Woquantity = this.textBox4.Text.Trim();  //wnquantity
             ctCodeInfo.Completedqty = this.textBox9.Text.Trim();    //completed quantity
             ctCodeInfo.Cusmatno = this.comboBox4.SelectedValue == null ? "" : this.comboBox4.SelectedValue.ToString().Trim();   //customer material number 
-            DataSet dsCheck = selectQ.getRulesByNo(ctCodeInfo.Cusno, ctCodeInfo.Mactype);
+            DataSet dsCheck = selectQ.getRulesByNo(ctCodeInfo.Mactype);
             if(dsCheck != null && dsCheck.Tables.Count > 0 && dsCheck.Tables[0].Rows.Count > 0)
             {
                 foreach (DataRow dr in dsCheck.Tables[0].Rows)
@@ -183,20 +183,7 @@ namespace CTCodePrint
 
         }
 
-        private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
-        {
-            string comboxValue = "";
-            DataSet ds = selectQ.getMacByCus(comboxValue);
-            DataTable itemTable = null;
-            if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-            {
-                itemTable = ds.Tables[0];
-            }
-            this.comboBox2.DisplayMember = "cus_mactype";
-            this.comboBox2.ValueMember = "cus_mactype";
-            this.comboBox2.DataSource = itemTable;
 
-        }
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -243,14 +230,24 @@ namespace CTCodePrint
         private void textBox11_TextChanged(object sender, EventArgs e)
         {
             string comboxValue = this.textBox11.Text;
-            DataSet ds = selectQ.getMacByCus(comboxValue);
+            string delmatno = this.textBox2.Text == null ? "" : this.textBox2.Text.Trim();
+            DataSet ds = selectQ.getMacByCus(comboxValue,delmatno);
             DataTable itemTable = null;
+            string mactypeno = null;
             if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
-                itemTable = ds.Tables[0];
+                mactypeno = ds.Tables[0].Rows[0]["mactypeno"].ToString();
             }
-            this.comboBox2.DisplayMember = "cus_mactype";
-            this.comboBox2.ValueMember = "cus_mactype";
+            if(mactypeno != null)
+            {
+                DataSet mactDS = printQ.queryMacType(mactypeno);
+                if (mactDS.Tables.Count > 0 && mactDS.Tables[0].Rows.Count > 0)
+                {
+                    itemTable = mactDS.Tables[0];
+                }
+            }
+            this.comboBox2.DisplayMember = "mactypename";
+            this.comboBox2.ValueMember = "mactypeno";
             this.comboBox2.DataSource = itemTable;
         }
 

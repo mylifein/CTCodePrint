@@ -32,11 +32,11 @@ namespace CTCodePrint
                 this.comboBox1.DataSource = dsCus.Tables[0];
             }
                
-            DataSet dsRule = printQ.queryCodeInfo("");
+            DataSet dsRule = printQ.queryMacType("");
             if (dsRule != null && dsRule.Tables.Count > 0 && dsRule.Tables[0].Rows.Count > 0)
             {
-                this.comboBox2.DisplayMember = "rule_desc";
-                this.comboBox2.ValueMember = "rule_no";
+                this.comboBox2.DisplayMember = "mactypename";
+                this.comboBox2.ValueMember = "mactypeno";
                 this.comboBox2.DataSource = dsRule.Tables[0];
             }
         }
@@ -45,14 +45,14 @@ namespace CTCodePrint
         {
             if(this.textBox1.Text == null || this.textBox1.Text.Trim() == "")
             {
-                MessageBox.Show("打印失敗請聯係管理員！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("規則已經綁定成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.textBox1.Focus();
                 return;
             }
             CusRule cusRule = new CusRule();
-            cusRule.Cusmactype = this.textBox1.Text.Trim();
+            cusRule.Delmatno = this.textBox1.Text.Trim();
             cusRule.Cusno = this.comboBox1.SelectedValue.ToString();
-            cusRule.Ruleno = this.comboBox2.SelectedValue.ToString();
+            cusRule.Mactypeno = this.comboBox2.SelectedValue.ToString();
             if (printQ.saveCusCodeRule(cusRule))
             {
                 MessageBox.Show("保存成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);

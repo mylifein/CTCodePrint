@@ -226,5 +226,114 @@ namespace BLL
             cusRule.Opuser = Auxiliary.loginName;
             return printM.saveRuleRelation(cusRule);
         }
+
+        /// <summary>
+        /// 保存CT碼必填字段
+        /// </summary>
+        /// <param name="mandatoryF"></param>
+        /// <returns></returns>
+        public bool saveManField(MandatoryInfo mandatoryF)
+        {
+            mandatoryF.Uuid = Auxiliary.Get_UUID();
+            mandatoryF.Createtime = DateTime.Now.ToString();
+            mandatoryF.Opuser = Auxiliary.loginName;
+            return printM.saveMandatory(mandatoryF);
+        }
+        
+        /// <summary>
+        /// 模糊查詢所有必填字段規則
+        /// </summary>
+        /// <returns></returns>
+        public DataSet queryMandatory()
+        {
+            return printM.queryMandatory("");
+        }
+
+        /// <summary>
+        /// 保存模板信息
+        /// </summary>
+        /// <param name="modelInfo"></param>
+        /// <returns></returns>
+        public ModelInfo saveModelInfo(ModelInfo modelInfo)
+        {
+            ModelInfo reModel = null;
+            modelInfo.Uuid = Auxiliary.Get_UUID();
+            modelInfo.Createtime = DateTime.Now.ToString();
+            modelInfo.Opuser = Auxiliary.loginName;
+            if (printM.saveModelInfo(modelInfo))
+            {
+                reModel = queryModelInfo(modelInfo.Uuid);
+            }
+            return reModel;
+        }
+
+
+        /// <summary>
+        /// 查詢打印模板信息
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <returns></returns>
+        public ModelInfo queryModelInfo(string uuid)
+        {
+            ModelInfo modelInfo = null;
+            DataSet ds = printM.queryModelById(uuid);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                modelInfo = new ModelInfo();
+                modelInfo.Uuid = ds.Tables[0].Rows[0]["uuid"].ToString();
+                modelInfo.Modelno = ds.Tables[0].Rows[0]["model_no"].ToString();
+                modelInfo.Modelname = ds.Tables[0].Rows[0]["model_name"].ToString();
+                modelInfo.Modeldesc = ds.Tables[0].Rows[0]["model_desc"].ToString();
+                modelInfo.Manno = ds.Tables[0].Rows[0]["man_no"].ToString();
+                modelInfo.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
+                modelInfo.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
+            }
+                return modelInfo;
+        }
+
+        public MacTypeInfo saveMacTypeInfo(MacTypeInfo mactypeinfo)
+        {
+            MacTypeInfo reMacType = null;
+            mactypeinfo.Uuid = Auxiliary.Get_UUID();
+            mactypeinfo.Createtime = DateTime.Now.ToString();
+            mactypeinfo.Opuser = Auxiliary.loginName;
+            if (printM.saveMacTypeInfo(mactypeinfo))
+            {
+                reMacType = queryMacTypeInfo(mactypeinfo.Uuid);
+            }
+            return reMacType;
+        }
+
+        /// <summary>
+        /// 根據ID 查詢機種類型信息
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <returns></returns>
+        public MacTypeInfo queryMacTypeInfo(string uuid)
+        {
+            MacTypeInfo mactypeinfo = null;
+            DataSet ds = printM.queryMacTypeById(uuid);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                mactypeinfo = new MacTypeInfo();
+                mactypeinfo.Uuid = ds.Tables[0].Rows[0]["uuid"].ToString();
+                mactypeinfo.Mactypeno = ds.Tables[0].Rows[0]["mactypeno"].ToString();
+                mactypeinfo.Mactypename = ds.Tables[0].Rows[0]["mactypename"].ToString();
+                mactypeinfo.Mactypedesc = ds.Tables[0].Rows[0]["mactypedesc"].ToString();
+                mactypeinfo.Ruleno = ds.Tables[0].Rows[0]["rule_no"].ToString();
+                mactypeinfo.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
+                mactypeinfo.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
+            }
+            return mactypeinfo;
+        }
+
+        /// <summary>
+        /// 模糊查詢機種類型
+        /// </summary>
+        /// <returns></returns>
+        public DataSet queryMacType(string mactypeno)
+        {
+            return printM.queryMacTypeByNo(mactypeno);
+        }
     }
 }

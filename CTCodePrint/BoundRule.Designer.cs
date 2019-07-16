@@ -62,7 +62,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 12);
             this.label2.TabIndex = 2;
-            this.label2.Text = "規則類型：";
+            this.label2.Text = "機種類型：";
             // 
             // comboBox2
             // 
@@ -80,7 +80,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(65, 12);
             this.label3.TabIndex = 4;
-            this.label3.Text = "幾種類型：";
+            this.label3.Text = "出貨料號：";
             // 
             // textBox1
             // 

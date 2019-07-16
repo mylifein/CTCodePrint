@@ -23,10 +23,10 @@ namespace BLL
         /// <param name="cusNo"></param>
         /// <param name="macNo"></param>
         /// <returns></returns>
-        public DataSet getRulesByNo(string cusNo,string macNo)
+        public DataSet getRulesByNo(string macNo)
         {
             DataSet ds = null;
-            ds = selectControl.getRuleByCus(cusNo, macNo);
+            ds = selectControl.getRuleByCus(macNo);
             if(ds.Tables.Count >0 && ds.Tables[0].Rows.Count > 0)
             {
                 string ruleNo = ds.Tables[0].Rows[0]["rule_no"].ToString();
@@ -35,13 +35,13 @@ namespace BLL
             return ds;
         }
         /// <summary>
-        /// 通過客戶編號獲取客戶機種類型
+        /// 通過客戶編號和出貨料號獲取客戶機種類型
         /// </summary>
         /// <param name="cusNo"></param>
         /// <returns></returns>
-        public DataSet getMacByCus(string cusNo)
+        public DataSet getMacByCus(string cusNo,string delmatno)
         {
-            DataSet ds = selectControl.getMacTypeByCus(cusNo);
+            DataSet ds = selectControl.getMacTypeByCus(cusNo,delmatno);
             return ds;
         }
 

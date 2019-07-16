@@ -1,19 +1,19 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Model
 {
-    public class RuleItem
+    public class ModelInfo
     {
         private string _uuid;
-        private string _ruleno;
-        private string _seqno;
-        private string _ruletype;
-        private string _rulevalue;
-        private string _rulelength;
+        private string _modelno;
+        private string _modelname;
+        private string _modeldesc;
+        private string _modelpath;
+        private string _manno;
         private string _opuser;
         private string _createtime;
         private string _updatetime;
@@ -32,68 +32,68 @@ namespace Model
             }
         }
 
-        public string Ruleno
+        public string Modelno
         {
             get
             {
-                return _ruleno;
+                return _modelno;
             }
 
             set
             {
-                _ruleno = value;
+                _modelno = value;
             }
         }
 
-        public string Seqno
+        public string Modelname
         {
             get
             {
-                return _seqno;
+                return _modelname;
             }
 
             set
             {
-                _seqno = value;
+                _modelname = value;
             }
         }
 
-        public string Ruletype
+        public string Modeldesc
         {
             get
             {
-                return _ruletype;
+                return _modeldesc;
             }
 
             set
             {
-                _ruletype = value;
+                _modeldesc = value;
             }
         }
 
-        public string Rulevalue
+        public string Modelpath
         {
             get
             {
-                return _rulevalue;
+                return _modelpath;
             }
 
             set
             {
-                _rulevalue = value;
+                _modelpath = value;
             }
         }
 
-        public string Rulelength
+        public string Manno
         {
             get
             {
-                return _rulelength;
+                return _manno;
             }
 
             set
             {
-                _rulelength = value;
+                _manno = value;
             }
         }
 

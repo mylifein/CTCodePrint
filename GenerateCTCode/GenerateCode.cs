@@ -21,7 +21,7 @@ namespace GenerateCTCode
             bool judgeSerial = false;                   //判断是否需要流水号
             List<CTCode> listCode = new List<CTCode>();
             StringBuilder ctCode = new StringBuilder();
-            DataSet ds = selectControl.getRulesByNo(ctCodeInfo.Cusno, ctCodeInfo.Mactype);
+            DataSet ds = selectControl.getRulesByNo(ctCodeInfo.Mactype);
             foreach (DataRow dr in ds.Tables[0].Rows)
             {
                 string ruleType = dr["rule_type"].ToString();

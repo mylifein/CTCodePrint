@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    public class CusRule
+    public class MandatoryInfo
     {
         private string _uuid;
-        private string _cusno;
-        private string _delmatno;
-        private string _mactypeno;
+        private string _manno;
+        private string _mandesc;
+        private string _ctcodem;
         private string _opuser;
         private string _createtime;
         private string _updatetime;
@@ -30,22 +30,44 @@ namespace Model
             }
         }
 
-        public string Cusno
+        public string Manno
         {
             get
             {
-                return _cusno;
+                return _manno;
             }
 
             set
             {
-                _cusno = value;
+                _manno = value;
             }
         }
 
+        public string Mandesc
+        {
+            get
+            {
+                return _mandesc;
+            }
 
+            set
+            {
+                _mandesc = value;
+            }
+        }
 
+        public string Ctcodem
+        {
+            get
+            {
+                return _ctcodem;
+            }
 
+            set
+            {
+                _ctcodem = value;
+            }
+        }
 
         public string Opuser
         {
@@ -96,32 +118,6 @@ namespace Model
             set
             {
                 _delflag = value;
-            }
-        }
-
-        public string Delmatno
-        {
-            get
-            {
-                return _delmatno;
-            }
-
-            set
-            {
-                _delmatno = value;
-            }
-        }
-
-        public string Mactypeno
-        {
-            get
-            {
-                return _mactypeno;
-            }
-
-            set
-            {
-                _mactypeno = value;
             }
         }
     }

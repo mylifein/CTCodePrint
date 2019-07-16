@@ -26,18 +26,14 @@ namespace DAL
         /// <param name="cusNo"></param>
         /// <param name="macNo"></param>
         /// <returns></returns>
-        public DataSet getRuleByCus(string cusNo,string macType)
+        public DataSet getRuleByCus(string macType)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select * from t_cus_codrule where cus_no=@cusNo and cus_mactype=@macType");
+            strSql.Append("select * from t_mactype_info where mactypeno=@macType");
             MySqlParameter[] parameters = {
-                new MySqlParameter("@cusNo", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@macType", MySqlDbType.VarChar, 900)
             };
-
-            parameters[0].Value = cusNo.Trim();
-            parameters[1].Value = macType.Trim();
-
+            parameters[0].Value = macType;
             DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text,strSql.ToString(),parameters);
 
             return ds;
@@ -48,16 +44,17 @@ namespace DAL
         /// </summary>
         /// <param name="cusNo"></param>
         /// <returns></returns>
-        public DataSet getMacTypeByCus(string cusNo)
+        public DataSet getMacTypeByCus(string cusNo,string delmatno)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select * from t_cus_codrule where cus_no=@cusNo");
+            strSql.Append("select * from t_cus_codrule where cus_no=@cusNo and del_matno=@delmatno");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@cusNo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@delmatno", MySqlDbType.VarChar, 900)
             };
 
-            parameters[0].Value = cusNo.Trim();
-
+            parameters[0].Value = cusNo;
+            parameters[1].Value = delmatno;
             DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
 
             return ds;

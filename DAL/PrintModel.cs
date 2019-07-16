@@ -374,20 +374,20 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_cus_codrule (uuid,cus_no,cus_mactype,rule_no,op_user,create_time)");
-            strSql.Append("values(@uuid,@cus_no,@cus_mactype,@rule_no,@opuser,@createtime)");
+            strSql.Append("insert into t_cus_codrule (uuid,cus_no,del_matno,mactypeno,op_user,create_time)");
+            strSql.Append("values(@uuid,@cusno,@delmatno,@mactypeno,@opuser,@createtime)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@cus_no", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@cus_mactype", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@rule_no", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cusno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@delmatno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@mactypeno", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
             };
             parameters[0].Value = cusRule.Uuid;
             parameters[1].Value = cusRule.Cusno;
-            parameters[2].Value = cusRule.Cusmactype;
-            parameters[3].Value = cusRule.Ruleno;
+            parameters[2].Value = cusRule.Delmatno;
+            parameters[3].Value = cusRule.Mactypeno;
             parameters[4].Value = cusRule.Opuser;
             parameters[5].Value = cusRule.Createtime;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
@@ -401,5 +401,185 @@ namespace DAL
             }
             return saveMark;
         }
+
+
+        /// <summary>
+        /// 保存打印模板必填字段
+        /// </summary>
+        /// <param name="mandaInfo"></param>
+        /// <returns></returns>
+        public bool saveMandatory(MandatoryInfo mandaInfo)
+        {
+            bool saveMark = true;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into t_mandatory_info (uuid,man_desc,ctcode_m,op_user,create_time)");
+            strSql.Append("values(@uuid,@mandesc,@ctcodem,@opuser,@createtime)");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@mandesc", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@ctcodem", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = mandaInfo.Uuid;
+            parameters[1].Value = mandaInfo.Mandesc;
+            parameters[2].Value = mandaInfo.Ctcodem;
+            parameters[3].Value = mandaInfo.Opuser;
+            parameters[4].Value = mandaInfo.Createtime;
+            int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                saveMark = true;
+            }
+            else
+            {
+                saveMark = false;
+            }
+            return saveMark;
+        }
+        
+        /// <summary>
+        /// 查詢打印字段規則
+        /// </summary>
+        /// <param name="manNo"></param>
+        /// <returns></returns>
+        public DataSet queryMandatory(string manNo)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_mandatory_info where man_no like @manNo");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@manNo", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = "%" + manNo + "%";
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
+        }
+
+
+        /// <summary>
+        /// 保存模板信息
+        /// </summary>
+        /// <param name="modelInfo"></param>
+        /// <returns></returns>
+        public bool saveModelInfo(ModelInfo modelInfo)
+        {
+            bool saveMark = true;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into t_model_info (uuid,model_name,model_desc,man_no,op_user,create_time)");
+            strSql.Append("values(@uuid,@modelname,@modeldesc,@manno,@opuser,@createtime)");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@modelname", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@modeldesc", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@manno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = modelInfo.Uuid;
+            parameters[1].Value = modelInfo.Modelname;
+            parameters[2].Value = modelInfo.Modeldesc;
+            parameters[3].Value = modelInfo.Manno;
+            parameters[4].Value = modelInfo.Opuser;
+            parameters[5].Value = modelInfo.Createtime;
+            int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                saveMark = true;
+            }
+            else
+            {
+                saveMark = false;
+            }
+            return saveMark;
+        }
+
+        /// <summary>
+        /// 根據uuid查詢打印模板信息
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <returns></returns>
+        public DataSet queryModelById(string uuid)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_model_info where uuid=@uuid");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = uuid;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
+        }
+
+        /// <summary>
+        /// 保存機種類型信息
+        /// </summary>
+        /// <param name="mactypeinfo"></param>
+        /// <returns></returns>
+        public bool saveMacTypeInfo(MacTypeInfo mactypeinfo)
+        {
+            bool saveMark = true;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into t_mactype_info (uuid,mactypename,mactypedesc,rule_no,op_user,create_time)");
+            strSql.Append("values(@uuid,@mactypename,@mactypedesc,@ruleno,@opuser,@createtime)");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@mactypename", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@mactypedesc", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@ruleno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = mactypeinfo.Uuid;
+            parameters[1].Value = mactypeinfo.Mactypename;
+            parameters[2].Value = mactypeinfo.Mactypedesc;
+            parameters[3].Value = mactypeinfo.Ruleno;
+            parameters[4].Value = mactypeinfo.Opuser;
+            parameters[5].Value = mactypeinfo.Createtime;
+            int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                saveMark = true;
+            }
+            else
+            {
+                saveMark = false;
+            }
+            return saveMark;
+        }
+
+        /// <summary>
+        /// 根據UUID 查詢模板信息
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <returns></returns>
+        public DataSet queryMacTypeById(string uuid)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_mactype_info where uuid=@uuid");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = uuid;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
+        }
+
+        /// <summary>
+        /// 根據機種類型編號，模糊查詢
+        /// </summary>
+        /// <param name="mactypeno"></param>
+        /// <returns></returns>
+        public DataSet queryMacTypeByNo(string mactypeno)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_mactype_info where mactypeno like @mactypeno");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@mactypeno", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = "%" + mactypeno + "%";
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
+        }
+
     }
 }
