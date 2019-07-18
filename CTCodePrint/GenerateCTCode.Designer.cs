@@ -58,6 +58,8 @@
             this.button2 = new System.Windows.Forms.Button();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -321,11 +323,20 @@
             this.label14.TabIndex = 32;
             this.label14.Text = "產生CT數：";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(64, 384);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(474, 203);
+            this.pictureBox1.TabIndex = 34;
+            this.pictureBox1.TabStop = false;
+            // 
             // GenerateCTCode
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1062, 538);
+            this.ClientSize = new System.Drawing.Size(1062, 599);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.textBox7);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.button2);
@@ -359,6 +370,7 @@
             this.Name = "GenerateCTCode";
             this.Text = "GenerateCTCode";
             this.Load += new System.EventHandler(this.GenerateCTCode_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -396,5 +408,6 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,7 @@ namespace CTCodePrint
         private readonly OracleQueryB queryB = new OracleQueryB();
         private readonly BarCodePrint barPrint = BarCodePrint.getInstance();
         private GenerateCode generateC = new GenerateCode();
+        private string filePath = null;
 
         private void GenerateCTCode_Load(object sender, EventArgs e)
         {
@@ -178,7 +180,7 @@ namespace CTCodePrint
                 }
 
             }
-
+            File.Delete(filePath);
 
 
         }
@@ -202,6 +204,25 @@ namespace CTCodePrint
                         this.textBox9.Text = ds.Tables[0].Rows[0]["QUANTITY_COMPLETED"].ToString();      //completed quantity
                         this.textBox3.Text = ds.Tables[0].Rows[0]["ITEM_CODE"].ToString();          //delivery code
                         this.textBox7.Text = printQ.getGeneratedCTCount(workno);
+                        //打印預覽
+                        string modelNo = printQ.checkPrintModelRel(ds.Tables[0].Rows[0]["CUSTOMER_ID"].ToString(), ds.Tables[0].Rows[0]["ITEM_CODE"].ToString());
+                        if (modelNo == null || modelNo == "")
+                        {
+                            MessageBox.Show("未找到該客戶出貨料號對應的打印模板", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            this.textBox2.Focus();
+                            return;
+                        }
+                        DataSet modelDs = printQ.getModelInfo(modelNo);
+                        if (ds == null || modelDs.Tables[0].Rows.Count < 1)
+                        {
+                            MessageBox.Show("未找到該客戶出貨料號對應的打印模板信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            this.textBox2.Focus();
+                            return;
+                        }
+                        string templateFile = System.IO.Directory.GetCurrentDirectory() + "\\" + ds.Tables[0].Rows[0]["model_name"].ToString();
+                        filePath = barPrint.PreviewPrintBC(templateFile);
+                        this.pictureBox1.Load(filePath);
+
                     }
                 }
                 ds = queryB.getCusMatInfo(workno);
