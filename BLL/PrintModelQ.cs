@@ -335,5 +335,41 @@ namespace BLL
         {
             return printM.queryMacTypeByNo(mactypeno);
         }
+
+        /// <summary>
+        /// 模糊查詢所有模板信息
+        /// </summary>
+        /// <returns></returns>
+        public DataSet queryModelInfo()
+        {
+            return printM.queryModelByModelNo("");
+        }
+
+        /// <summary>
+        /// 保存打印模板关系信息
+        /// </summary>
+        /// <param name="modelRelation"></param>
+        /// <returns></returns>
+        public bool saveBoundModel(ModelRelation modelRelation)
+        {
+            modelRelation.Uuid = Auxiliary.Get_UUID();
+            modelRelation.Createtime = DateTime.Now.ToString();
+            modelRelation.Opuser = Auxiliary.loginName;
+            return printM.saveModelRelation(modelRelation);
+        }
+
+        public bool queryRepeatInModelRel(string cusno,string delmatno)
+        {
+            bool queryMark = false;
+            string result = printM.getModelRelationCount(cusno, delmatno);
+            if(result != null && result != "")
+            {
+                if(result == "0")
+                {
+                    queryMark = true;
+                }
+            }
+            return queryMark;
+        }
     }
 }

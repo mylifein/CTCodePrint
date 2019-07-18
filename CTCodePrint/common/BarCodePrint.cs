@@ -95,5 +95,42 @@ namespace CTCodePrint.common
             return true;
 
         }
+        public string PreviewPrintBC(string templateFileName, PrintContent printContent, MandatoryField manF)
+        {
+            string filePath = null;
+            //未加載模板文件或者模板發生變更時，重新加載新的模板
+            if (lbl.Documents.Count == 0 || templateFileName.IndexOf(lbl.ActiveDocument.Name) == -1)
+            {
+                lbl.Documents.Open(templateFileName, false);// 调用设计好的label文件
+
+            }
+            Document doc = lbl.ActiveDocument;
+            try
+            {
+                if (manF.Ctcodem == "0")
+                {
+                    doc.Variables.FormVariables.Item("ctcode").Value = printContent.CtCode;   //给参数传值             可以不傳參數
+                }
+                filePath = "D:\\" + System.DateTime.Now.Year + System.DateTime.Now.Month + System.DateTime.Now.Day + System.DateTime.Now.Hour + System.DateTime.Now.Minute + System.DateTime.Now.Second + ".bmp";
+                string st = doc.CopyImageToFile(12, "BMP", 90, 60, filePath);
+                int Num = 1;                      //打印数量
+                //doc.Printer.SwitchTo(DefaultPrinter());
+                //doc.PrintLabel(1, 1, 1, Num, 1, "");
+                //doc.PrintDocument(Num);           //打印               
+
+            }
+            catch (Exception ex)
+            {
+                                          //返回,後面代碼不執行
+            }
+            finally
+            {
+                doc.FormFeed();
+            }
+            return filePath;
+
+        }
+
+
     }
 }

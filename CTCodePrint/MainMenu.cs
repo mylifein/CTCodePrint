@@ -86,5 +86,11 @@ namespace CTCodePrint
             BoundRule boundRule = new BoundRule();
             boundRule.Show();
         }
+
+        private void 模板綁定ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BoundModel boundModel = new BoundModel();
+            boundModel.Show();
+        }
     }
 }

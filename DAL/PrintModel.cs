@@ -511,6 +511,24 @@ namespace DAL
         }
 
         /// <summary>
+        /// 根據modelno模糊查詢
+        /// </summary>
+        /// <param name="modelno"></param>
+        /// <returns></returns>
+        public DataSet queryModelByModelNo(string modelno)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_model_info where model_no like @modelno");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@modelno", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = "%" + modelno + "%";
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
+        }
+
+
+        /// <summary>
         /// 保存機種類型信息
         /// </summary>
         /// <param name="mactypeinfo"></param>
@@ -580,6 +598,69 @@ namespace DAL
             DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             return ds;
         }
+
+        /// <summary>
+        /// 保存打印模板關係信息
+        /// </summary>
+        /// <param name="modelRelation"></param>
+        /// <returns></returns>
+        public bool saveModelRelation(ModelRelation modelRelation)
+        {
+            bool saveMark = true;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into t_model_rel (uuid,model_no,cus_no,del_matno,op_user,create_time)");
+            strSql.Append("values(@uuid,@modelno,@cusno,@delmatno,@opuser,@createtime)");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@modelno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cusno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@delmatno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = modelRelation.Uuid;
+            parameters[1].Value = modelRelation.Modelno;
+            parameters[2].Value = modelRelation.Cusno;
+            parameters[3].Value = modelRelation.Delmatno;
+            parameters[4].Value = modelRelation.Opuser;
+            parameters[5].Value = modelRelation.Createtime;
+            int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                saveMark = true;
+            }
+            else
+            {
+                saveMark = false;
+            }
+            return saveMark;
+        }
+
+        /// <summary>
+        /// 根據客戶編號和出貨料號判斷是否已經定義打印模板
+        /// </summary>
+        /// <param name="cusno"></param>
+        /// <param name="delmatno"></param>
+        /// <returns></returns>
+        public string getModelRelationCount(string cusno,string delmatno)
+        {
+            string countNo = "";
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from t_model_rel where cus_no=@cusno and del_matno=@delmatno");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@cusno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@delmatno", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = cusno;
+            parameters[1].Value = delmatno;
+            Object countDB = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (countDB != null && countDB != DBNull.Value)
+            {
+                countNo = countDB.ToString();
+            }
+            return countNo;
+        }
+
 
     }
 }

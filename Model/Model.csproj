@@ -47,6 +47,7 @@
     <Compile Include="MandatoryField.cs" />
     <Compile Include="MandatoryInfo.cs" />
     <Compile Include="ModelInfo.cs" />
+    <Compile Include="ModelRelation.cs" />
     <Compile Include="PrintContent.cs" />
     <Compile Include="PrintRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

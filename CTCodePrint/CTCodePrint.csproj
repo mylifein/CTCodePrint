@@ -72,6 +72,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auxiliary.cs" />
+    <Compile Include="BoundModel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BoundModel.Designer.cs">
+      <DependentUpon>BoundModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="BoundRule.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -144,6 +150,9 @@
       <DependentUpon>RuleConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="SQLHelper.cs" />
+    <EmbeddedResource Include="BoundModel.resx">
+      <DependentUpon>BoundModel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="BoundRule.resx">
       <DependentUpon>BoundRule.cs</DependentUpon>
     </EmbeddedResource>

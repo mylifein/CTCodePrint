@@ -97,7 +97,7 @@
             // 客戶配置ToolStripMenuItem
             // 
             this.客戶配置ToolStripMenuItem.Name = "客戶配置ToolStripMenuItem";
-            this.客戶配置ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.客戶配置ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.客戶配置ToolStripMenuItem.Text = "客戶配置";
             this.客戶配置ToolStripMenuItem.Click += new System.EventHandler(this.客戶配置ToolStripMenuItem_Click);
             // 
@@ -131,26 +131,27 @@
             this.模板綁定ToolStripMenuItem,
             this.模板信息維護ToolStripMenuItem});
             this.打印模板配置ToolStripMenuItem.Name = "打印模板配置ToolStripMenuItem";
-            this.打印模板配置ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.打印模板配置ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.打印模板配置ToolStripMenuItem.Text = "打印模板配置";
             // 
             // 模板字段配置ToolStripMenuItem
             // 
             this.模板字段配置ToolStripMenuItem.Name = "模板字段配置ToolStripMenuItem";
-            this.模板字段配置ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.模板字段配置ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.模板字段配置ToolStripMenuItem.Text = "模板字段配置";
             this.模板字段配置ToolStripMenuItem.Click += new System.EventHandler(this.模板字段配置ToolStripMenuItem_Click);
             // 
             // 模板綁定ToolStripMenuItem
             // 
             this.模板綁定ToolStripMenuItem.Name = "模板綁定ToolStripMenuItem";
-            this.模板綁定ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.模板綁定ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.模板綁定ToolStripMenuItem.Text = "模板綁定";
+            this.模板綁定ToolStripMenuItem.Click += new System.EventHandler(this.模板綁定ToolStripMenuItem_Click);
             // 
             // 模板信息維護ToolStripMenuItem
             // 
             this.模板信息維護ToolStripMenuItem.Name = "模板信息維護ToolStripMenuItem";
-            this.模板信息維護ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.模板信息維護ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.模板信息維護ToolStripMenuItem.Text = "模板信息維護";
             this.模板信息維護ToolStripMenuItem.Click += new System.EventHandler(this.模板信息維護ToolStripMenuItem_Click);
             // 
@@ -168,20 +169,20 @@
             // 機種信息維護ToolStripMenuItem
             // 
             this.機種信息維護ToolStripMenuItem.Name = "機種信息維護ToolStripMenuItem";
-            this.機種信息維護ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.機種信息維護ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.機種信息維護ToolStripMenuItem.Text = "機種信息維護";
             this.機種信息維護ToolStripMenuItem.Click += new System.EventHandler(this.機種信息維護ToolStripMenuItem_Click);
             // 
             // 機種信息查詢ToolStripMenuItem
             // 
             this.機種信息查詢ToolStripMenuItem.Name = "機種信息查詢ToolStripMenuItem";
-            this.機種信息查詢ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.機種信息查詢ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.機種信息查詢ToolStripMenuItem.Text = "機種信息查詢";
             // 
             // 機種信息綁定ToolStripMenuItem
             // 
             this.機種信息綁定ToolStripMenuItem.Name = "機種信息綁定ToolStripMenuItem";
-            this.機種信息綁定ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.機種信息綁定ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.機種信息綁定ToolStripMenuItem.Text = "機種信息綁定";
             // 
             // 客戶機種關係維護ToolStripMenuItem
