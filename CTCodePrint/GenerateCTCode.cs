@@ -213,13 +213,13 @@ namespace CTCodePrint
                             return;
                         }
                         DataSet modelDs = printQ.getModelInfo(modelNo);
-                        if (ds == null || modelDs.Tables[0].Rows.Count < 1)
+                        if (modelDs == null || modelDs.Tables[0].Rows.Count < 1)
                         {
                             MessageBox.Show("未找到該客戶出貨料號對應的打印模板信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             this.textBox2.Focus();
                             return;
                         }
-                        string templateFile = System.IO.Directory.GetCurrentDirectory() + "\\" + ds.Tables[0].Rows[0]["model_name"].ToString();
+                        string templateFile = System.IO.Directory.GetCurrentDirectory() + "\\" + modelDs.Tables[0].Rows[0]["model_name"].ToString();
                         filePath = barPrint.PreviewPrintBC(templateFile);
                         this.pictureBox1.Load(filePath);
 

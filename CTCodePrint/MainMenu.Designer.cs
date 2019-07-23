@@ -44,7 +44,6 @@
             this.客戶機種配置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.機種信息維護ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.機種信息查詢ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.機種信息綁定ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.客戶機種關係維護ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -113,14 +112,14 @@
             // 編碼規則查詢ToolStripMenuItem
             // 
             this.編碼規則查詢ToolStripMenuItem.Name = "編碼規則查詢ToolStripMenuItem";
-            this.編碼規則查詢ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.編碼規則查詢ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.編碼規則查詢ToolStripMenuItem.Text = "編碼規則查詢";
             this.編碼規則查詢ToolStripMenuItem.Click += new System.EventHandler(this.編碼規則查詢ToolStripMenuItem_Click);
             // 
             // 編碼規則創建ToolStripMenuItem
             // 
             this.編碼規則創建ToolStripMenuItem.Name = "編碼規則創建ToolStripMenuItem";
-            this.編碼規則創建ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.編碼規則創建ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.編碼規則創建ToolStripMenuItem.Text = "編碼規則創建";
             this.編碼規則創建ToolStripMenuItem.Click += new System.EventHandler(this.編碼規則創建ToolStripMenuItem_Click);
             // 
@@ -160,7 +159,6 @@
             this.客戶機種配置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.機種信息維護ToolStripMenuItem,
             this.機種信息查詢ToolStripMenuItem,
-            this.機種信息綁定ToolStripMenuItem,
             this.客戶機種關係維護ToolStripMenuItem});
             this.客戶機種配置ToolStripMenuItem.Name = "客戶機種配置ToolStripMenuItem";
             this.客戶機種配置ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
@@ -178,12 +176,6 @@
             this.機種信息查詢ToolStripMenuItem.Name = "機種信息查詢ToolStripMenuItem";
             this.機種信息查詢ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.機種信息查詢ToolStripMenuItem.Text = "機種信息查詢";
-            // 
-            // 機種信息綁定ToolStripMenuItem
-            // 
-            this.機種信息綁定ToolStripMenuItem.Name = "機種信息綁定ToolStripMenuItem";
-            this.機種信息綁定ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.機種信息綁定ToolStripMenuItem.Text = "機種信息綁定";
             // 
             // 客戶機種關係維護ToolStripMenuItem
             // 
@@ -226,7 +218,6 @@
         private System.Windows.Forms.ToolStripMenuItem 客戶機種配置ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 機種信息維護ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 機種信息查詢ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 機種信息綁定ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 客戶機種關係維護ToolStripMenuItem;
     }
 }
