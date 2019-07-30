@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CTCodePrint</RootNamespace>
     <AssemblyName>CTCodePrint</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <PublishUrl>publish\</PublishUrl>
@@ -27,6 +27,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -150,6 +151,12 @@
       <DependentUpon>RuleConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="SQLHelper.cs" />
+    <Compile Include="UploadFile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UploadFile.Designer.cs">
+      <DependentUpon>UploadFile.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="BoundModel.resx">
       <DependentUpon>BoundModel.cs</DependentUpon>
     </EmbeddedResource>
@@ -188,12 +195,16 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="ReprintCT.resx">
       <DependentUpon>ReprintCT.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RuleConfig.resx">
       <DependentUpon>RuleConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UploadFile.resx">
+      <DependentUpon>UploadFile.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

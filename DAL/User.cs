@@ -54,7 +54,7 @@ namespace DAL
             parameters[0].Value = Auxiliary.Get_UUID();
             parameters[1].Value = userId;
             parameters[2].Value = ipAddress;
-            parameters[3].Value = DateTime.Now.ToString();
+            parameters[3].Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {

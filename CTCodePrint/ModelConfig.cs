@@ -36,7 +36,19 @@ namespace CTCodePrint
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(this.textBox1.Text != null && this.textBox1.Text.Trim() != "")
+            if (this.textBox2.Text == null || this.textBox2.Text.Trim() == "")
+            {
+                MessageBox.Show("模板文件名不能為空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.textBox2.Focus();
+                return;
+            }
+            if (this.textBox3.Text == null || this.textBox3.Text.Trim() == "")
+            {
+                MessageBox.Show("模板描述不能為空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.textBox3.Focus();
+                return;
+            }
+            if (this.textBox1.Text != null && this.textBox1.Text.Trim() != "")
             {
                 MessageBox.Show("該模板已經保存成功,請勿重複保存！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;

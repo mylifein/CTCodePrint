@@ -661,6 +661,66 @@ namespace DAL
             return countNo;
         }
 
+        /// <summary>
+        /// 保存打印模板
+        /// </summary>
+        /// <param name="modelFile"></param>
+        /// <returns></returns>
+        public bool saveModelFile(ModelFile modelFile)
+        {
+            bool saveMark = true;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into t_model_file (uuid,fileName,fileDescription,fileAddress,op_user,create_time)");
+            strSql.Append("values(@uuid,@fileName,@fileDescription,@fileAddress,@opuser,@createtime)");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@fileName", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@fileDescription", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@fileAddress", MySqlDbType.LongBlob, 900),
+                new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = modelFile.Uuid;
+            parameters[1].Value = modelFile.Filename;
+            parameters[2].Value = modelFile.Filedescription;
+            parameters[3].Value = modelFile.Fileaddress;
+            parameters[4].Value = modelFile.Opuser;
+            parameters[5].Value = modelFile.Createtime;
+            int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                saveMark = true;
+            }
+            else
+            {
+                saveMark = false;
+            }
+            return saveMark;
+        }
+
+        public DataSet queryModelFile(string uuid)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_model_file where uuid=@uuid");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = uuid;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
+        }
+
+        public DataSet queryModelFileByNo(string fileNo)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_model_file where file_no like @fileNo");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@fileNo", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = "%" + fileNo + "%";
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
+        }
 
     }
 }

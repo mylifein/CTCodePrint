@@ -79,7 +79,7 @@ namespace BLL
         public bool saveCTCodeInfo(CTCode ctCode)
         {
             ctCode.Uuid = Auxiliary.Get_UUID();
-            ctCode.Createtime = DateTime.Now.ToString();
+            ctCode.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             ctCode.Opuser = Auxiliary.loginName;
             return printM.saveCTInfo(ctCode);
         }
@@ -112,7 +112,7 @@ namespace BLL
         public bool savePrintRecord(PrintRecord record)
         {
             record.Uuid = Auxiliary.Get_UUID();
-            record.Createtime = DateTime.Now.ToString();
+            record.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             record.Opuser = Auxiliary.loginName;
             return printM.savePrintRecord(record);
         }
@@ -143,9 +143,10 @@ namespace BLL
         /// </summary>
         /// <param name="codeRule"></param>
         /// <returns></returns>
-        public bool saveRuleInfo(CodeRule codeRule)
+        public string saveRuleInfo(CodeRule codeRule)
         {
             bool mark = false;
+            string saveResult = null;
             codeRule.Uuid = Auxiliary.Get_UUID();
             codeRule.Createtime = DateTime.Now.ToString();
             codeRule.Opuser = Auxiliary.loginName;
@@ -155,13 +156,19 @@ namespace BLL
                 foreach(RuleItem item in codeRule.RuleItem){
                     item.Uuid = Auxiliary.Get_UUID();
                     item.Ruleno = RuleNo;
-                    item.Createtime = DateTime.Now.ToString();
+                    item.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     item.Opuser = Auxiliary.loginName;
                     mark = printM.saveSaveRuleItem(item);
                 }
             }
-            return mark;
+            if (mark)
+            {
+                saveResult = printM.queryRuleByID(codeRule.Uuid);
+            }
+            return saveResult;
         }
+
+
 
         /// <summary>
         /// 根據規則號模糊查詢
@@ -222,7 +229,7 @@ namespace BLL
         public bool saveCusCodeRule(CusRule cusRule)
         {
             cusRule.Uuid = Auxiliary.Get_UUID();
-            cusRule.Createtime = DateTime.Now.ToString();
+            cusRule.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             cusRule.Opuser = Auxiliary.loginName;
             return printM.saveRuleRelation(cusRule);
         }
@@ -235,7 +242,7 @@ namespace BLL
         public bool saveManField(MandatoryInfo mandatoryF)
         {
             mandatoryF.Uuid = Auxiliary.Get_UUID();
-            mandatoryF.Createtime = DateTime.Now.ToString();
+            mandatoryF.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             mandatoryF.Opuser = Auxiliary.loginName;
             return printM.saveMandatory(mandatoryF);
         }
@@ -295,7 +302,7 @@ namespace BLL
         {
             MacTypeInfo reMacType = null;
             mactypeinfo.Uuid = Auxiliary.Get_UUID();
-            mactypeinfo.Createtime = DateTime.Now.ToString();
+            mactypeinfo.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             mactypeinfo.Opuser = Auxiliary.loginName;
             if (printM.saveMacTypeInfo(mactypeinfo))
             {
@@ -353,7 +360,7 @@ namespace BLL
         public bool saveBoundModel(ModelRelation modelRelation)
         {
             modelRelation.Uuid = Auxiliary.Get_UUID();
-            modelRelation.Createtime = DateTime.Now.ToString();
+            modelRelation.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             modelRelation.Opuser = Auxiliary.loginName;
             return printM.saveModelRelation(modelRelation);
         }
@@ -370,6 +377,20 @@ namespace BLL
                 }
             }
             return queryMark;
+        }
+
+
+        public ModelFile saveModelFile(ModelFile modelFile)
+        {
+            ModelFile reModelFile = null;
+            modelFile.Uuid = Auxiliary.Get_UUID();
+            modelFile.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            modelFile.Opuser = Auxiliary.loginName;
+            if (printM.saveModelFile(modelFile))
+            {
+                //reModelFile = queryMacTypeInfo(modelFile.Uuid);
+            }
+            return reModelFile;
         }
     }
 }

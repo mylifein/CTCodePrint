@@ -45,7 +45,7 @@ namespace CTCodePrint
         {
             if(this.textBox1.Text == null || this.textBox1.Text.Trim() == "")
             {
-                MessageBox.Show("規則已經綁定成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("出貨料號不能為空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.textBox1.Focus();
                 return;
             }

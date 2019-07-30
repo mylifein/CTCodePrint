@@ -45,6 +45,7 @@
             this.機種信息維護ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.機種信息查詢ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.客戶機種關係維護ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.模板上傳ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -128,7 +129,8 @@
             this.打印模板配置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.模板字段配置ToolStripMenuItem,
             this.模板綁定ToolStripMenuItem,
-            this.模板信息維護ToolStripMenuItem});
+            this.模板信息維護ToolStripMenuItem,
+            this.模板上傳ToolStripMenuItem});
             this.打印模板配置ToolStripMenuItem.Name = "打印模板配置ToolStripMenuItem";
             this.打印模板配置ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.打印模板配置ToolStripMenuItem.Text = "打印模板配置";
@@ -184,6 +186,13 @@
             this.客戶機種關係維護ToolStripMenuItem.Text = "客戶機種關係維護";
             this.客戶機種關係維護ToolStripMenuItem.Click += new System.EventHandler(this.客戶機種關係維護ToolStripMenuItem_Click);
             // 
+            // 模板上傳ToolStripMenuItem
+            // 
+            this.模板上傳ToolStripMenuItem.Name = "模板上傳ToolStripMenuItem";
+            this.模板上傳ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.模板上傳ToolStripMenuItem.Text = "模板上傳";
+            this.模板上傳ToolStripMenuItem.Click += new System.EventHandler(this.模板上傳ToolStripMenuItem_Click);
+            // 
             // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -219,6 +228,7 @@
         private System.Windows.Forms.ToolStripMenuItem 機種信息維護ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 機種信息查詢ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 客戶機種關係維護ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 模板上傳ToolStripMenuItem;
     }
 }
 

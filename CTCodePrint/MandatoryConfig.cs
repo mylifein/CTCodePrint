@@ -45,7 +45,13 @@ namespace CTCodePrint
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(this.textBox1.Text == null)
+            if (this.textBox2.Text == null || this.textBox2.Text.Trim() == "")
+            {
+                MessageBox.Show("必填描述不能為空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.textBox2.Focus();
+                return;
+            }
+            if (this.textBox1.Text == null)
             {
                 MessageBox.Show("该模板必填规则已经保存！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }else

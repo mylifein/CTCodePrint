@@ -26,7 +26,7 @@ namespace CTCodePrint
             string queryValue = this.textBox1.Text;
             CodeRule codeR = printM.queryCodeByNo(queryValue);
             DataSet ds = selectQ.getRulesByRuleNo(queryValue);
-            if (codeR != null )
+            if (codeR != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
                 this.textBox2.Text = codeR.RuleDesc;
                 this.textBox3.Text = codeR.Opuser;

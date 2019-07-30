@@ -72,6 +72,7 @@ namespace CTCodePrint
             CTCode ctCodeInfo = new CTCode();
             ctCodeInfo.Workno = this.textBox1.Text.Trim();           //workNo
             ctCodeInfo.Cuspo = this.textBox2.Text.Trim();            //Cuspo
+
             ctCodeInfo.Delmatno = this.textBox3.Text.Trim();        //string deliveryMat
             ctCodeInfo.Cusno = this.textBox11.Text.Trim();          //customer number 
             ctCodeInfo.Offino = this.textBox6.Text.Trim();  //officialNo
@@ -180,7 +181,6 @@ namespace CTCodePrint
                 }
 
             }
-            File.Delete(filePath);
 
 
         }
@@ -198,11 +198,11 @@ namespace CTCodePrint
                     if (ds.Tables[0].Rows.Count > 0)
                     {
                         this.textBox2.Text = ds.Tables[0].Rows[0]["CUST_PO_NUMBER"].ToString();     //PO
-                        this.textBox11.Text = ds.Tables[0].Rows[0]["CUSTOMER_ID"].ToString();      //customer number 
                         this.textBox10.Text = ds.Tables[0].Rows[0]["CUST_NAME"].ToString();     //customer name
                         this.textBox4.Text = ds.Tables[0].Rows[0]["START_QUANTITY"].ToString();      //work number quantity
                         this.textBox9.Text = ds.Tables[0].Rows[0]["QUANTITY_COMPLETED"].ToString();      //completed quantity
                         this.textBox3.Text = ds.Tables[0].Rows[0]["ITEM_CODE"].ToString();          //delivery code
+                        this.textBox11.Text = ds.Tables[0].Rows[0]["CUSTOMER_ID"].ToString();      //customer number 
                         this.textBox7.Text = printQ.getGeneratedCTCount(workno);
                         //打印預覽
                         string modelNo = printQ.checkPrintModelRel(ds.Tables[0].Rows[0]["CUSTOMER_ID"].ToString(), ds.Tables[0].Rows[0]["ITEM_CODE"].ToString());
@@ -251,7 +251,7 @@ namespace CTCodePrint
         private void textBox11_TextChanged(object sender, EventArgs e)
         {
             string comboxValue = this.textBox11.Text;
-            string delmatno = this.textBox2.Text == null ? "" : this.textBox2.Text.Trim();
+            string delmatno = this.textBox3.Text == null ? "" : this.textBox3.Text.Trim();
             DataSet ds = selectQ.getMacByCus(comboxValue,delmatno);
             DataTable itemTable = null;
             string mactypeno = null;

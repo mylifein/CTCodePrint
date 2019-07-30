@@ -92,5 +92,11 @@ namespace CTCodePrint
             BoundModel boundModel = new BoundModel();
             boundModel.Show();
         }
+
+        private void 模板上傳ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UploadFile uploadFile = new UploadFile();
+            uploadFile.Show();
+        }
     }
 }

@@ -111,6 +111,22 @@ namespace CTCodePrint
 
         private void button2_Click(object sender, EventArgs e)
         {
+            if(this.textBox2.Text == null || this.textBox2.Text.Trim() == "")
+            {
+                MessageBox.Show("規則描述不能為空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.textBox2.Focus();
+                return;
+            }
+            if(this.dataGridView1.RowCount == 0)
+            {
+                MessageBox.Show("規則不能為空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            if (this.textBox1.Text != null && this.textBox1.Text.Trim() != "")
+            {
+                MessageBox.Show("該規則已經保存，請勿重複保存！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
             CodeRule codeR = new CodeRule();
             codeR.RuleDesc = this.textBox2.Text;
             List<RuleItem> list = new List<RuleItem>();
@@ -124,8 +140,10 @@ namespace CTCodePrint
                 list.Add(ruleItem);
             }
             codeR.RuleItem = list;
-            if (printQ.saveRuleInfo(codeR))
+            string saveResult = printQ.saveRuleInfo(codeR);
+            if (saveResult != null)
             {
+                this.textBox1.Text = saveResult;
                 MessageBox.Show("保存成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
