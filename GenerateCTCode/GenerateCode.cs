@@ -363,6 +363,7 @@ namespace GenerateCTCode
             ctCode1.Workno = ctCode2.Workno;
             ctCode1.Cusno = ctCode2.Cusno;
             ctCode1.Cuspo = ctCode2.Cuspo;
+            ctCode1.Orderqty = ctCode1.Orderqty;
             ctCode1.Cusmatno = ctCode2.Cusmatno;
             ctCode1.Opuser = Auxiliary.loginName;
             ctCode1.Woquantity = ctCode2.Woquantity;

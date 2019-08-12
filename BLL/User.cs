@@ -18,6 +18,11 @@ namespace BLL
         {
             return userDAL.saveLoginInfo(username,ipAddress);
         }
+
+        public Model.User queryByUsername(string username)
+        {
+            return userDAL.queryUser(username);
+        }
     }
 
 }

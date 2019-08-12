@@ -33,8 +33,7 @@ namespace CTCodePrint
         private void GenerateCTCode_Load(object sender, EventArgs e)
         {
 
-           
-            
+                       
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -55,7 +54,7 @@ namespace CTCodePrint
             if (this.textBox11.Text == null || this.textBox11.Text.Trim() == "")
             {
                 MessageBox.Show("請在本系統維護客戶信息！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.textBox11.Focus();
+                this.textBox11.Focus(); 
                 return;
             }
             if (this.comboBox2.SelectedValue == null || this.comboBox2.SelectedValue.ToString() == "")
@@ -63,7 +62,7 @@ namespace CTCodePrint
                 MessageBox.Show("請在本系統維護客戶和幾種類型關係！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            int printQty = int.Parse(this.textBox4.Text.Trim().ToString()) - int.Parse(printQ.getGeneratedCTCount(this.textBox1.Text.Trim()));
+            int printQty = int.Parse(this.textBox2.Text.Trim().ToString()) - int.Parse(this.getCountCT(this.textBox1.Text.Trim()));
             if (printQty <= 0)
             {
                 MessageBox.Show("此工單已經生成所需數量的CT碼！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -71,13 +70,13 @@ namespace CTCodePrint
             }
             CTCode ctCodeInfo = new CTCode();
             ctCodeInfo.Workno = this.textBox1.Text.Trim();           //workNo
-            ctCodeInfo.Cuspo = this.textBox2.Text.Trim();            //Cuspo
-
+            ctCodeInfo.Cuspo = this.comboBox1.SelectedText == null ? "" : this.comboBox1.SelectedText.ToString().Trim();            //Cuspo
+            ctCodeInfo.Orderqty = this.textBox2.Text.Trim();        //order qty
             ctCodeInfo.Delmatno = this.textBox3.Text.Trim();        //string deliveryMat
             ctCodeInfo.Cusno = this.textBox11.Text.Trim();          //customer number 
             ctCodeInfo.Offino = this.textBox6.Text.Trim();  //officialNo
             ctCodeInfo.Mactype = this.comboBox2.SelectedValue == null ? "" : this.comboBox2.SelectedValue.ToString().Trim();  //macType
-            ctCodeInfo.Verno = this.comboBox3.SelectedValue.ToString().Trim();      //version number
+            ctCodeInfo.Verno = this.comboBox3.SelectedValue == null ? "" : this.comboBox3.SelectedValue.ToString().Trim();      //version number
             ctCodeInfo.Woquantity = this.textBox4.Text.Trim();  //wnquantity
             ctCodeInfo.Completedqty = this.textBox9.Text.Trim();    //completed quantity
             ctCodeInfo.Cusmatno = this.comboBox4.SelectedValue == null ? "" : this.comboBox4.SelectedValue.ToString().Trim();   //customer material number 
@@ -196,27 +195,31 @@ namespace CTCodePrint
                 if (ds != null && ds.Tables.Count > 0)
                 {
                     if (ds.Tables[0].Rows.Count > 0)
-                    {
-                        this.textBox2.Text = ds.Tables[0].Rows[0]["CUST_PO_NUMBER"].ToString();     //PO
+                    {                            
+                        this.comboBox1.DataSource = ds.Tables[0];                               
+                        this.comboBox1.DisplayMember = "CUST_PO_NUMBER";                        //PO                    
+                        this.comboBox1.ValueMember = "ORDER_QTY";                               //QTY
                         this.textBox10.Text = ds.Tables[0].Rows[0]["CUST_NAME"].ToString();     //customer name
                         this.textBox4.Text = ds.Tables[0].Rows[0]["START_QUANTITY"].ToString();      //work number quantity
                         this.textBox9.Text = ds.Tables[0].Rows[0]["QUANTITY_COMPLETED"].ToString();      //completed quantity
                         this.textBox3.Text = ds.Tables[0].Rows[0]["ITEM_CODE"].ToString();          //delivery code
                         this.textBox11.Text = ds.Tables[0].Rows[0]["CUSTOMER_ID"].ToString();      //customer number 
-                        this.textBox7.Text = printQ.getGeneratedCTCount(workno);
+
+                        this.textBox7.Text = this.getCountCT(workno);                //CT Count
+                        this.textBox2.Text = ds.Tables[0].Rows[0]["ORDER_QTY"].ToString();      //PO QTY
                         //打印預覽
                         string modelNo = printQ.checkPrintModelRel(ds.Tables[0].Rows[0]["CUSTOMER_ID"].ToString(), ds.Tables[0].Rows[0]["ITEM_CODE"].ToString());
                         if (modelNo == null || modelNo == "")
                         {
                             MessageBox.Show("未找到該客戶出貨料號對應的打印模板", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            this.textBox2.Focus();
+                            this.textBox1.Focus();
                             return;
                         }
                         DataSet modelDs = printQ.getModelInfo(modelNo);
                         if (modelDs == null || modelDs.Tables[0].Rows.Count < 1)
                         {
                             MessageBox.Show("未找到該客戶出貨料號對應的打印模板信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            this.textBox2.Focus();
+                            this.textBox1.Focus();
                             return;
                         }
                         string templateFile = System.IO.Directory.GetCurrentDirectory() + "\\" + modelDs.Tables[0].Rows[0]["model_name"].ToString();
@@ -277,8 +280,27 @@ namespace CTCodePrint
             this.suspendB = true;
         }
 
+        private void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            if(this.comboBox1.SelectedText != null && this.comboBox1.SelectedText.ToString().Trim() != "")
+            {
+                this.textBox2.Text = this.comboBox1.SelectedValue.ToString().Trim();
+                this.textBox7.Text = this.getCountCT(this.textBox1.Text);
+            }
+        }
 
-
-
+        private string getCountCT(string workno)
+        {
+            string countCT = "";
+            if (this.comboBox1.SelectedText != null && this.comboBox1.SelectedText.Trim() != "")
+            {
+                countCT = printQ.getGeneratedCTCountByPO(workno, this.comboBox1.SelectedText.Trim());
+            }
+            else
+            {
+                countCT = printQ.getGeneratedCTCount(workno);
+            }
+            return countCT;
+        }
     }
 }

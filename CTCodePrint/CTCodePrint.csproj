@@ -88,6 +88,18 @@
     <Compile Include="common\BarCodePrint.cs" />
     <Compile Include="common\BCPrint.cs" />
     <Compile Include="common\LocalIP.cs" />
+    <Compile Include="CreateMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateMenu.Designer.cs">
+      <DependentUpon>CreateMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateRole.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateRole.Designer.cs">
+      <DependentUpon>CreateRole.cs</DependentUpon>
+    </Compile>
     <Compile Include="CreateRules.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -144,6 +156,18 @@
     <Compile Include="ReprintCT.Designer.cs">
       <DependentUpon>ReprintCT.cs</DependentUpon>
     </Compile>
+    <Compile Include="RoleRelMenuConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RoleRelMenuConfig.Designer.cs">
+      <DependentUpon>RoleRelMenuConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RoleRelUserConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RoleRelUserConfig.Designer.cs">
+      <DependentUpon>RoleRelUserConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="RuleConfig.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -162,6 +186,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BoundRule.resx">
       <DependentUpon>BoundRule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateMenu.resx">
+      <DependentUpon>CreateMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateRole.resx">
+      <DependentUpon>CreateRole.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CreateRules.resx">
       <DependentUpon>CreateRules.cs</DependentUpon>
@@ -199,6 +229,12 @@
     </Compile>
     <EmbeddedResource Include="ReprintCT.resx">
       <DependentUpon>ReprintCT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RoleRelMenuConfig.resx">
+      <DependentUpon>RoleRelMenuConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RoleRelUserConfig.resx">
+      <DependentUpon>RoleRelUserConfig.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RuleConfig.resx">
       <DependentUpon>RuleConfig.cs</DependentUpon>

@@ -14,6 +14,7 @@ namespace Model
         private string _workno;
         private string _cusno;
         private string _cuspo;
+        private string _orderqty;
         private string _cusmatno;
         private string _delmatno;
         private string _mactype;
@@ -258,6 +259,19 @@ namespace Model
             set
             {
                 _modelno = value;
+            }
+        }
+
+        public string Orderqty
+        {
+            get
+            {
+                return _orderqty;
+            }
+
+            set
+            {
+                _orderqty = value;
             }
         }
     }

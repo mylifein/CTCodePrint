@@ -19,7 +19,7 @@ namespace DAL
         public DataSet getWorkNoInofo(string workno)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT MWORK.ORGANIZATION_ID,MWORK.WIP_ENTITY_NAME,MWORK.START_QUANTITY,MWORK.QUANTITY_COMPLETED,MWORK.SO_ORDER,MWORK.ITEM_CODE,MWORK.ITEM_DESC,MWORK.CUST_PO_NUMBER,MWORK.CUSTOMER_ID,MWORK.CUST_NAME FROM MES_WORKINFO_V  MWORK WHERE MWORK.ORGANIZATION_ID = '385' AND MWORK.WIP_ENTITY_NAME =:workno");
+            strSql.Append("SELECT MWORK.ORGANIZATION_ID,MWORK.WIP_ENTITY_NAME,MWORK.START_QUANTITY,MWORK.QUANTITY_COMPLETED,MWORK.SO_ORDER,MWORK.ITEM_CODE,MWORK.ITEM_DESC,MWORK.CUST_PO_NUMBER,MWORK.CUSTOMER_ID,MWORK.CUST_NAME,MWORK.ORDER_QTY FROM MES_WORKINFO_V  MWORK WHERE MWORK.ORGANIZATION_ID = '385' AND MWORK.WIP_ENTITY_NAME =:workno");
             OracleParameter[] parameters =
             {
                 new OracleParameter(":workno",OracleDbType.Varchar2,900)
@@ -59,6 +59,7 @@ namespace DAL
             DataSet ds = OracleSQLHelper.ExecuteDataset(OracleSQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             return ds;
         }
+
 
 
     }

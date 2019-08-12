@@ -111,8 +111,8 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_code_info (uuid,ct_code,rule_no,work_no,cus_no,cus_po,cus_matno,del_matno,mac_type,offi_no,ver_no,wo_quantity,completed_qty,model_no,op_user,create_time)");
-            strSql.Append("values(@uuid,@ctcode,@ruleno,@workno,@cusno,@cuspo,@cusmatno,@delmatno,@mac_type,@offino,@verno,@woquantity,@completedQty,@model_no,@opuser,@createtime)");
+            strSql.Append("insert into t_code_info (uuid,ct_code,rule_no,work_no,cus_no,cus_po,po_qty,cus_matno,del_matno,mac_type,offi_no,ver_no,wo_quantity,completed_qty,model_no,op_user,create_time)");
+            strSql.Append("values(@uuid,@ctcode,@ruleno,@workno,@cusno,@cuspo,@poqty,@cusmatno,@delmatno,@mac_type,@offino,@verno,@woquantity,@completedQty,@model_no,@opuser,@createtime)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@ctcode", MySqlDbType.VarChar, 900),
@@ -129,7 +129,8 @@ namespace DAL
                 new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@completedQty", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@model_no", MySqlDbType.VarChar, 900)
+                new MySqlParameter("@model_no", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@poqty", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = ctCode.Uuid;
             parameters[1].Value = ctCode.Ctcode;
@@ -147,6 +148,7 @@ namespace DAL
             parameters[13].Value = ctCode.Createtime;
             parameters[14].Value = ctCode.Completedqty;
             parameters[15].Value = ctCode.Modelno;
+            parameters[16].Value = ctCode.Orderqty;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
@@ -194,6 +196,31 @@ namespace DAL
                 new MySqlParameter("@workno", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = workno;
+            Object countDB = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (countDB != null && countDB != DBNull.Value)
+            {
+                countNo = countDB.ToString();
+            }
+            return countNo;
+        }
+
+        /// <summary>
+        /// 根據工單和PO查詢已經產生CT數量
+        /// </summary>
+        /// <param name="workno"></param>
+        /// <param name="po"></param>
+        /// <returns></returns>
+        public string getCTCountByPO(string workno,string po)
+        {
+            string countNo = "";
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from t_code_info where work_no=@workno and cus_po=@po");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@workno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@po", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = workno;
+            parameters[1].Value = po;
             Object countDB = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (countDB != null && countDB != DBNull.Value)
             {
@@ -455,6 +482,22 @@ namespace DAL
             return ds;
         }
 
+        /// <summary>
+        /// 根據uuid查詢必填字段
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <returns></returns>
+        public DataSet queryMandatoryById(string uuid)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_mandatory_info where uuid=@uuid");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = uuid;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
+        }
 
         /// <summary>
         /// 保存模板信息
@@ -698,6 +741,11 @@ namespace DAL
             return saveMark;
         }
 
+        /// <summary>
+        /// 通過uuid查詢保存的模板
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <returns></returns>
         public DataSet queryModelFile(string uuid)
         {
             StringBuilder strSql = new StringBuilder();
@@ -710,6 +758,11 @@ namespace DAL
             return ds;
         }
 
+        /// <summary>
+        /// 通過模板號查詢信息
+        /// </summary>
+        /// <param name="fileNo"></param>
+        /// <returns></returns>
         public DataSet queryModelFileByNo(string fileNo)
         {
             StringBuilder strSql = new StringBuilder();
@@ -722,5 +775,6 @@ namespace DAL
             return ds;
         }
 
+        
     }
 }

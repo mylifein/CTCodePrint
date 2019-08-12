@@ -1,4 +1,7 @@
-﻿using System;
+﻿using BLL;
+using DBUtility;
+using Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,6 +20,7 @@ namespace CTCodePrint
             InitializeComponent();
         }
 
+        private readonly RoleRelMenuService roleRelMenuService = new RoleRelMenuService();
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
 
@@ -24,9 +28,7 @@ namespace CTCodePrint
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
-
-
+            this.disableMenuItems();
         }
 
         private void 产生CT码ToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -97,6 +99,54 @@ namespace CTCodePrint
         {
             UploadFile uploadFile = new UploadFile();
             uploadFile.Show();
+        }
+
+        private void MenuCreateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateMenu createMenu = new CreateMenu();
+            createMenu.Show();
+        }
+
+        private void 創建角色ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateRole createRole = new CreateRole();
+            createRole.Show();
+        }
+
+        private void 分配菜單ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RoleRelMenuConfig roleRelMenuConfig = new RoleRelMenuConfig();
+            roleRelMenuConfig.Show();
+        }
+
+        private void 為用戶分配角色ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RoleRelUserConfig roleRelUserConfig = new RoleRelUserConfig();
+            roleRelUserConfig.Show();
+        }
+
+        private void disableMenuItems()
+        {
+            List<RoleUnionMenu> roleUnionMenuList = roleRelMenuService.queryRoleUionMenuList(Auxiliary.RoleNo);
+            if (roleUnionMenuList != null)
+            {
+                for(int i = 0; i < this.MenuToolStripMenuItem.DropDownItems.Count; i++)
+                {
+                    
+                    if (!(this.MenuToolStripMenuItem.DropDownItems[i] is ToolStripSeparator))
+                    {
+                        this.MenuToolStripMenuItem.DropDownItems[i].Enabled = false;
+                        foreach (RoleUnionMenu roleUnionMenu in roleUnionMenuList)
+                        {
+                            if(roleUnionMenu.Menuname == this.MenuToolStripMenuItem.DropDownItems[i].Name.ToString().Trim())
+                            {
+                                this.MenuToolStripMenuItem.DropDownItems[i].Enabled = true;
+                            }
+                        }
+
+                    }
+                }
+            }
         }
     }
 }

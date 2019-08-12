@@ -67,5 +67,32 @@ namespace DAL
 
             return saveMark;
         }
+
+        public Model.User queryUser(string username)
+        {
+            {
+                Model.User user = null;
+                StringBuilder strSql = new StringBuilder();
+                strSql.Append("SELECT * FROM t_user where username=@username");
+                MySqlParameter[] parameters = {
+                new MySqlParameter("@username", MySqlDbType.VarChar, 900),
+            };
+                parameters[0].Value = username;
+                DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    user = new Model.User();
+                    user.Uuid = ds.Tables[0].Rows[0]["uuid"].ToString();
+                    user.Userid = ds.Tables[0].Rows[0]["user_id"].ToString();
+                    user.Username = ds.Tables[0].Rows[0]["username"].ToString();
+                    user.Password = ds.Tables[0].Rows[0]["password"].ToString();
+                    user.Userdesc = ds.Tables[0].Rows[0]["userdesc"].ToString();
+                    user.Department = ds.Tables[0].Rows[0]["department"].ToString();
+                    user.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
+                    user.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
+                }
+                return user;
+            }
+        }
     }
 }

@@ -104,6 +104,11 @@ namespace BLL
             return printM.getCTCount(workno);
         }
 
+        public string getGeneratedCTCountByPO(string workno,string po)
+        {
+            return printM.getCTCountByPO(workno,po);
+        }
+
         /// <summary>
         /// 保存打印CT碼記錄
         /// </summary>
@@ -239,14 +244,36 @@ namespace BLL
         /// </summary>
         /// <param name="mandatoryF"></param>
         /// <returns></returns>
-        public bool saveManField(MandatoryInfo mandatoryF)
+        public MandatoryInfo saveManField(MandatoryInfo mandatoryF)
         {
+            MandatoryInfo reMandatory = null;
             mandatoryF.Uuid = Auxiliary.Get_UUID();
             mandatoryF.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             mandatoryF.Opuser = Auxiliary.loginName;
-            return printM.saveMandatory(mandatoryF);
+            if (printM.saveMandatory(mandatoryF))
+            {
+                reMandatory = queryRemandatoryInfo(mandatoryF.Uuid);
+            }
+            return reMandatory;
         }
         
+        public MandatoryInfo queryRemandatoryInfo(string uuid)
+        {
+            MandatoryInfo mandatoryInfo = null;
+            DataSet ds = printM.queryMandatoryById(uuid);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                mandatoryInfo = new MandatoryInfo();
+                mandatoryInfo.Uuid = ds.Tables[0].Rows[0]["uuid"].ToString();
+                mandatoryInfo.Manno = ds.Tables[0].Rows[0]["man_no"].ToString();
+                mandatoryInfo.Mandesc = ds.Tables[0].Rows[0]["man_desc"].ToString();
+                mandatoryInfo.Ctcodem = ds.Tables[0].Rows[0]["ctcode_m"].ToString();
+                mandatoryInfo.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
+                mandatoryInfo.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
+            }
+            return mandatoryInfo;
+        }
+
         /// <summary>
         /// 模糊查詢所有必填字段規則
         /// </summary>
@@ -295,7 +322,7 @@ namespace BLL
                 modelInfo.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
                 modelInfo.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
             }
-                return modelInfo;
+            return modelInfo;
         }
 
         public MacTypeInfo saveMacTypeInfo(MacTypeInfo mactypeinfo)
@@ -379,6 +406,51 @@ namespace BLL
             return queryMark;
         }
 
+        /// <summary>
+        /// uuid查詢ModelFile
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <returns></returns>
+        public ModelFile queryModelFileByUUID(string uuid)
+        {
+            ModelFile modelFile = null;
+            DataSet ds = printM.queryModelFile(uuid);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                modelFile = new ModelFile();
+                modelFile.Uuid = ds.Tables[0].Rows[0]["uuid"].ToString();
+                modelFile.Fileno = ds.Tables[0].Rows[0]["file_no"].ToString();
+                modelFile.Filename = ds.Tables[0].Rows[0]["fileName"].ToString();
+                modelFile.Filedescription = ds.Tables[0].Rows[0]["fileDescription"].ToString();
+                //modelFile.Fileaddress = (byte[])ds.Tables[0].Rows[0]["fileAddress"];
+                modelFile.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
+                modelFile.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
+            }
+            return modelFile;
+        }
+
+        /// <summary>
+        /// 通過模板號查詢modelfile
+        /// </summary>
+        /// <param name="fileNo"></param>
+        /// <returns></returns>
+        public ModelFile queryModelFileByFileNo(string fileNo)
+        {
+            ModelFile modelFile = null;
+            DataSet ds = printM.queryModelFileByNo(fileNo);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                modelFile = new ModelFile();
+                modelFile.Uuid = ds.Tables[0].Rows[0]["uuid"].ToString();
+                modelFile.Fileno = ds.Tables[0].Rows[0]["file_no"].ToString();
+                modelFile.Filename = ds.Tables[0].Rows[0]["fileName"].ToString();
+                modelFile.Filedescription = ds.Tables[0].Rows[0]["fileDescription"].ToString();
+                modelFile.Fileaddress = (byte[])ds.Tables[0].Rows[0]["fileAddress"];
+                modelFile.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
+                modelFile.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
+            }
+            return modelFile;
+        }
 
         public ModelFile saveModelFile(ModelFile modelFile)
         {
@@ -388,7 +460,7 @@ namespace BLL
             modelFile.Opuser = Auxiliary.loginName;
             if (printM.saveModelFile(modelFile))
             {
-                //reModelFile = queryMacTypeInfo(modelFile.Uuid);
+                reModelFile = queryModelFileByUUID(modelFile.Uuid);
             }
             return reModelFile;
         }

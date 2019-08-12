@@ -33,6 +33,11 @@ namespace CTCodePrint
 
         private void button2_Click(object sender, EventArgs e)
         {
+            if(this.textBox3.Text != null && this.textBox3.Text.Trim() != "")
+            {
+                MessageBox.Show("該文件已經上傳請勿重複保存！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
             if (this.textBox1.Text == null || this.textBox1.Text.Trim() == "")
             {
                 MessageBox.Show("請選擇需要上傳的文件！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -59,7 +64,7 @@ namespace CTCodePrint
                 byte[] files = FileToBytes(filePath);
                 if (fileSize > 0)
                 {
-                    string[] type = { "png" };
+                    string[] type = { "png","lab" };
                     bool exists = ((IList)type).Contains(fileType.ToLower());
 
                     if (!exists)
@@ -70,7 +75,22 @@ namespace CTCodePrint
                     ModelFile modelFile = new ModelFile();
                     modelFile.Fileaddress = files;
                     modelFile.Filename = completeName;
-                    printQ.saveModelFile(modelFile);
+                    modelFile.Filedescription = this.textBox2.Text;
+                    ModelFile reModelFile = printQ.saveModelFile(modelFile);
+                    if(reModelFile != null)
+                    {
+                        this.textBox3.Text = reModelFile.Fileno;
+                        MessageBox.Show("上傳文件成功！", "提示对话框", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("上傳文件失敗！", "提示对话框", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+                }else
+                {
+                    MessageBox.Show("請確認是否選擇正確的文件上傳！", "提示对话框", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
                 }
             }
             catch(Exception ex)
@@ -102,12 +122,17 @@ namespace CTCodePrint
             bw.Write(fileBuffer, 0, fileBuffer.Length); //用文件流生成一个文件
             bw.Close();
             fs.Close();
-        }    
-        
-       
-       
-             
+        }
 
-
+        private void button3_Click(object sender, EventArgs e)
+        {
+            ModelFile modelfile = printQ.queryModelFileByFileNo("F008");
+            if(modelfile != null)
+            {
+                string templateFile = System.IO.Directory.GetCurrentDirectory() + "\\" + modelfile.Filename;
+                CreateFile(modelfile.Fileaddress, templateFile);
+            }
+            
+        }
     }
 }

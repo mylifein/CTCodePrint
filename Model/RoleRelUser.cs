@@ -2,18 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Model
 {
-    public class User
+    public class RoleRelUser
     {
         private string _uuid;
+        private string _roleno;
         private string _userid;
-        private string _username;
-        private string _password;
-        private string _userdesc;
-        private string _department;
         private string _opuser;
         private string _createtime;
         private string _updatetime;
@@ -32,6 +28,19 @@ namespace Model
             }
         }
 
+        public string Roleno
+        {
+            get
+            {
+                return _roleno;
+            }
+
+            set
+            {
+                _roleno = value;
+            }
+        }
+
         public string Userid
         {
             get
@@ -45,33 +54,18 @@ namespace Model
             }
         }
 
-        public string Username
+        public string Opuser
         {
             get
             {
-                return _username;
+                return _opuser;
             }
 
             set
             {
-                _username = value;
+                _opuser = value;
             }
         }
-
-        public string Password
-        {
-            get
-            {
-                return _password;
-            }
-
-            set
-            {
-                _password = value;
-            }
-        }
-
-
 
         public string Createtime
         {
@@ -109,45 +103,6 @@ namespace Model
             set
             {
                 _delflag = value;
-            }
-        }
-
-        public string Userdesc
-        {
-            get
-            {
-                return _userdesc;
-            }
-
-            set
-            {
-                _userdesc = value;
-            }
-        }
-
-        public string Department
-        {
-            get
-            {
-                return _department;
-            }
-
-            set
-            {
-                _department = value;
-            }
-        }
-
-        public string Opuser
-        {
-            get
-            {
-                return _opuser;
-            }
-
-            set
-            {
-                _opuser = value;
             }
         }
     }

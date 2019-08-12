@@ -48,9 +48,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MenuDao.cs" />
     <Compile Include="OracleQuery.cs" />
     <Compile Include="PrintModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoleDao.cs" />
+    <Compile Include="RoleRelMenuDao.cs" />
+    <Compile Include="RoleRelUserDao.cs" />
     <Compile Include="SelectControl.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>

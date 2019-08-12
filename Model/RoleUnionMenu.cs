@@ -2,22 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Model
 {
-    public class User
+    public class RoleUnionMenu
     {
         private string _uuid;
-        private string _userid;
-        private string _username;
-        private string _password;
-        private string _userdesc;
-        private string _department;
+        private string _roleno;
+        private string _rolename;
+        private string _menuno;
+        private string _menuname;
+        private string _menudesc;
         private string _opuser;
         private string _createtime;
         private string _updatetime;
-        private string _delflag;
 
         public string Uuid
         {
@@ -32,46 +30,70 @@ namespace Model
             }
         }
 
-        public string Userid
+        public string Roleno
         {
             get
             {
-                return _userid;
+                return _roleno;
             }
 
             set
             {
-                _userid = value;
+                _roleno = value;
             }
         }
 
-        public string Username
+        public string Rolename
         {
             get
             {
-                return _username;
+                return _rolename;
             }
 
             set
             {
-                _username = value;
+                _rolename = value;
             }
         }
 
-        public string Password
+        public string Menuno
         {
             get
             {
-                return _password;
+                return _menuno;
             }
 
             set
             {
-                _password = value;
+                _menuno = value;
             }
         }
 
+        public string Menudesc
+        {
+            get
+            {
+                return _menudesc;
+            }
 
+            set
+            {
+                _menudesc = value;
+            }
+        }
+
+        public string Opuser
+        {
+            get
+            {
+                return _opuser;
+            }
+
+            set
+            {
+                _opuser = value;
+            }
+        }
 
         public string Createtime
         {
@@ -99,55 +121,16 @@ namespace Model
             }
         }
 
-        public string Delflag
+        public string Menuname
         {
             get
             {
-                return _delflag;
+                return _menuname;
             }
 
             set
             {
-                _delflag = value;
-            }
-        }
-
-        public string Userdesc
-        {
-            get
-            {
-                return _userdesc;
-            }
-
-            set
-            {
-                _userdesc = value;
-            }
-        }
-
-        public string Department
-        {
-            get
-            {
-                return _department;
-            }
-
-            set
-            {
-                _department = value;
-            }
-        }
-
-        public string Opuser
-        {
-            get
-            {
-                return _opuser;
-            }
-
-            set
-            {
-                _opuser = value;
+                _menuname = value;
             }
         }
     }

@@ -51,16 +51,21 @@ namespace CTCodePrint
                 this.textBox2.Focus();
                 return;
             }
-            if (this.textBox1.Text == null)
+            if (this.textBox1.Text != null && this.textBox1.Text != "")
             {
-                MessageBox.Show("该模板必填规则已经保存！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("该模板必填规则已经保存！請勿重複保存", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }else
             {
                 MandatoryInfo manInfo = new MandatoryInfo();
                 manInfo.Mandesc = this.textBox2.Text == null ? "" : this.textBox2.Text.Trim();
                 manInfo.Ctcodem = this.comboBox1.SelectedValue.ToString();
-                if (printQ.saveManField(manInfo))
+                MandatoryInfo reMandatory = printQ.saveManField(manInfo);
+                if (reMandatory != null)
                 {
+                    this.textBox1.Text = reMandatory.Manno;
+                    this.textBox3.Text = reMandatory.Opuser;
+                    this.textBox4.Text = reMandatory.Createtime;
                     MessageBox.Show("保存成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }else
                 {
