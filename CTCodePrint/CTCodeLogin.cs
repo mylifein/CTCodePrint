@@ -12,6 +12,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -24,7 +25,8 @@ namespace CTCodePrint
         {
             InitializeComponent();
         }
-
+        public static string user = "";
+        public string User { get { return user;}set { user = value; } }
         private readonly BLL.User userBLL = new BLL.User();
         private readonly RoleRelUserService roleRelUserService = new RoleRelUserService();
         
@@ -57,12 +59,13 @@ namespace CTCodePrint
                 this.textBox1.Focus();
                 return;
             }
+            user = textBox1.Text.Trim();
             string ipAddress = LocalIP.GetLocalIP();
             userBLL.saveLoginInfo(username, ipAddress);
             Auxiliary.loginName = username;
             Auxiliary.RoleNo = this.comboBox1.SelectedValue.ToString().Trim();
-            MainMenu mainMenu = new MainMenu();
-            mainMenu.Show();
+            MainMenuMDI mainMenuMDI = new MainMenuMDI();
+            mainMenuMDI.Show();
             this.Hide();
 
          
@@ -77,7 +80,9 @@ namespace CTCodePrint
                 return;
             }
             Model.User userEntity = userBLL.queryByUsername(this.textBox1.Text.Trim());
-            if(userEntity != null)
+
+
+            if (userEntity != null)
             {
                 List<RoleUnionUser> roleUnionUserList = roleRelUserService.queryRoleUionUserList(userEntity.Userid);
                 if(roleUnionUserList != null)

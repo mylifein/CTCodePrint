@@ -11,7 +11,6 @@ namespace Model
         private string _uuid;
         private string _manno;
         private string _mandesc;
-        private string _ctcodem;
         private string _opuser;
         private string _createtime;
         private string _updatetime;
@@ -56,18 +55,6 @@ namespace Model
             }
         }
 
-        public string Ctcodem
-        {
-            get
-            {
-                return _ctcodem;
-            }
-
-            set
-            {
-                _ctcodem = value;
-            }
-        }
 
         public string Opuser
         {

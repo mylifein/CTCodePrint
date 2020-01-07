@@ -222,7 +222,7 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
             this.Name = "RoleRelUserConfig";
-            this.Text = "RoleRelUserConfig";
+            this.Text = "用戶分配角色界面";
             this.Load += new System.EventHandler(this.RoleRelUserConfig_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);

@@ -106,7 +106,7 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
             this.Name = "ReprintCT";
-            this.Text = "ReprintCT";
+            this.Text = "重印CT界面";
             this.Load += new System.EventHandler(this.ReprintCT_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);

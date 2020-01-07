@@ -19,7 +19,7 @@ namespace DAL
         public DataSet getWorkNoInofo(string workno)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT MWORK.ORGANIZATION_ID,MWORK.WIP_ENTITY_NAME,MWORK.START_QUANTITY,MWORK.QUANTITY_COMPLETED,MWORK.SO_ORDER,MWORK.ITEM_CODE,MWORK.ITEM_DESC,MWORK.CUST_PO_NUMBER,MWORK.CUSTOMER_ID,MWORK.CUST_NAME,MWORK.ORDER_QTY FROM MES_WORKINFO_V  MWORK WHERE MWORK.ORGANIZATION_ID = '385' AND MWORK.WIP_ENTITY_NAME =:workno");
+            strSql.Append("SELECT MWORK.ORGANIZATION_ID,MWORK.CUSTOMER_ITEM_NUMBER,MWORK.WIP_ENTITY_NAME,MWORK.START_QUANTITY,MWORK.QUANTITY_COMPLETED,MWORK.SO_ORDER,MWORK.ITEM_CODE,MWORK.ITEM_DESC,MWORK.CUST_PO_NUMBER,MWORK.CUSTOMER_ID,MWORK.CUST_NAME,MWORK.ORDER_QTY FROM MES_WORKINFO_V  MWORK WHERE MWORK.ORGANIZATION_ID = '385' AND MWORK.WIP_ENTITY_NAME =:workno");
             OracleParameter[] parameters =
             {
                 new OracleParameter(":workno",OracleDbType.Varchar2,900)
@@ -60,6 +60,25 @@ namespace DAL
             return ds;
         }
 
+
+        /// <summary>
+        /// 獲得客戶編號和名稱
+        /// </summary>
+        /// <param name="cusNo"></param>
+        /// <param name="delNo"></param>
+        /// <returns></returns>
+        public DataSet getCusInfo()
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT CUST.CUST_ACCOUNT_ID, CUST.PARTY_NAME FROM MES_CUSTINFO_V CUST");
+            OracleParameter[] parameters =
+            {
+
+            };
+
+            DataSet ds = OracleSQLHelper.ExecuteDataset(OracleSQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
+        }
 
 
     }

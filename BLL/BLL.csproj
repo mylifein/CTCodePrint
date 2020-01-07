@@ -42,7 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CTCodeService.cs" />
+    <Compile Include="CusRuleService.cs" />
+    <Compile Include="FieldTypeService.cs" />
+    <Compile Include="FileRelDelService.cs" />
+    <Compile Include="MandatoryFieldService.cs" />
+    <Compile Include="ManRelFieldTypeService.cs" />
     <Compile Include="MenuService.cs" />
+    <Compile Include="ModelInfoService.cs" />
+    <Compile Include="ModelRelMandService.cs" />
     <Compile Include="OracleQueryB.cs" />
     <Compile Include="PrintModelQ.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -50,6 +58,7 @@
     <Compile Include="RoleRelUserService.cs" />
     <Compile Include="RoleService.cs" />
     <Compile Include="SelectQuery.cs" />
+    <Compile Include="SubMatInfoService.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>

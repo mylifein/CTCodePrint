@@ -53,5 +53,14 @@ namespace BLL
             }
             return resultDS;
         }
+
+        /// <summary>
+        /// 獲得客戶ID和客戶名稱
+        /// </summary>
+        /// <returns></returns>
+        public DataSet getCusInfo()
+        {
+            return oracleQ.getCusInfo();
+        }
     }
 }

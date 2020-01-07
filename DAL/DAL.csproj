@@ -48,7 +48,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CTCodeDao.cs" />
+    <Compile Include="CusRuleDao.cs" />
+    <Compile Include="FieldTypeDao.cs" />
+    <Compile Include="FileRelDelDao.cs" />
+    <Compile Include="MandatoryFieldDao.cs" />
+    <Compile Include="ManRelFieldTypeDao.cs" />
     <Compile Include="MenuDao.cs" />
+    <Compile Include="ModelInfoDao.cs" />
+    <Compile Include="ModelRelMandDao.cs" />
     <Compile Include="OracleQuery.cs" />
     <Compile Include="PrintModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -56,6 +64,7 @@
     <Compile Include="RoleRelMenuDao.cs" />
     <Compile Include="RoleRelUserDao.cs" />
     <Compile Include="SelectControl.cs" />
+    <Compile Include="SubMatInfoDao.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>

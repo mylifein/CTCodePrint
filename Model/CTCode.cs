@@ -23,6 +23,7 @@ namespace Model
         private string _woquantity;
         private string _completedqty;
         private string _modelno;
+        private string _soOrder;
         private string _opuser;
         private string _createtime;
         private string _updatetime;
@@ -272,6 +273,19 @@ namespace Model
             set
             {
                 _orderqty = value;
+            }
+        }
+
+        public string SoOrder
+        {
+            get
+            {
+                return _soOrder;
+            }
+
+            set
+            {
+                _soOrder = value;
             }
         }
     }

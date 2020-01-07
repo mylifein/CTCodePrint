@@ -15,7 +15,10 @@ namespace CTCodePrint
     public partial class BoundRule : Form
     {
         private readonly PrintModelQ printQ = new PrintModelQ();
-        private readonly SelectQuery selectQ = new SelectQuery(); 
+        private readonly SelectQuery selectQ = new SelectQuery();
+        private readonly CusRuleService cusRuleService = new CusRuleService();
+        private readonly OracleQueryB oracleQueryB = new OracleQueryB();
+
         public BoundRule()
         {
             InitializeComponent();
@@ -23,12 +26,12 @@ namespace CTCodePrint
 
         private void BoundRule_Load(object sender, EventArgs e)
         {
-            DataSet dsCus = selectQ.getCusSelect();
+            DataSet dsCus = oracleQueryB.getCusInfo();
             DataTable itemTable = null;
             if (dsCus != null && dsCus.Tables.Count > 0 && dsCus.Tables[0].Rows.Count > 0)
             {
-                this.comboBox1.DisplayMember = "cus_name";
-                this.comboBox1.ValueMember = "cus_no";
+                this.comboBox1.DisplayMember = "PARTY_NAME";
+                this.comboBox1.ValueMember = "CUST_ACCOUNT_ID";
                 this.comboBox1.DataSource = dsCus.Tables[0];
             }
                
@@ -51,8 +54,14 @@ namespace CTCodePrint
             }
             CusRule cusRule = new CusRule();
             cusRule.Delmatno = this.textBox1.Text.Trim();
-            cusRule.Cusno = this.comboBox1.SelectedValue.ToString();
-            cusRule.Mactypeno = this.comboBox2.SelectedValue.ToString();
+            cusRule.Cusno = this.comboBox1.SelectedValue.ToString().Trim();
+            cusRule.Mactypeno = this.comboBox2.SelectedValue.ToString().Trim();
+            if (cusRuleService.checkAdd(cusRule))
+            {
+                MessageBox.Show("該客戶和出貨料號已經綁定幾種！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             if (printQ.saveCusCodeRule(cusRule))
             {
                 MessageBox.Show("保存成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);

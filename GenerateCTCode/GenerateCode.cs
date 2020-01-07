@@ -62,7 +62,7 @@ namespace GenerateCTCode
                         break;
                     case "T006":
                         judgeSerial = true;
-                        string maxCode = printM.getMaxCTCode(ctCode.ToString());
+                        string maxCode = printM.getMaxCTCode(ctCode.ToString(), ctCodeInfo.Delmatno);
                         string prefixCT = ctCode.ToString();
                         if (maxCode == null || maxCode == "")
                         {
@@ -111,6 +111,10 @@ namespace GenerateCTCode
                         break;
                     case "T007":
                         ctCode.Append(ruleValue);
+                        break;
+                    case "T008":                   
+                        string subOperation = this.extractString(ctCodeInfo.SoOrder, ruleLength);
+                        ctCode.Append(subOperation);
                         break;
 
                 }
@@ -187,7 +191,7 @@ namespace GenerateCTCode
                 case 4:
                     //获得4位，年周别，分别为2位
                     timeString.Append(DateTime.Now.ToString("yy"));
-                    string weekString = "";
+                    timeString.Append(getWeek());
                     break;
                 case 6:
                     //获得6位,获得年、月、日
@@ -363,8 +367,9 @@ namespace GenerateCTCode
             ctCode1.Workno = ctCode2.Workno;
             ctCode1.Cusno = ctCode2.Cusno;
             ctCode1.Cuspo = ctCode2.Cuspo;
-            ctCode1.Orderqty = ctCode1.Orderqty;
+            ctCode1.Orderqty = ctCode2.Orderqty;
             ctCode1.Cusmatno = ctCode2.Cusmatno;
+            ctCode1.SoOrder = ctCode2.SoOrder;
             ctCode1.Opuser = Auxiliary.loginName;
             ctCode1.Woquantity = ctCode2.Woquantity;
             ctCode1.Completedqty = ctCode2.Completedqty;
@@ -377,5 +382,26 @@ namespace GenerateCTCode
             ctCode1.Createtime = DateTime.Now.ToString();
             return ctCode1;
         } 
+
+        public string extractString(string operaField,int ruleLength)
+        {
+            string result = "";
+            if (operaField.Count() < ruleLength)
+            {
+                result = operaField;
+            }else
+            {
+                result = operaField.Substring(0, ruleLength);
+            }
+            int fieldLen = result.Count();
+            if (fieldLen < ruleLength)
+            {
+                for(int i = fieldLen; i < ruleLength; i++)
+                {
+                    result = 0 + result;
+                }
+            }
+            return result;
+        }
     }
 }

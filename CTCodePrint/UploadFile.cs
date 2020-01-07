@@ -1,4 +1,5 @@
 ﻿using BLL;
+using CTCodePrint.common;
 using Model;
 using System;
 using System.Collections;
@@ -17,6 +18,7 @@ namespace CTCodePrint
 {
     public partial class UploadFile : Form
     {
+        private readonly BarCodePrint barPrint = BarCodePrint.getInstance();
         public UploadFile()
         {
             InitializeComponent();
@@ -29,6 +31,8 @@ namespace CTCodePrint
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.ShowDialog();
             this.textBox1.Text = ofd.FileName;
+            string filePath = barPrint.PreviewPrintBC(ofd.FileName);
+            this.pictureBox1.Load(filePath);
         }
 
         private void button2_Click(object sender, EventArgs e)

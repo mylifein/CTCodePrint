@@ -49,6 +49,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>20190903115541809_easyicon_net_48.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Interop.LabelManager2">
       <HintPath>..\..\..\..\..\Source\Repos\mylifein\CPSscan\CPSscan\obj\Debug\Interop.LabelManager2.dll</HintPath>
@@ -73,11 +76,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auxiliary.cs" />
+    <Compile Include="BoundModelFile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BoundModelFile.Designer.cs">
+      <DependentUpon>BoundModelFile.cs</DependentUpon>
+    </Compile>
     <Compile Include="BoundModel.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="BoundModel.Designer.cs">
       <DependentUpon>BoundModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SubmatMaintain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SubmatMaintain.Designer.cs">
+      <DependentUpon>SubmatMaintain.cs</DependentUpon>
     </Compile>
     <Compile Include="BoundRule.cs">
       <SubType>Form</SubType>
@@ -93,6 +108,12 @@
     </Compile>
     <Compile Include="CreateMenu.Designer.cs">
       <DependentUpon>CreateMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateField.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateField.Designer.cs">
+      <DependentUpon>CreateField.cs</DependentUpon>
     </Compile>
     <Compile Include="CreateRole.cs">
       <SubType>Form</SubType>
@@ -136,11 +157,23 @@
     <Compile Include="MainMenu.Designer.cs">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainMenuMDI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainMenuMDI.Designer.cs">
+      <DependentUpon>MainMenuMDI.cs</DependentUpon>
+    </Compile>
     <Compile Include="MandatoryConfig.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MandatoryConfig.Designer.cs">
       <DependentUpon>MandatoryConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModelBoundField.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModelBoundField.Designer.cs">
+      <DependentUpon>ModelBoundField.cs</DependentUpon>
     </Compile>
     <Compile Include="ModelConfig.cs">
       <SubType>Form</SubType>
@@ -162,6 +195,12 @@
     <Compile Include="RoleRelMenuConfig.Designer.cs">
       <DependentUpon>RoleRelMenuConfig.cs</DependentUpon>
     </Compile>
+    <Compile Include="ManRelFieldTypeConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManRelFieldTypeConfig.Designer.cs">
+      <DependentUpon>ManRelFieldTypeConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="RoleRelUserConfig.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -181,14 +220,23 @@
     <Compile Include="UploadFile.Designer.cs">
       <DependentUpon>UploadFile.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="BoundModelFile.resx">
+      <DependentUpon>BoundModelFile.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="BoundModel.resx">
       <DependentUpon>BoundModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SubmatMaintain.resx">
+      <DependentUpon>SubmatMaintain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="BoundRule.resx">
       <DependentUpon>BoundRule.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CreateMenu.resx">
       <DependentUpon>CreateMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateField.resx">
+      <DependentUpon>CreateField.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CreateRole.resx">
       <DependentUpon>CreateRole.cs</DependentUpon>
@@ -211,8 +259,14 @@
     <EmbeddedResource Include="MainMenu.resx">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MainMenuMDI.resx">
+      <DependentUpon>MainMenuMDI.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MandatoryConfig.resx">
       <DependentUpon>MandatoryConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModelBoundField.resx">
+      <DependentUpon>ModelBoundField.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ModelConfig.resx">
       <DependentUpon>ModelConfig.cs</DependentUpon>
@@ -232,6 +286,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RoleRelMenuConfig.resx">
       <DependentUpon>RoleRelMenuConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManRelFieldTypeConfig.resx">
+      <DependentUpon>ManRelFieldTypeConfig.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RoleRelUserConfig.resx">
       <DependentUpon>RoleRelUserConfig.cs</DependentUpon>
@@ -304,6 +361,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="20190903115541809_easyicon_net_48.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

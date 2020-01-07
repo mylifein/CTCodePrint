@@ -98,5 +98,6 @@ namespace DAL
             }
             return roleInfoList;
         }
+
     }
 }

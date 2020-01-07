@@ -48,7 +48,8 @@
             // 
             // comboBox1
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.comboBox1.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(137, 26);
             this.comboBox1.Name = "comboBox1";
@@ -112,7 +113,7 @@
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label1);
             this.Name = "BoundRule";
-            this.Text = "BoundRule";
+            this.Text = "綁定編碼規則";
             this.Load += new System.EventHandler(this.BoundRule_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

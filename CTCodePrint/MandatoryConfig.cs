@@ -22,24 +22,7 @@ namespace CTCodePrint
         private readonly PrintModelQ printQ = new PrintModelQ();
         private void MandatoryConfig_Load(object sender, EventArgs e)
         {
-            DataTable itemTable = new DataTable();   // construct selects value
-            DataColumn column;
-            DataRow row;
-            column = new DataColumn("Name");
-            itemTable.Columns.Add(column);
-            column = new DataColumn("Value");
-            itemTable.Columns.Add(column);
-            row = itemTable.NewRow();
-            row["Name"] = "打印";
-            row["Value"] = "0";
-            itemTable.Rows.Add(row);
-            row = itemTable.NewRow();
-            row["Name"] = "不打印";
-            row["Value"] = "1";
-            itemTable.Rows.Add(row);
-            this.comboBox1.DisplayMember = "Name";
-            this.comboBox1.ValueMember = "Value";
-            this.comboBox1.DataSource = itemTable;
+
 
         }
 
@@ -59,7 +42,6 @@ namespace CTCodePrint
             {
                 MandatoryInfo manInfo = new MandatoryInfo();
                 manInfo.Mandesc = this.textBox2.Text == null ? "" : this.textBox2.Text.Trim();
-                manInfo.Ctcodem = this.comboBox1.SelectedValue.ToString();
                 MandatoryInfo reMandatory = printQ.saveManField(manInfo);
                 if (reMandatory != null)
                 {

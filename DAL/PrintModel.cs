@@ -166,14 +166,17 @@ namespace DAL
         /// </summary>
         /// <param name="ctCode"></param>
         /// <returns></returns>
-        public string queryCodeNo(string ctCode)
+        public string queryCodeNo(string ctCode,string delMatno)
         {
             string maxCtCode = "";
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select MAX(ct_code) from t_code_info where ct_code like '%" + ctCode.Trim() + "%'");
+            strSql.Append("select MAX(ct_code) from t_code_info where ct_code like @ctCode AND del_matno=@delMatno");
             MySqlParameter[] parameters = {
-                new MySqlParameter("@manNo", MySqlDbType.VarChar, 900)
+                new MySqlParameter("@ctCode", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@delMatno", MySqlDbType.VarChar, 900)
             };
+            parameters[0].Value = "%" + ctCode + "%"; ;
+            parameters[1].Value = delMatno;
             Object maxCode = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if(maxCode != null && maxCode != DBNull.Value)
             {
@@ -196,6 +199,31 @@ namespace DAL
                 new MySqlParameter("@workno", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = workno;
+            Object countDB = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (countDB != null && countDB != DBNull.Value)
+            {
+                countNo = countDB.ToString();
+            }
+            return countNo;
+        }
+
+        /// <summary>
+        /// 根據子階料號查詢CT數
+        /// </summary>
+        /// <param name="workno"></param>
+        /// <param name="subMaterial"></param>
+        /// <returns></returns>
+        public string getCTCountBySubMat(string workno,string subMaterial)
+        {
+            string countNo = "";
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from t_code_info where work_no=@workno and del_matno=@delMatno");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@workno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@delMatno", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = workno;
+            parameters[1].Value = subMaterial;
             Object countDB = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (countDB != null && countDB != DBNull.Value)
             {
@@ -229,12 +257,13 @@ namespace DAL
             return countNo;
         }
 
+
         /// <summary>
         /// 保存打印記錄
         /// </summary>
         /// <param name="record"></param>
         /// <returns></returns>
-        public bool savePrintRecord(PrintRecord record) 
+        public bool savePrintRecord(CTCode ctCode) 
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
@@ -246,10 +275,10 @@ namespace DAL
                 new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
             };
-            parameters[0].Value = record.Uuid;
-            parameters[1].Value = record.Ctcode;
-            parameters[2].Value = record.Opuser;
-            parameters[3].Value = record.Createtime;
+            parameters[0].Value = ctCode.Uuid;
+            parameters[1].Value = ctCode.Ctcode;
+            parameters[2].Value = ctCode.Opuser;
+            parameters[3].Value = ctCode.Createtime;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
@@ -439,20 +468,18 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_mandatory_info (uuid,man_desc,ctcode_m,op_user,create_time)");
-            strSql.Append("values(@uuid,@mandesc,@ctcodem,@opuser,@createtime)");
+            strSql.Append("insert into t_mandatory_info (uuid,man_desc,op_user,create_time)");
+            strSql.Append("values(@uuid,@mandesc,@opuser,@createtime)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@mandesc", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@ctcodem", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
             };
             parameters[0].Value = mandaInfo.Uuid;
             parameters[1].Value = mandaInfo.Mandesc;
-            parameters[2].Value = mandaInfo.Ctcodem;
-            parameters[3].Value = mandaInfo.Opuser;
-            parameters[4].Value = mandaInfo.Createtime;
+            parameters[2].Value = mandaInfo.Opuser;
+            parameters[3].Value = mandaInfo.Createtime;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
@@ -465,6 +492,7 @@ namespace DAL
             return saveMark;
         }
         
+
         /// <summary>
         /// 查詢打印字段規則
         /// </summary>

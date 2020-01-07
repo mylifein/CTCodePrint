@@ -1,5 +1,6 @@
 ﻿using BLL;
 using CTCodePrint.common;
+using DBUtility;
 using Model;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,11 @@ namespace CTCodePrint
 
         private readonly PrintModelQ printQ = new PrintModelQ();
         private readonly BarCodePrint barPrint = BarCodePrint.getInstance();
+        private readonly CTCodeService cTCodeService = new CTCodeService();
+        private readonly ModelInfoService modelInfoService = new ModelInfoService();        //查詢模板內容並下載
+        private readonly ModelRelMandService modelRelMandService = new ModelRelMandService();  //查詢模板的字段規則
+        private readonly ManRelFieldTypeService manRelFieldTypeService = new ManRelFieldTypeService();  //根據字段規則 查詢字段規則值
+
         private void ReprintCT_Load(object sender, EventArgs e)
         {
             DataTable itemTable = new DataTable();   // construct selects value
@@ -100,30 +106,32 @@ namespace CTCodePrint
             }
             int index = this.dataGridView1.CurrentRow.Index;
             string modelNo = this.dataGridView1.Rows[index].Cells["model_no"].Value.ToString();
-
-            DataSet ds = printQ.getModelInfo(modelNo);
-            if (ds == null || ds.Tables[0].Rows.Count < 1)
+            ModelFile modelFile = modelInfoService.queryModelFileByNo(modelNo);
+            if (modelFile == null)
             {
                 MessageBox.Show("未找到該客戶出貨料號對應的打印模板信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            string templateFile = System.IO.Directory.GetCurrentDirectory() + "\\" + ds.Tables[0].Rows[0]["model_name"].ToString();
-
-            ///查詢該模板必填字段
-            MandatoryField manF = printQ.getMandInfoByMod(modelNo);
-            if (manF == null)
+            string filePath = Auxiliary.downloadModelFile(modelFile);
+            //查詢打印模板的打印字段
+            ModelRelMand modelRelMand = modelRelMandService.queryMenuInfoByFileNo(modelFile.Fileno);
+            if (modelRelMand == null)
             {
-                MessageBox.Show("未找到打印模板必填字段数据，请检查维护", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            PrintContent printContent = new PrintContent();
-            PrintRecord record = new PrintRecord();
-            printContent.CtCode = this.dataGridView1.Rows[index].Cells["ct_code"].Value.ToString();
-            record.Ctcode = this.dataGridView1.Rows[index].Cells["ct_code"].Value.ToString(); 
-            bool judge = barPrint.PrintBC(templateFile, printContent, manF);
+            List<MandUnionFieldType> mandUnionFieldTypeList = manRelFieldTypeService.queryMandUnionFieldTypeList(modelRelMand.ManNo);
+            if (mandUnionFieldTypeList == null)
+            {
+                MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            string ctcode = this.dataGridView1.Rows[index].Cells["ct_code"].Value.ToString();
+            CTCode ctcodeEntity = cTCodeService.queryCTCodeByCtcode(ctcode);
+            bool judge = barPrint.PrintBCByModel(filePath, ctcodeEntity, mandUnionFieldTypeList);
             if (judge)
             {
-                printQ.savePrintRecord(record);
+                printQ.savePrintRecord(ctcodeEntity);
 
             }
             else

@@ -120,7 +120,7 @@
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label1);
             this.Name = "RoleRelMenuConfig";
-            this.Text = "RoleRelMenuConfig";
+            this.Text = "角色分配菜單界面";
             this.Load += new System.EventHandler(this.RoleRelMenuConfig_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);

@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Model;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,6 +51,35 @@ namespace DBUtility
             return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
+        public static string downloadModelFile(ModelFile modelFile)
+        {
+            string templateFile = System.IO.Directory.GetCurrentDirectory() + "\\" + modelFile.Filename;
+            if (File.Exists(templateFile))
+            {
+                Process[] pcs = Process.GetProcesses();
+                foreach (Process p in pcs)
+                {
+                    //确定文件进程名
+                    if (p.ProcessName == "lppa")
+                    {
+                        //确认文件
+
+                        //p.Kill();//结束进程
+
+                        return templateFile;
+                    }
+                }
+                File.Delete(templateFile);
+            }
+            FileStream fs = new FileStream(templateFile, FileMode.CreateNew);
+            BinaryWriter bw = new BinaryWriter(fs);
+            bw.Write(modelFile.Fileaddress, 0, modelFile.Fileaddress.Length); //用文件流生成一个文件
+            bw.Close();
+            fs.Close();
+            bw.Dispose();
+            fs.Dispose();
+            return templateFile;
+        }
 
     }
 }

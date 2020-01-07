@@ -83,15 +83,18 @@ namespace BLL
             ctCode.Opuser = Auxiliary.loginName;
             return printM.saveCTInfo(ctCode);
         }
+        
+
+      
 
         /// <summary>
         /// 根据流水码之前的编码查找最大流水号
         /// </summary>
         /// <param name="ctCode"></param>
         /// <returns></returns>
-        public string getMaxCTCode(string ctCode)
+        public string getMaxCTCode(string ctCode,string delMatno)
         {
-            return printM.queryCodeNo(ctCode);
+            return printM.queryCodeNo(ctCode, delMatno);
         }
 
         /// <summary>
@@ -104,6 +107,17 @@ namespace BLL
             return printM.getCTCount(workno);
         }
 
+        /// <summary>
+        /// 根據workno和subMaterial 查詢CT碼數量
+        /// </summary>
+        /// <param name="workno"></param>
+        /// <param name="subMaterial"></param>
+        /// <returns></returns>
+        public string getCTCountBySubMat(string workno, string subMaterial)
+        {
+            return printM.getCTCountBySubMat(workno, subMaterial);
+        }
+
         public string getGeneratedCTCountByPO(string workno,string po)
         {
             return printM.getCTCountByPO(workno,po);
@@ -114,12 +128,24 @@ namespace BLL
         /// </summary>
         /// <param name="record"></param>
         /// <returns></returns>
-        public bool savePrintRecord(PrintRecord record)
+        public bool savePrintRecord(CTCode ctCode)
         {
-            record.Uuid = Auxiliary.Get_UUID();
-            record.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            record.Opuser = Auxiliary.loginName;
-            return printM.savePrintRecord(record);
+            ctCode.Uuid = Auxiliary.Get_UUID();
+            ctCode.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            ctCode.Opuser = Auxiliary.loginName;
+            return printM.savePrintRecord(ctCode);
+        }
+
+        public bool savePrintRecordList(List<CTCode> ctCodeList)
+        {
+            foreach (CTCode ctCode in ctCodeList)
+            {
+                if (!this.savePrintRecord(ctCode))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>
@@ -267,7 +293,6 @@ namespace BLL
                 mandatoryInfo.Uuid = ds.Tables[0].Rows[0]["uuid"].ToString();
                 mandatoryInfo.Manno = ds.Tables[0].Rows[0]["man_no"].ToString();
                 mandatoryInfo.Mandesc = ds.Tables[0].Rows[0]["man_desc"].ToString();
-                mandatoryInfo.Ctcodem = ds.Tables[0].Rows[0]["ctcode_m"].ToString();
                 mandatoryInfo.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
                 mandatoryInfo.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
             }

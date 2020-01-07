@@ -28,10 +28,10 @@ namespace CTCodePrint
                 this.textBox1.Focus();
                 return;
             }
-            if (this.textBox2.Text == null || this.textBox2.Text.Trim() == "")
+            if (this.comboBox1.Text == null || this.comboBox1.Text.Trim() == "")
             {
                 MessageBox.Show("菜單名稱不能為空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.textBox2.Focus();
+                this.comboBox1.Focus();
                 return;
             }
             if (this.textBox3.Text == null || this.textBox3.Text.Trim() == "")
@@ -41,7 +41,7 @@ namespace CTCodePrint
                 return;
             }
             MenuInfo menuInfo = new MenuInfo();
-            menuInfo.MenuName = this.textBox2.Text.Trim();
+            menuInfo.MenuName = this.comboBox1.SelectedValue.ToString();
             menuInfo.MenuDescription = this.textBox3.Text.Trim();
             MenuInfo reMenuInfo = menuService.saveMenuInfo(menuInfo);
             if (reMenuInfo != null)
@@ -57,6 +57,26 @@ namespace CTCodePrint
             }
         }
 
-
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //list.Insert(0, new itemEx("請選擇", "0"));
+            //List<itemEx> list = new List<itemEx>();
+            comboBox1.DisplayMember = "name";
+            comboBox1.ValueMember = "Tag";
+            comboBox1.DataSource =MainMenuMDI.list;
+            ClearText(this);
+        }
+        private void ClearText(Control ctrlTop)
+        {
+            if (ctrlTop.GetType() == typeof(TextBox))
+                ctrlTop.Text = "";
+            else
+            {
+                foreach (Control ctrl in ctrlTop.Controls)
+                {
+                    ClearText(ctrl); //循环调用
+                }
+            }
+        }
     }
 }

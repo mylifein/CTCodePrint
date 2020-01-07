@@ -45,13 +45,18 @@
     <Compile Include="CodeRule.cs" />
     <Compile Include="CTCode.cs" />
     <Compile Include="CusRule.cs" />
+    <Compile Include="FieldType.cs" />
+    <Compile Include="FileRelDel.cs" />
     <Compile Include="MacTypeInfo.cs" />
     <Compile Include="MandatoryField.cs" />
     <Compile Include="MandatoryInfo.cs" />
+    <Compile Include="MandUnionFieldType.cs" />
+    <Compile Include="ManRelFieldType.cs" />
     <Compile Include="MenuInfo.cs" />
     <Compile Include="ModelFile.cs" />
     <Compile Include="ModelInfo.cs" />
     <Compile Include="ModelRelation.cs" />
+    <Compile Include="ModelRelMand.cs" />
     <Compile Include="PrintContent.cs" />
     <Compile Include="PrintRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,6 +66,7 @@
     <Compile Include="RoleUnionMenu.cs" />
     <Compile Include="RoleUnionUser.cs" />
     <Compile Include="RuleItem.cs" />
+    <Compile Include="SubMatInfo.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

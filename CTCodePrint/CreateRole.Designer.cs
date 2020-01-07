@@ -151,7 +151,7 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
             this.Name = "CreateRole";
-            this.Text = "CreateRole";
+            this.Text = "創建角色";
             this.ResumeLayout(false);
             this.PerformLayout();
 
