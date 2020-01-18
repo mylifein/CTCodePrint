@@ -355,6 +355,7 @@ namespace CTCodePrint
             ctCodeInfo.Workno = this.textBox1.Text.Trim();           //workNo
             ctCodeInfo.Cuspo = this.comboBox1.Text == null ? "" : this.comboBox1.Text.ToString().Trim();            //Cuspo
             ctCodeInfo.Orderqty = this.textBox2.Text.Trim();        //order qty
+           
             if (this.comboBox7.SelectedValue.ToString() == "1")         //如果等於出貨料號
             {
                 ctCodeInfo.Delmatno = this.textBox3.Text.Trim();        //string deliveryMat
@@ -363,6 +364,7 @@ namespace CTCodePrint
                 ctCodeInfo.Delmatno = this.comboBox6.SelectedValue.ToString();
             }
             ctCodeInfo.Cusno = this.textBox11.Text.Trim();          //customer number 
+            ctCodeInfo.Cusname = this.textBox10.Text.Trim();        //customer name
             ctCodeInfo.Offino = this.textBox6.Text.Trim();  //officialNo
             ctCodeInfo.SoOrder = this.comboBox5.Text == null ? "" : this.comboBox5.Text.ToString().Trim();   //so_order
             ctCodeInfo.Mactype = this.comboBox2.SelectedValue == null ? "" : this.comboBox2.SelectedValue.ToString().Trim();  //macType

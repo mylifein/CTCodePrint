@@ -148,5 +148,11 @@ namespace CTCodePrint
                 }
             }
         }
+
+        private void 部門創建ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateDepartment createDepartment = new CreateDepartment();
+            createDepartment.Show();
+        }
     }
 }

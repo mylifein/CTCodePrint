@@ -240,5 +240,28 @@ namespace CTCodePrint
             submatMaintain.MdiParent = this;
             submatMaintain.Show();
         }
+
+        private void AuthorizationConfig_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void 部門創建ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateDepartment createDepartment = new CreateDepartment();
+            createDepartment.Show();
+        }
+
+        private void 線別設定ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateProdLine createProdLine = new CreateProdLine();
+            createProdLine.Show();
+        }
+
+        private void 裝箱單號打印ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CartonPrint cartonPrint = new CartonPrint();
+            cartonPrint.Show();
+        }
     }
 }

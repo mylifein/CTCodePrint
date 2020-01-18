@@ -69,7 +69,7 @@ namespace DAL
         public DataSet getRuleInfo(string ruleNo)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_code_rule where rule_no=@ruleNo ORDER BY seq_no ASC");
+            strSql.Append("SELECT * FROM t_code_rule where rule_no=@ruleNo AND del_flag is null ORDER BY seq_no ASC");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@ruleNo", MySqlDbType.VarChar, 900)
             };
@@ -78,6 +78,7 @@ namespace DAL
             DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             return ds;
         }
+
 
         /// <summary>
         /// 獲得所有規則類型

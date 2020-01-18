@@ -26,11 +26,14 @@ namespace BLL
         public DataSet getRulesByNo(string macNo)
         {
             DataSet ds = null;
-            ds = selectControl.getRuleByCus(macNo);
-            if(ds.Tables.Count >0 && ds.Tables[0].Rows.Count > 0)
+            if(macNo != null && macNo.Trim() != "")
             {
-                string ruleNo = ds.Tables[0].Rows[0]["rule_no"].ToString();
-                ds = selectControl.getRuleInfo(ruleNo);
+                ds = selectControl.getRuleByCus(macNo);
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    string ruleNo = ds.Tables[0].Rows[0]["rule_no"].ToString();
+                    ds = selectControl.getRuleInfo(ruleNo);
+                }
             }
             return ds;
         }

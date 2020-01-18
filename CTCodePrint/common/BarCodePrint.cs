@@ -67,7 +67,7 @@ namespace CTCodePrint.common
         }
 
 
-        public bool PrintBC(string templateFileName,PrintContent printContent,MandatoryField manF)
+        public bool PrintBC(string templateFileName, PrintContent printContent, MandatoryField manF)
         {
 
             //未加載模板文件或者模板發生變更時，重新加載新的模板
@@ -104,7 +104,7 @@ namespace CTCodePrint.common
 
         public bool PrintBCByModel(string templateFileName, CTCode ctCode, List<MandUnionFieldType> mandUnionFieldTypeList)
         {
-            if(lbl == null)
+            if (lbl == null)
             {
                 lbl = new ApplicationClass();
             }
@@ -128,7 +128,7 @@ namespace CTCodePrint.common
                             PropertyInfo[] propertyInfoARR = ctCode.GetType().GetProperties();
                             foreach (PropertyInfo propertyInfo in propertyInfoARR)
                             {
-                                if(propertyInfo.Name == mandUnionFieldType.FieldName)
+                                if (propertyInfo.Name == mandUnionFieldType.FieldName)
                                 {
                                     string entityValue = ctCode.GetType().GetProperty(propertyInfo.Name).GetValue(ctCode, null).ToString();
                                     doc.Variables.FormVariables.Item(i).Value = entityValue;
@@ -140,9 +140,9 @@ namespace CTCodePrint.common
                             }
                             if (!judge)
                             {
-                                
+
                                 doc.Variables.FormVariables.Item(i).Value = mandUnionFieldType.FieldValue;
-                                break;                               
+                                break;
                             }
                         }
                     }
@@ -174,7 +174,7 @@ namespace CTCodePrint.common
         }
 
 
-        public bool BactchPrintBCByModel(string templateFileName, List<CTCode> ctCodeList, List<MandUnionFieldType> mandUnionFieldTypeList,String printerName)
+        public bool BactchPrintBCByModel(string templateFileName, List<CTCode> ctCodeList, List<MandUnionFieldType> mandUnionFieldTypeList, String printerName)
         {
             if (lbl == null)
             {
@@ -189,7 +189,7 @@ namespace CTCodePrint.common
             Document doc = lbl.ActiveDocument;
             bool isFirstParam = false;
             Dictionary<int, string> dic1 = new Dictionary<int, string>();
-            Dictionary<int, bool> isObjectDic = new Dictionary<int, bool>(); 
+            Dictionary<int, bool> isObjectDic = new Dictionary<int, bool>();
             try
             {
                 foreach (CTCode ctcode in ctCodeList)
@@ -276,6 +276,86 @@ namespace CTCodePrint.common
 
         }
 
+        /// <summary>
+        /// TODO 打印装箱单
+        /// </summary>
+        /// <param name="templateFileName"></param>
+        /// <param name="carton"></param>
+        /// <param name="mandUnionFieldTypeList"></param>
+        /// <param name="printerName"></param>
+        /// <returns></returns>
+        public bool printCatonByModel(string templateFileName, Carton carton, List<MandUnionFieldType> mandUnionFieldTypeList)
+        {
+            if (lbl == null)
+            {
+                lbl = new ApplicationClass();
+            }
+            //未加載模板文件或者模板發生變更時，重新加載新的模板
+            if (lbl.Documents.Count == 0 || templateFileName.IndexOf(lbl.ActiveDocument.Name) == -1)
+            {
+                lbl.Documents.Open(templateFileName, false);// 调用设计好的label文件
+
+            }
+            Document doc = lbl.ActiveDocument;
+            try
+            {
+
+                for (int i = 1; i <= doc.Variables.FormVariables.Count; i++)
+                {
+                    string variableName = doc.Variables.FormVariables.Item(i).Name.ToString();
+                    foreach (MandUnionFieldType mandUnionFieldType in mandUnionFieldTypeList)
+                    {
+                        if (mandUnionFieldType.FieldName.ToUpper() == variableName.ToUpper())
+                        {
+                            bool judge = false;
+                            PropertyInfo[] propertyInfoARR = carton.GetType().GetProperties();
+                            foreach (PropertyInfo propertyInfo in propertyInfoARR)
+                            {
+                                if (propertyInfo.Name.ToUpper() == mandUnionFieldType.FieldName.ToUpper())
+                                {
+                                    string entityValue = carton.GetType().GetProperty(propertyInfo.Name).GetValue(carton, null).ToString();
+                                    doc.Variables.FormVariables.Item(i).Value = entityValue;
+                                    judge = true;
+                                    break;
+                                }
+
+
+                            }
+                            if (!judge)
+                            {
+                                doc.Variables.FormVariables.Item(i).Value = mandUnionFieldType.FieldValue;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                int Num = 1;                      //打印数量
+                doc.Printer.SwitchTo(DefaultPrinter());
+                //doc.Printer.SwitchTo(printerName);  //設置打印機
+                doc.PrintLabel(1, 1, 1, Num, 1, "");
+                doc.FormFeed();
+                //doc.PrintDocument(Num);           //打印               
+
+            }
+            catch (Exception ex)
+            {
+                return false;                          //返回,後面代碼不執行
+            }
+            finally
+            {
+                //內存釋放和回收
+                lbl.Documents.CloseAll();
+                lbl.Quit();
+                lbl = null;
+                doc = null;
+                GC.Collect(0);
+
+            }
+            return true;
+
+        }
+
 
         public string PreviewPrintBC(string templateFileName)
         {
@@ -294,11 +374,11 @@ namespace CTCodePrint.common
             try
             {
                 filePath = "D:\\" + System.DateTime.Now.Year + System.DateTime.Now.Month + System.DateTime.Now.Day + System.DateTime.Now.Hour + System.DateTime.Now.Minute + System.DateTime.Now.Second + ".bmp";
-                string st = doc.CopyImageToFile(12, "BMP", 90, 60, filePath);          
+                string st = doc.CopyImageToFile(12, "BMP", 90, 60, filePath);
             }
             catch (Exception ex)
             {
-                                          //返回,後面代碼不執行
+                //返回,後面代碼不執行
             }
             finally
             {

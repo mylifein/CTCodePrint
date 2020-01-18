@@ -341,18 +341,20 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_rule_info (uuid,rule_desc,op_user,create_time)");
-            strSql.Append("values(@uuid,@ruledesc,@opuser,@createtime)");
+            strSql.Append("insert into t_rule_info (uuid,rule_desc,func_type,op_user,create_time)");
+            strSql.Append("values(@uuid,@ruledesc,@funcType,@opuser,@createtime)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@ruledesc", MySqlDbType.VarChar, 900),
+                 new MySqlParameter("@funcType", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
             };
             parameters[0].Value = codeRule.Uuid;
             parameters[1].Value = codeRule.RuleDesc;
-            parameters[2].Value = codeRule.Opuser;
-            parameters[3].Value = codeRule.Createtime;
+            parameters[2].Value = codeRule.FuncType;
+            parameters[3].Value = codeRule.Opuser;
+            parameters[4].Value = codeRule.Createtime;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
@@ -661,14 +663,16 @@ namespace DAL
         public DataSet queryMacTypeByNo(string mactypeno)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_mactype_info where mactypeno like @mactypeno");
+            strSql.Append("SELECT * FROM t_mactype_info where mactypeno like @macTypeNo");
             MySqlParameter[] parameters = {
-                new MySqlParameter("@mactypeno", MySqlDbType.VarChar, 900)
+                new MySqlParameter("@macTypeNo", MySqlDbType.VarChar, 900),
             };
             parameters[0].Value = "%" + mactypeno + "%";
             DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             return ds;
         }
+
+
 
         /// <summary>
         /// 保存打印模板關係信息

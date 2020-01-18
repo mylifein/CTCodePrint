@@ -1,22 +1,18 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Model
 {
-    public class RuleItem
+    public class Department
     {
         private string _uuid;
-        private string _ruleno;
-        private string _seqno;
-        private string _ruletype;
-        private string _rulevalue;
-        private string _rulelength;
+        private string _deptId;
+        private string _deptName;
+        private string _deptDesc;
         private string _opuser;
         private string _createtime;
-        private string _updateUser;
         private string _updatetime;
         private string _delflag;
 
@@ -33,68 +29,42 @@ namespace Model
             }
         }
 
-        public string Ruleno
+        public string DeptId
         {
             get
             {
-                return _ruleno;
+                return _deptId;
             }
 
             set
             {
-                _ruleno = value;
+                _deptId = value;
             }
         }
 
-        public string Seqno
+        public string DeptName
         {
             get
             {
-                return _seqno;
+                return _deptName;
             }
 
             set
             {
-                _seqno = value;
+                _deptName = value;
             }
         }
 
-        public string Ruletype
+        public string DeptDesc
         {
             get
             {
-                return _ruletype;
+                return _deptDesc;
             }
 
             set
             {
-                _ruletype = value;
-            }
-        }
-
-        public string Rulevalue
-        {
-            get
-            {
-                return _rulevalue;
-            }
-
-            set
-            {
-                _rulevalue = value;
-            }
-        }
-
-        public string Rulelength
-        {
-            get
-            {
-                return _rulelength;
-            }
-
-            set
-            {
-                _rulelength = value;
+                _deptDesc = value;
             }
         }
 
@@ -147,19 +117,6 @@ namespace Model
             set
             {
                 _delflag = value;
-            }
-        }
-
-        public string UpdateUser
-        {
-            get
-            {
-                return _updateUser;
-            }
-
-            set
-            {
-                _updateUser = value;
             }
         }
     }

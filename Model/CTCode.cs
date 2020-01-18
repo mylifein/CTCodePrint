@@ -13,6 +13,7 @@ namespace Model
         private string _ruleno;
         private string _workno;
         private string _cusno;
+        private string _cusname;
         private string _cuspo;
         private string _orderqty;
         private string _cusmatno;
@@ -286,6 +287,19 @@ namespace Model
             set
             {
                 _soOrder = value;
+            }
+        }
+
+        public string Cusname
+        {
+            get
+            {
+                return _cusname;
+            }
+
+            set
+            {
+                _cusname = value;
             }
         }
     }

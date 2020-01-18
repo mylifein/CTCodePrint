@@ -1,19 +1,17 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Model
 {
-    public class RuleItem
+    public class ProdLine
     {
         private string _uuid;
-        private string _ruleno;
-        private string _seqno;
-        private string _ruletype;
-        private string _rulevalue;
-        private string _rulelength;
+        private string _prodlineId;
+        private string _prodlineName;
+        private string _prodlineDesc;
+        private Department _department;
         private string _opuser;
         private string _createtime;
         private string _updateUser;
@@ -33,70 +31,33 @@ namespace Model
             }
         }
 
-        public string Ruleno
+        public string ProdlineName
         {
             get
             {
-                return _ruleno;
+                return _prodlineName;
             }
 
             set
             {
-                _ruleno = value;
+                _prodlineName = value;
             }
         }
 
-        public string Seqno
+        public string ProdlineDesc
         {
             get
             {
-                return _seqno;
+                return _prodlineDesc;
             }
 
             set
             {
-                _seqno = value;
+                _prodlineDesc = value;
             }
         }
 
-        public string Ruletype
-        {
-            get
-            {
-                return _ruletype;
-            }
 
-            set
-            {
-                _ruletype = value;
-            }
-        }
-
-        public string Rulevalue
-        {
-            get
-            {
-                return _rulevalue;
-            }
-
-            set
-            {
-                _rulevalue = value;
-            }
-        }
-
-        public string Rulelength
-        {
-            get
-            {
-                return _rulelength;
-            }
-
-            set
-            {
-                _rulelength = value;
-            }
-        }
 
         public string Opuser
         {
@@ -121,6 +82,19 @@ namespace Model
             set
             {
                 _createtime = value;
+            }
+        }
+
+        public string UpdateUser
+        {
+            get
+            {
+                return _updateUser;
+            }
+
+            set
+            {
+                _updateUser = value;
             }
         }
 
@@ -150,16 +124,29 @@ namespace Model
             }
         }
 
-        public string UpdateUser
+        public string ProdlineId
         {
             get
             {
-                return _updateUser;
+                return _prodlineId;
             }
 
             set
             {
-                _updateUser = value;
+                _prodlineId = value;
+            }
+        }
+
+        public Department Department
+        {
+            get
+            {
+                return _department;
+            }
+
+            set
+            {
+                _department = value;
             }
         }
     }

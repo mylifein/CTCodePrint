@@ -22,101 +22,105 @@ namespace GenerateCTCode
             List<CTCode> listCode = new List<CTCode>();
             StringBuilder ctCode = new StringBuilder();
             DataSet ds = selectControl.getRulesByNo(ctCodeInfo.Mactype);
-            foreach (DataRow dr in ds.Tables[0].Rows)
+            if(ds != null && ds.Tables.Count > 0)
             {
-                string ruleType = dr["rule_type"].ToString();
-                ctCodeInfo.Ruleno = dr["rule_no"].ToString();
-                int ruleLength = Convert.ToInt32(dr["rule_length"].ToString());
-                string ruleValue = dr["rule_value"].ToString();
-                switch (ruleType.Trim())
+                foreach (DataRow dr in ds.Tables[0].Rows)
                 {
-                    case "T001":
-                        string poOrWorkNo = "";
-                        if (ctCodeInfo.Cuspo != null && ctCodeInfo.Cuspo != "")
-                        {
-                            poOrWorkNo = ctCodeInfo.Cuspo;
-                        }
-                        else
-                        {
-                            poOrWorkNo = ctCodeInfo.Workno;
-                        }
-                        ctCode.Append(poOrWorkNo.Substring(0, ruleLength));
-                        break;
-                    case "T002":
-                        ctCode.Append(GenerateTimeCode(ruleLength));
-                        break;
-                    case "T003":
-                        if(ctCodeInfo.Cusmatno.Length > ruleLength)
-                        {
-                            ctCode.Append(ctCodeInfo.Cusmatno.Trim().Substring(0, ruleLength));
-                        }else
-                        {
-                            ctCode.Append("");
-                        }
-                        break;
-                    case "T004":
-                        ctCode.Append(ctCodeInfo.Offino.Trim().Substring(0, ruleLength));
-                        break;
-                    case "T005":
-                        ctCode.Append(ctCodeInfo.Verno.Trim().Substring(0, ruleLength));
-                        break;
-                    case "T006":
-                        judgeSerial = true;
-                        string maxCode = printM.getMaxCTCode(ctCode.ToString(), ctCodeInfo.Delmatno);
-                        string prefixCT = ctCode.ToString();
-                        if (maxCode == null || maxCode == "")
-                        {
-                            for (int i = 1; i <= printQty; i++)
+                    string ruleType = dr["rule_type"].ToString();
+                    ctCodeInfo.Ruleno = dr["rule_no"].ToString();
+                    int ruleLength = Convert.ToInt32(dr["rule_length"].ToString());
+                    string ruleValue = dr["rule_value"].ToString();
+                    switch (ruleType.Trim())
+                    {
+                        case "T001":
+                            string poOrWorkNo = "";
+                            if (ctCodeInfo.Cuspo != null && ctCodeInfo.Cuspo != "")
                             {
-                                CTCode ctCodeIn = new CTCode();
-                                ctCodeIn = exchangeCT(ctCodeIn, ctCodeInfo);
-                                string seqNo = "";
-                                string tempCT = "";
-                                string seqCode = Convert34Code(i);
-                                for (int numLength = seqCode.Length ; numLength < ruleLength; numLength++)
-                                {
-                                    seqNo += "0";
-                                }
-                                seqNo += seqCode;
-                                tempCT = prefixCT + seqNo;
-                                ctCodeIn.Ctcode = tempCT;
-                                listCode.Add(ctCodeIn);
+                                poOrWorkNo = ctCodeInfo.Cuspo;
                             }
-                        }
-                        else
-                        {
-                            //獲取流水號
-                            string subCode = maxCode.Substring(maxCode.Length - ruleLength);
-                            int ctNo = convert34CodeTo10(subCode);
-                            for (int i=0;i < printQty; i++)
+                            else
                             {
-                                CTCode ctCodeIn = new CTCode();
-                                ctCodeIn = exchangeCT(ctCodeIn, ctCodeInfo);
-                                ctNo++;
-                                string ct34Code = Convert34Code(ctNo);
-                                string temStr = "";
-                                string tempCT = "";
-                                for(int j = ct34Code.Length; j < ruleLength; j++)
-                                {
-                                    temStr += 0;
-                                }
-                                ct34Code = temStr + ct34Code;
-                                tempCT = prefixCT + ct34Code;
-                                ctCodeIn.Ctcode = tempCT;
-                                listCode.Add(ctCodeIn);
+                                poOrWorkNo = ctCodeInfo.Workno;
                             }
+                            ctCode.Append(poOrWorkNo.Substring(0, ruleLength));
+                            break;
+                        case "T002":
+                            ctCode.Append(GenerateTimeCode(ruleLength));
+                            break;
+                        case "T003":
+                            if (ctCodeInfo.Cusmatno.Length > ruleLength)
+                            {
+                                ctCode.Append(ctCodeInfo.Cusmatno.Trim().Substring(0, ruleLength));
+                            }
+                            else
+                            {
+                                ctCode.Append("");
+                            }
+                            break;
+                        case "T004":
+                            ctCode.Append(ctCodeInfo.Offino.Trim().Substring(0, ruleLength));
+                            break;
+                        case "T005":
+                            ctCode.Append(ctCodeInfo.Verno.Trim().Substring(0, ruleLength));
+                            break;
+                        case "T006":
+                            judgeSerial = true;
+                            string maxCode = printM.getMaxCTCode(ctCode.ToString(), ctCodeInfo.Delmatno);
+                            string prefixCT = ctCode.ToString();
+                            if (maxCode == null || maxCode == "")
+                            {
+                                for (int i = 1; i <= printQty; i++)
+                                {
+                                    CTCode ctCodeIn = new CTCode();
+                                    ctCodeIn = exchangeCT(ctCodeIn, ctCodeInfo);
+                                    string seqNo = "";
+                                    string tempCT = "";
+                                    string seqCode = Convert34Code(i);
+                                    for (int numLength = seqCode.Length; numLength < ruleLength; numLength++)
+                                    {
+                                        seqNo += "0";
+                                    }
+                                    seqNo += seqCode;
+                                    tempCT = prefixCT + seqNo;
+                                    ctCodeIn.Ctcode = tempCT;
+                                    listCode.Add(ctCodeIn);
+                                }
+                            }
+                            else
+                            {
+                                //獲取流水號
+                                string subCode = maxCode.Substring(maxCode.Length - ruleLength);
+                                int ctNo = convert34CodeTo10(subCode);
+                                for (int i = 0; i < printQty; i++)
+                                {
+                                    CTCode ctCodeIn = new CTCode();
+                                    ctCodeIn = exchangeCT(ctCodeIn, ctCodeInfo);
+                                    ctNo++;
+                                    string ct34Code = Convert34Code(ctNo);
+                                    string temStr = "";
+                                    string tempCT = "";
+                                    for (int j = ct34Code.Length; j < ruleLength; j++)
+                                    {
+                                        temStr += 0;
+                                    }
+                                    ct34Code = temStr + ct34Code;
+                                    tempCT = prefixCT + ct34Code;
+                                    ctCodeIn.Ctcode = tempCT;
+                                    listCode.Add(ctCodeIn);
+                                }
 
-                        }
-                        //ctCode.Append(GenerateRandom(ruleLength));
-                        break;
-                    case "T007":
-                        ctCode.Append(ruleValue);
-                        break;
-                    case "T008":                   
-                        string subOperation = this.extractString(ctCodeInfo.SoOrder, ruleLength);
-                        ctCode.Append(subOperation);
-                        break;
+                            }
+                            //ctCode.Append(GenerateRandom(ruleLength));
+                            break;
+                        case "T007":
+                            ctCode.Append(ruleValue);
+                            break;
+                        case "T008":
+                            string subOperation = this.extractString(ctCodeInfo.SoOrder, ruleLength);
+                            ctCode.Append(subOperation);
+                            break;
 
+                    }
                 }
             }
             if (!judgeSerial)
@@ -367,6 +371,7 @@ namespace GenerateCTCode
             ctCode1.Workno = ctCode2.Workno;
             ctCode1.Cusno = ctCode2.Cusno;
             ctCode1.Cuspo = ctCode2.Cuspo;
+            ctCode1.Cusname = ctCode2.Cusname;
             ctCode1.Orderqty = ctCode2.Orderqty;
             ctCode1.Cusmatno = ctCode2.Cusmatno;
             ctCode1.SoOrder = ctCode2.SoOrder;

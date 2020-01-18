@@ -2,22 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Model
 {
-    public class CodeRule
+    public class CtRelCarton
     {
         private string _uuid;
-        private string _ruleno;
-        private string _funcType;
-        private string _ruleDesc;
+        private string _ctcode;
+        private string _cartonNo;
         private string _opuser;
         private string _createtime;
+        private string _updateser;
         private string _updatetime;
-        private string _updateUser;
         private string _delflag;
-        private List<RuleItem> _ruleItem;
 
         public string Uuid
         {
@@ -32,29 +29,29 @@ namespace Model
             }
         }
 
-        public string Ruleno
+        public string Ctcode
         {
             get
             {
-                return _ruleno;
+                return _ctcode;
             }
 
             set
             {
-                _ruleno = value;
+                _ctcode = value;
             }
         }
 
-        public string RuleDesc
+        public string CartonNo
         {
             get
             {
-                return _ruleDesc;
+                return _cartonNo;
             }
 
             set
             {
-                _ruleDesc = value;
+                _cartonNo = value;
             }
         }
 
@@ -84,6 +81,19 @@ namespace Model
             }
         }
 
+        public string Updateser
+        {
+            get
+            {
+                return _updateser;
+            }
+
+            set
+            {
+                _updateser = value;
+            }
+        }
+
         public string Updatetime
         {
             get
@@ -107,45 +117,6 @@ namespace Model
             set
             {
                 _delflag = value;
-            }
-        }
-
-        public List<RuleItem> RuleItem
-        {
-            get
-            {
-                return _ruleItem;
-            }
-
-            set
-            {
-                _ruleItem = value;
-            }
-        }
-
-        public string FuncType
-        {
-            get
-            {
-                return _funcType;
-            }
-
-            set
-            {
-                _funcType = value;
-            }
-        }
-
-        public string UpdateUser
-        {
-            get
-            {
-                return _updateUser;
-            }
-
-            set
-            {
-                _updateUser = value;
             }
         }
     }

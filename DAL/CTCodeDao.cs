@@ -31,6 +31,7 @@ namespace DAL
                 cTCode.Ruleno = ds.Tables[0].Rows[0]["rule_no"].ToString();
                 cTCode.Workno = ds.Tables[0].Rows[0]["work_no"].ToString();
                 cTCode.Cusno = ds.Tables[0].Rows[0]["cus_no"].ToString();
+                cTCode.Cusname = ds.Tables[0].Rows[0]["cus_name"].ToString();
                 cTCode.Cuspo = ds.Tables[0].Rows[0]["cus_po"].ToString();
                 cTCode.Orderqty = ds.Tables[0].Rows[0]["po_qty"].ToString();
                 cTCode.Cusmatno = ds.Tables[0].Rows[0]["cus_matno"].ToString();
@@ -41,6 +42,7 @@ namespace DAL
                 cTCode.Woquantity = ds.Tables[0].Rows[0]["wo_quantity"].ToString();
                 cTCode.Completedqty = ds.Tables[0].Rows[0]["completed_qty"].ToString();
                 cTCode.Modelno = ds.Tables[0].Rows[0]["model_no"].ToString();
+                cTCode.SoOrder = ds.Tables[0].Rows[0]["so_order"].ToString();
                 cTCode.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
                 cTCode.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
             }
@@ -51,8 +53,8 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_code_info (uuid,ct_code,rule_no,work_no,cus_no,cus_po,po_qty,cus_matno,del_matno,mac_type,offi_no,ver_no,wo_quantity,completed_qty,model_no,op_user,create_time,so_order)");
-            strSql.Append("values(@uuid,@ctcode,@ruleno,@workno,@cusno,@cuspo,@poqty,@cusmatno,@delmatno,@mac_type,@offino,@verno,@woquantity,@completedQty,@model_no,@opuser,@createtime,@soOrder)");
+            strSql.Append("insert into t_code_info (uuid,ct_code,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,mac_type,offi_no,ver_no,wo_quantity,completed_qty,model_no,op_user,create_time,so_order)");
+            strSql.Append("values(@uuid,@ctcode,@ruleno,@workno,@cusno,@cusname,@cuspo,@poqty,@cusmatno,@delmatno,@mac_type,@offino,@verno,@woquantity,@completedQty,@model_no,@opuser,@createtime,@soOrder)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@ctcode", MySqlDbType.VarChar, 900),
@@ -71,7 +73,8 @@ namespace DAL
                 new MySqlParameter("@completedQty", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@model_no", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@poqty", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@soOrder", MySqlDbType.VarChar, 900)
+                new MySqlParameter("@soOrder", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cusname", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = ctCode.Uuid;
             parameters[1].Value = ctCode.Ctcode;
@@ -91,6 +94,7 @@ namespace DAL
             parameters[15].Value = ctCode.Modelno;
             parameters[16].Value = ctCode.Orderqty;
             parameters[17].Value = ctCode.SoOrder;
+            parameters[18].Value = ctCode.Cusname;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {

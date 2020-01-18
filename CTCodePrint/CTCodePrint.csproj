@@ -88,6 +88,24 @@
     <Compile Include="BoundModel.Designer.cs">
       <DependentUpon>BoundModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="CreateDepartment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateDepartment.Designer.cs">
+      <DependentUpon>CreateDepartment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateProdLine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateProdLine.Designer.cs">
+      <DependentUpon>CreateProdLine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CartonPrint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CartonPrint.Designer.cs">
+      <DependentUpon>CartonPrint.cs</DependentUpon>
+    </Compile>
     <Compile Include="SubmatMaintain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -225,6 +243,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BoundModel.resx">
       <DependentUpon>BoundModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateDepartment.resx">
+      <DependentUpon>CreateDepartment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateProdLine.resx">
+      <DependentUpon>CreateProdLine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CartonPrint.resx">
+      <DependentUpon>CartonPrint.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SubmatMaintain.resx">
       <DependentUpon>SubmatMaintain.cs</DependentUpon>
