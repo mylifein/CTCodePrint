@@ -40,6 +40,29 @@ namespace CTCodePrint
                 this.comboBox2.ValueMember = "CUST_ACCOUNT_ID";
                 this.comboBox2.DataSource = dsCus.Tables[0];
             }
+
+            DataTable itemTable2 = new DataTable();   // construct selects value
+            DataColumn columnType;
+            DataRow rowType;
+            columnType = new DataColumn("Name");
+            itemTable2.Columns.Add(columnType);
+            columnType = new DataColumn("Value");
+            itemTable2.Columns.Add(columnType);
+            rowType = itemTable2.NewRow();
+            rowType["Name"] = "CT";
+            rowType["Value"] = "0";
+            itemTable2.Rows.Add(rowType);
+            rowType = itemTable2.NewRow();
+            rowType["Name"] = "裝箱";
+            rowType["Value"] = "1";
+            itemTable2.Rows.Add(rowType);
+            rowType = itemTable2.NewRow();
+            rowType["Name"] = "棧板";
+            rowType["Value"] = "2";
+            itemTable2.Rows.Add(rowType);
+            this.comboBox3.DisplayMember = "Name";
+            this.comboBox3.ValueMember = "Value";
+            this.comboBox3.DataSource = itemTable2;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -55,10 +78,13 @@ namespace CTCodePrint
                 this.textBox1.Focus();
                 return;
             }
+            string boundType = this.comboBox3.SelectedValue == null ? "0" : this.comboBox3.SelectedValue.ToString();
             FileRelDel fileRelDel = new FileRelDel();
             fileRelDel.FileNo = this.comboBox1.SelectedValue.ToString();
             fileRelDel.CusNo = this.comboBox2.SelectedValue.ToString().Trim();
             fileRelDel.DelMatno = this.textBox1.Text.Trim().ToString().Trim();
+            fileRelDel.BoundType = boundType;
+            
             if(fileRelDelService.checkAdd(fileRelDel))
             {
                 MessageBox.Show("該客戶和出貨料號的打印模板已經綁定，請勿重複綁定！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);

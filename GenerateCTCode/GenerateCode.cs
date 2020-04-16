@@ -21,7 +21,7 @@ namespace GenerateCTCode
             bool judgeSerial = false;                   //判断是否需要流水号
             List<CTCode> listCode = new List<CTCode>();
             StringBuilder ctCode = new StringBuilder();
-            DataSet ds = selectControl.getRulesByNo(ctCodeInfo.Mactype);
+            DataSet ds = selectControl.getRulesByActualNo(ctCodeInfo.Ruleno);
             if(ds != null && ds.Tables.Count > 0)
             {
                 foreach (DataRow dr in ds.Tables[0].Rows)
@@ -42,26 +42,96 @@ namespace GenerateCTCode
                             {
                                 poOrWorkNo = ctCodeInfo.Workno;
                             }
-                            ctCode.Append(poOrWorkNo.Substring(0, ruleLength));
+                            if (listCode.Count > 1)
+                            {
+
+                                for (int i= 0;i < listCode.Count;i++)
+                                {
+                                    listCode[i].Ctcode = listCode[i].Ctcode + poOrWorkNo.Substring(0, ruleLength);
+                                }
+                            }else
+                            {
+                                ctCode.Append(poOrWorkNo.Substring(0, ruleLength));
+                            }
                             break;
                         case "T002":
-                            ctCode.Append(GenerateTimeCode(ruleLength));
-                            break;
-                        case "T003":
-                            if (ctCodeInfo.Cusmatno.Length > ruleLength)
+                            if (listCode.Count > 1)
                             {
-                                ctCode.Append(ctCodeInfo.Cusmatno.Trim().Substring(0, ruleLength));
+
+                                for (int i = 0; i < listCode.Count; i++)
+                                {
+                                    listCode[i].Ctcode = listCode[i].Ctcode + GenerateTimeCode(ruleLength);
+                                }
                             }
                             else
                             {
-                                ctCode.Append("");
+                                ctCode.Append(GenerateTimeCode(ruleLength));
+                            }
+                            break;
+                        case "T003":
+                            string assistStr = "";
+                            if (ctCodeInfo.Cusmatno.Length > ruleLength)
+                            {
+                                assistStr = ctCodeInfo.Cusmatno.Trim().Substring(0, ruleLength);
+                            }
+                            if (listCode.Count > 1)
+                            {
+
+                                for (int i = 0; i < listCode.Count; i++)
+                                {
+                                    listCode[i].Ctcode = listCode[i].Ctcode + assistStr;
+                                }
+                            }
+                            else
+                            {
+                                ctCode.Append(assistStr);
                             }
                             break;
                         case "T004":
-                            ctCode.Append(ctCodeInfo.Offino.Trim().Substring(0, ruleLength));
+                            //  ctCode.Append(ctCodeInfo.Offino.Trim().Substring(0, ruleLength));
+                            if(ctCodeInfo.Offino.Trim().Length > ruleLength)
+                            {
+                                string assistT004 = ctCodeInfo.Offino.Trim().Substring(0, ruleLength);
+
+                                if (listCode.Count > 1)
+                                {
+
+                                    for (int i = 0; i < listCode.Count; i++)
+                                    {
+                                        listCode[i].Ctcode = listCode[i].Ctcode + assistT004;
+                                    }
+                                }
+                                else
+                                {
+                                    ctCode.Append(assistT004);
+                                }
+                            }else
+                            {
+                                ctCode.Append(ctCodeInfo.Offino.Trim());
+                            }
+
+                        
                             break;
                         case "T005":
-                            ctCode.Append(ctCodeInfo.Verno.Trim().Substring(0, ruleLength));
+                            // ctCode.Append(ctCodeInfo.Verno.Trim().Substring(0, ruleLength));
+                            string assistT005 = "A10";
+                            if (ctCodeInfo.Verno.Length > ruleLength)
+                            {
+                                assistT005 = ctCodeInfo.Verno.Trim().Substring(0, ruleLength);
+                            }
+                            
+                            if (listCode.Count >= 1)
+                            {
+
+                                for (int i = 0; i < listCode.Count; i++)
+                                {
+                                    listCode[i].Ctcode = listCode[i].Ctcode + assistT005;
+                                }
+                            }
+                            else
+                            {
+                                ctCode.Append(assistT005);
+                            }
                             break;
                         case "T006":
                             judgeSerial = true;
@@ -89,7 +159,7 @@ namespace GenerateCTCode
                             else
                             {
                                 //獲取流水號
-                                string subCode = maxCode.Substring(maxCode.Length - ruleLength);
+                                string subCode = maxCode.Substring(ctCode.Length, ruleLength);
                                 int ctNo = convert34CodeTo10(subCode);
                                 for (int i = 0; i < printQty; i++)
                                 {
@@ -113,13 +183,163 @@ namespace GenerateCTCode
                             //ctCode.Append(GenerateRandom(ruleLength));
                             break;
                         case "T007":
-                            ctCode.Append(ruleValue);
+                            //ctCode.Append(ruleValue);
+                            if (listCode.Count > 1)
+                            {
+
+                                for (int i = 0; i < listCode.Count; i++)
+                                {
+                                    listCode[i].Ctcode = listCode[i].Ctcode + ruleValue;
+                                }
+                            }
+                            else
+                            {
+                                ctCode.Append(ruleValue);
+                            }
                             break;
                         case "T008":
                             string subOperation = this.extractString(ctCodeInfo.SoOrder, ruleLength);
-                            ctCode.Append(subOperation);
-                            break;
+                            //ctCode.Append(subOperation);
+                            if (listCode.Count > 1)
+                            {
 
+                                for (int i = 0; i < listCode.Count; i++)
+                                {
+                                    listCode[i].Ctcode = listCode[i].Ctcode + subOperation;
+                                }
+                            }
+                            else
+                            {
+                                ctCode.Append(subOperation);
+                            }
+                            break;
+                        case "T013":                //十進制流水碼
+                            judgeSerial = true;
+                            string maxTenCode = printM.getMaxCTCode(ctCode.ToString(), ctCodeInfo.Delmatno);
+                            string prefixTenCT = ctCode.ToString();
+                            if (maxTenCode == null || maxTenCode == "")
+                            {
+                                for (int i = 1; i <= printQty; i++)
+                                {
+                                    CTCode ctCodeIn = new CTCode();
+                                    ctCodeIn = exchangeCT(ctCodeIn, ctCodeInfo);
+                                    string seqNo = "";
+                                    string tempCT = "";
+                                    string seqCode = i.ToString();
+                                    for (int numLength = seqCode.Length; numLength < ruleLength; numLength++)
+                                    {
+                                        seqNo += "0";
+                                    }
+                                    seqNo += seqCode;
+                                    tempCT = prefixTenCT + seqNo;
+                                    ctCodeIn.Ctcode = tempCT;
+                                    listCode.Add(ctCodeIn);
+                                }
+                            }
+                            else
+                            {
+                                //獲取流水號
+                                string subCode = maxTenCode.Substring(ctCode.Length, ruleLength);
+                                int ctNo = int.Parse(subCode);
+                                for (int i = 0; i < printQty; i++)
+                                {
+                                    CTCode ctCodeIn = new CTCode();
+                                    ctCodeIn = exchangeCT(ctCodeIn, ctCodeInfo);
+                                    ctNo++;
+                                    string ct34Code = ctNo.ToString();
+                                    string temStr = "";
+                                    string tempCT = "";
+                                    for (int j = ct34Code.Length; j < ruleLength; j++)
+                                    {
+                                        temStr += 0;
+                                    }
+                                    ct34Code = temStr + ct34Code;
+                                    tempCT = prefixTenCT + ct34Code;
+                                    ctCodeIn.Ctcode = tempCT;
+                                    listCode.Add(ctCodeIn);
+                                }
+
+                            }
+                            ctCode.Append("");
+                            break;
+                        case "T014":                //年月日進制表示
+                            StringBuilder timeString = new StringBuilder();
+                            string yearString = DateTime.Now.Year.ToString();
+                            int yearInt = int.Parse(yearString.Substring(yearString.Length - 2)); //獲取兩位年
+                            int monthInt = DateTime.Now.Month;
+                            int dayInt = DateTime.Now.Day;
+                            timeString.Append(Base31Code[yearInt]);
+                            timeString.Append(Base31Code[monthInt]);
+                            timeString.Append(Base31Code[dayInt]);
+                            //                            ctCode.Append(timeString.ToString());
+                            if (listCode.Count > 1)
+                            {
+
+                                for (int i = 0; i < listCode.Count; i++)
+                                {
+                                    listCode[i].Ctcode = listCode[i].Ctcode + timeString.ToString();
+                                }
+                            }
+                            else
+                            {
+                                ctCode.Append(timeString.ToString());
+                            }
+                            break;
+                        case "T015":                //年月日進制表示
+                            StringBuilder inspurTime = new StringBuilder();
+                            string inspurYearString = DateTime.Now.Year.ToString();
+                            int inspurYearInt = int.Parse(inspurYearString.Substring(inspurYearString.Length - 2)); //獲取兩位年
+                            int inspurmonthInt = DateTime.Now.Month;
+                            string dd2 = DateTime.Now.ToString("dd");                       //获得两位日
+                            inspurTime.Append(Base33Code[inspurYearInt]);
+                            inspurTime.Append(Base33Code[inspurmonthInt]);
+                            inspurTime.Append(dd2);
+                            //             ctCode.Append(inspurTime.ToString());
+                            if (listCode.Count > 1)
+                            {
+
+                                for (int i = 0; i < listCode.Count; i++)
+                                {
+                                    listCode[i].Ctcode = listCode[i].Ctcode + inspurTime.ToString();
+                                }
+                            }
+                            else
+                            {
+                                ctCode.Append(inspurTime.ToString());
+                            }
+                            break;
+                        case "T016":                //浪潮批次号
+
+                            String condition = ctCode.ToString().Substring(2);
+                            string batchCT = printM.queryInspurCodeNo(condition, ctCodeInfo.Workno,ctCodeInfo.Cuspo);
+                            string batchNo = "1";
+                            if(batchCT != null)
+                            {
+                                batchNo = batchCT.Substring(ctCode.Length, 1);
+                            }else
+                            {
+                                batchCT = printM.queryInspurMaxCode(condition, ctCodeInfo.Cusno);
+                                if(batchCT != null)
+                                {
+                                    string tempBatchNo = batchNo = batchCT.Substring(ctCode.Length, 1);
+                                    int tempMathNo = InverseBase34Code[tempBatchNo];
+                                    batchNo = Base34Code[tempMathNo + 1];
+                                }
+                            }
+                            if (listCode.Count > 1)
+                            {
+
+                                for (int i = 0; i < listCode.Count; i++)
+                                {
+                                    listCode[i].Ctcode = listCode[i].Ctcode + batchNo;
+                                }
+                            }
+                            else
+                            {
+                                ctCode.Append(batchNo);
+                            }
+
+                            break;
                     }
                 }
             }
@@ -301,7 +521,26 @@ namespace GenerateCTCode
         };
 
 
+        
+        /// <summary>
+        /// DGP 31进制的年月日 编码
+        /// </summary>
+        public static Dictionary<int, string> Base31Code = new Dictionary<int, string>() {
+            {   0  ,"0"}, {   1  ,"1"}, {   2  ,"2"}, {   3  ,"3"}, {   4  ,"4"}, {   5  ,"5"}, {   6  ,"6"}, {   7  ,"7"}, {   8  ,"8"}, {   9  ,"9"},
+            {   10  ,"A"}, {   11  ,"B"}, {   12  ,"C"}, {   13  ,"D"}, {   14  ,"E"}, {   15  ,"F"}, {   16  ,"G"}, {   17  ,"H"}, {   18  ,"J"}, {   19  ,"K"},
+            {   20  ,"L"}, {   21  ,"M"}, {   22  ,"N"}, {   23  ,"P"}, {   24  ,"R"}, {   25  ,"S"}, {   26  ,"T"}, {   27  ,"V"}, {   28  ,"W"}, {   29  ,"X"},
+            {   30  ,"Y"}, {   31  ,"Z"}
+        };
 
+        /// <summary>
+        ///  浪潮年编码 
+        /// </summary>
+        public static Dictionary<int, string> Base33Code = new Dictionary<int, string>() {
+            {   0  ,"0"}, {   1  ,"1"}, {   2  ,"2"}, {   3  ,"3"}, {   4  ,"4"}, {   5  ,"5"}, {   6  ,"6"}, {   7  ,"7"}, {   8  ,"8"}, {   9  ,"9"},
+            {   10  ,"A"}, {   11  ,"B"}, {   12  ,"C"}, {   13  ,"D"}, {   14  ,"E"}, {   15  ,"F"}, {   16  ,"G"}, {   17  ,"H"}, {   18  ,"J"}, {   19  ,"K"},
+            {   20  ,"L"}, {   21  ,"M"}, {   22  ,"N"}, {   23  ,"P"}, {   24  ,"Q"}, {   25  ,"R"}, {   26  ,"S"}, {   27  ,"T"}, {   28  ,"U"}, {   29  ,"V"},
+            {   30  ,"W"}, {   31  ,"X"},{   32  ,"Y"},{   33  ,"Z"}
+        };
 
         /// <summary>
         /// 将日期和月份转换

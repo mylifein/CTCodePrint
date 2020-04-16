@@ -108,35 +108,38 @@ namespace DAL
                 codeRule.UpdateUser = ds.Tables[0].Rows[0]["update_user"].ToString();
                 codeRule.Updatetime = ds.Tables[0].Rows[0]["update_time"].ToString();
             }
-            List<RuleItem> ruleItems = null;
-            StringBuilder strSql1 = new StringBuilder();
-            strSql1.Append("SELECT * FROM t_code_rule WHERE rule_no = @ruleNo AND del_flag is null ORDER BY seq_no ASC");
-            MySqlParameter[] parameters1 = {
+            if(codeRule != null)
+            {
+                List<RuleItem> ruleItems = null;
+                StringBuilder strSql1 = new StringBuilder();
+                strSql1.Append("SELECT * FROM t_code_rule WHERE rule_no = @ruleNo AND del_flag is null ORDER BY seq_no ASC");
+                MySqlParameter[] parameters1 = {
                 new MySqlParameter("@ruleNo", MySqlDbType.VarChar, 900),
             };
-            parameters1[0].Value = ruleNo;
-            DataSet ds1 = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql1.ToString(), parameters1);
-            if (ds1 != null && ds1.Tables.Count > 0 && ds1.Tables[0].Rows.Count > 0)
-            {
-                ruleItems = new List<RuleItem>();
-                foreach (DataRow dr in ds1.Tables[0].Rows)
+                parameters1[0].Value = ruleNo;
+                DataSet ds1 = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql1.ToString(), parameters1);
+                if (ds1 != null && ds1.Tables.Count > 0 && ds1.Tables[0].Rows.Count > 0)
                 {
-                    RuleItem ruleItem = new RuleItem();
-                    ruleItem.Uuid = dr["uuid"].ToString();
-                    ruleItem.Ruleno = dr["rule_no"].ToString();
-                    ruleItem.Seqno = dr["seq_no"].ToString();
-                    ruleItem.Ruletype = dr["rule_type"].ToString();
-                    ruleItem.Rulevalue = dr["rule_value"].ToString();
-                    ruleItem.Rulelength = dr["rule_length"].ToString();
-                    ruleItem.Opuser = dr["op_user"].ToString();
-                    ruleItem.Createtime = dr["create_time"].ToString();
-                    ruleItem.UpdateUser = dr["update_user"].ToString();
-                    ruleItem.Updatetime = dr["update_time"].ToString();
-                    ruleItems.Add(ruleItem);
-                }
+                    ruleItems = new List<RuleItem>();
+                    foreach (DataRow dr in ds1.Tables[0].Rows)
+                    {
+                        RuleItem ruleItem = new RuleItem();
+                        ruleItem.Uuid = dr["uuid"].ToString();
+                        ruleItem.Ruleno = dr["rule_no"].ToString();
+                        ruleItem.Seqno = dr["seq_no"].ToString();
+                        ruleItem.Ruletype = dr["rule_type"].ToString();
+                        ruleItem.Rulevalue = dr["rule_value"].ToString();
+                        ruleItem.Rulelength = int.Parse(dr["rule_length"].ToString());
+                        ruleItem.Opuser = dr["op_user"].ToString();
+                        ruleItem.Createtime = dr["create_time"].ToString();
+                        ruleItem.UpdateUser = dr["update_user"].ToString();
+                        ruleItem.Updatetime = dr["update_time"].ToString();
+                        ruleItems.Add(ruleItem);
+                    }
 
+                }
+                codeRule.RuleItem = ruleItems;
             }
-            codeRule.RuleItem = ruleItems;
             return codeRule;
         }
 

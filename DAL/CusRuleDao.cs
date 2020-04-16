@@ -16,13 +16,15 @@ namespace DAL
         {
             bool repeatJudge = false;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select count(1) from t_cus_codrule where cus_no=@cusNo and del_matno=@delMatno and del_flag is null");
+            strSql.Append("select count(1) from t_cus_codrule where cus_no=@cusNo and del_matno=@delMatno and bound_type=@boundType and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@cusNo", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@delMatno", MySqlDbType.VarChar, 900)
+                new MySqlParameter("@delMatno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@boundType", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = cusRule.Cusno;
             parameters[1].Value = cusRule.Delmatno;
+            parameters[2].Value = cusRule.Boundtype;
             int rows = int.Parse(SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters).ToString().Trim());
             if (rows > 0)
             {

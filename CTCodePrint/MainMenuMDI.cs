@@ -19,14 +19,14 @@ namespace CTCodePrint
         public MainMenuMDI()
         {
             InitializeComponent();
-            toolStripStatusLabel4.Text =CTCodeLogin.user;
+            toolStripStatusLabel4.Text = CTCodeLogin.user;
             ct();
         }
         private readonly RoleRelMenuService roleRelMenuService = new RoleRelMenuService();
         private void ExitToolsStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
-        }    
+        }
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             ReprintCT printCT = new ReprintCT();
@@ -181,12 +181,12 @@ namespace CTCodePrint
 
                     if (!(this.menuStrip.Items[i] is ToolStripSeparator))
                     {
-                        this.menuStrip.Items[i].Visible= false;
+                        this.menuStrip.Items[i].Visible = false;
                         foreach (RoleUnionMenu roleUnionMenu in roleUnionMenuList)
                         {
                             if (roleUnionMenu.Menuname == this.menuStrip.Items[i].Name.ToString().Trim())
                             {
-                                this.menuStrip.Items[i].Visible= true;
+                                this.menuStrip.Items[i].Visible = true;
                             }
                         }
 
@@ -262,6 +262,50 @@ namespace CTCodePrint
         {
             CartonPrint cartonPrint = new CartonPrint();
             cartonPrint.Show();
+        }
+
+        private void 单出件装箱单打印ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CartonDirectPrint cartonDirectPrint = new CartonDirectPrint();
+            cartonDirectPrint.Show();
+        }
+
+        private void 棧板標籤打印ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PalletPrint palletPrint = new PalletPrint();
+            palletPrint.Show();
+        }
+
+        private void 創建容量ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateCapacity createCapacity = new CreateCapacity();
+            createCapacity.Show();
+        }
+
+        private void 容量綁定ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BoundCapacity boundCapacity = new BoundCapacity();
+            boundCapacity.Show();
+        }
+
+
+
+        private void 創建用戶ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateUser createUser = new CreateUser();
+            createUser.Show();
+        }
+
+        private void 模板修改ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ModifyModelFile modifyModelFile = new ModifyModelFile();
+            modifyModelFile.Show();
+        }
+
+        private void 重印裝箱單ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ReprintCarton reprintCarton = new ReprintCarton();
+            reprintCarton.Show();
         }
     }
 }

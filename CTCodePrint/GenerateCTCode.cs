@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -74,10 +75,13 @@ namespace CTCodePrint
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.checkUIInfo();   //檢查必填項信息
+            if (!this.checkUIInfo())
+            {
+                return;
+            }
             if (this.comboBox2.SelectedValue == null || this.comboBox2.SelectedValue.ToString().Trim() == "")
             {
-                MessageBox.Show("客戶機種類型為空，請先維護該出貨料號/子階料號對應的機種類型!", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("客戶编码规则為空，請先維護該出貨料號/子階料號對應的機種類型!", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.textBox1.Focus();
                 return;
             }
@@ -103,8 +107,8 @@ namespace CTCodePrint
                 this.comboBox8.Focus();
                 return;
             }
-            MessageBox.Show("正在打印中，不能做任何操作請耐心等待！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            bool judgePrint = barPrint.BactchPrintBCByModel(filePath, ctList, mandUnionFieldTypeList,comboBox8.SelectedItem.ToString());
+            // MessageBox.Show("正在打印中，不能做任何操作請耐心等待！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            bool judgePrint = barPrint.BactchPrintCTByModel(filePath, ctListToArray(ctList, mandUnionFieldTypeList), comboBox8.SelectedItem.ToString()); //barPrint.BactchPrintBCByModel(filePath, ctList, mandUnionFieldTypeList,comboBox8.SelectedItem.ToString());
             if (judgePrint)
             {
                 if (!ctCodeService.saveCTCodeList(ctList))
@@ -112,12 +116,12 @@ namespace CTCodePrint
                     MessageBox.Show("保存CT碼列表失敗！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
-                if (!printQ.savePrintRecordList(ctList))
-                {
-                    MessageBox.Show("保存CT碼打印記錄失敗！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-                MessageBox.Show("生成CT碼並打印完成！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //if (!printQ.savePrintRecordList(ctList))
+                //{
+                //    MessageBox.Show("保存CT碼打印記錄失敗！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //    return;
+                //}
+                // MessageBox.Show("生成CT碼並打印完成！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
             else
@@ -154,6 +158,17 @@ namespace CTCodePrint
                         this.textBox3.Text = ds.Tables[0].Rows[0]["ITEM_CODE"].ToString();          //delivery code
                         this.textBox11.Text = ds.Tables[0].Rows[0]["CUSTOMER_ID"].ToString();      //customer number 
                         this.textBox7.Text = this.getCountWorkNoCT(workno);                //CT Count
+                        //DataSet dsCusMaterial = queryB.getCusMatInfo(workno);
+                        //if (dsCusMaterial != null && dsCusMaterial.Tables.Count > 0)
+                        //{
+                        //    if (dsCusMaterial.Tables[0].Rows.Count > 0)
+                        //    {
+                        //        this.comboBox4.DisplayMember = "CUSTOMER_ITEM_NUMBER";
+                        //        this.comboBox4.ValueMember = "CUSTOMER_ITEM_NUMBER";
+                        //        this.comboBox4.DataSource = dsCusMaterial.Tables[0];
+                        //        this.textBox14.Text = dsCusMaterial.Tables[0].Rows[0]["CUSTOMER_ITEM_DESC"].ToString();
+                        //    }
+                        //}
                         if (ds.Tables[0].Rows[0]["CUSTOMER_ITEM_NUMBER"] != null && ds.Tables[0].Rows[0]["CUSTOMER_ITEM_NUMBER"].ToString().Trim() != "")
                         {
                             this.comboBox4.DisplayMember = "CUSTOMER_ITEM_NUMBER";
@@ -170,6 +185,7 @@ namespace CTCodePrint
                                     this.comboBox4.DisplayMember = "CUSTOMER_ITEM_NUMBER";
                                     this.comboBox4.ValueMember = "CUSTOMER_ITEM_NUMBER";
                                     this.comboBox4.DataSource = dsCusMaterial.Tables[0];
+                                    this.textBox14.Text = dsCusMaterial.Tables[0].Rows[0]["CUSTOMER_ITEM_DESC"].ToString();
                                 }
                             }
                         }
@@ -223,7 +239,7 @@ namespace CTCodePrint
 
         private void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
-            if (this.comboBox1.SelectedText != null && this.comboBox1.SelectedText.ToString().Trim() != "")
+            if (this.comboBox1.SelectedValue != null && this.comboBox1.SelectedValue.ToString().Trim() != "")
             {
                 this.textBox2.Text = this.comboBox1.SelectedValue.ToString().Trim();
                 this.textBox7.Text = this.getCountWorkNoCT(this.textBox1.Text);
@@ -276,27 +292,27 @@ namespace CTCodePrint
         }
 
         //檢查打印所需信息
-        private void checkUIInfo()
+        private bool checkUIInfo()
         {
             //獲得界面信息
             if (this.textBox1.Text == null || this.textBox1.Text.Trim() == "")
             {
                 MessageBox.Show("請輸入工單號！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.textBox1.Focus();
-                return;
+                return false;
             }
             if (this.textBox11.Text == null || this.textBox11.Text.Trim() == "")
             {
                 MessageBox.Show("請在本系統維護客戶信息！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.textBox11.Focus();
-                return;
+                return false;
             }
             if (this.comboBox2.SelectedValue == null || this.comboBox2.SelectedValue.ToString() == "")
             {
                 MessageBox.Show("請在本系統維護客戶和幾種類型關係！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                return false;
             }
-            DataSet dsCheck = selectQ.getRulesByNo(ctCodeInfo.Mactype);
+            DataSet dsCheck = selectQ.getRulesByActualNo(ctCodeInfo.Ruleno);
             if (dsCheck != null && dsCheck.Tables.Count > 0 && dsCheck.Tables[0].Rows.Count > 0)
             {
                 foreach (DataRow dr in dsCheck.Tables[0].Rows)
@@ -312,7 +328,7 @@ namespace CTCodePrint
                             if (ctCodeInfo.Cusmatno.Trim() == "")
                             {
                                 MessageBox.Show("此編碼規則需要客戶料號信息，請在ERP中維護！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                return;
+                                return false;
                             }
                             break;
                         case "T004":
@@ -320,21 +336,21 @@ namespace CTCodePrint
                             {
                                 MessageBox.Show("此編碼規則需要正式編號信息，請輸入正式編號！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 this.textBox6.Focus();
-                                return;
+                                return false;
                             }
                             break;
                         case "T005":
                             if (ctCodeInfo.Verno.Trim() == "")
                             {
                                 MessageBox.Show("此編碼規則需要版本號，請在ERP中維護！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                return;
+                                return false;
                             }
                             break;
                         case "T008":
                             if (ctCodeInfo.SoOrder.Trim() == "")
                             {
                                 MessageBox.Show("此編碼規則需要销售订单，請在ERP中維護！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                return;
+                                return false;
                             }
                             break;
 
@@ -345,14 +361,15 @@ namespace CTCodePrint
             else
             {
                 MessageBox.Show("未找到編碼規則，請維護編碼規則", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                return false;
             }
+            return true;
 
         }
 
         private void checkPrintInfo()
         {
-            ctCodeInfo.Workno = this.textBox1.Text.Trim();           //workNo
+            ctCodeInfo.Workno = this.textBox1.Text.Trim().ToUpper();           //workNo
             ctCodeInfo.Cuspo = this.comboBox1.Text == null ? "" : this.comboBox1.Text.ToString().Trim();            //Cuspo
             ctCodeInfo.Orderqty = this.textBox2.Text.Trim();        //order qty
            
@@ -367,12 +384,13 @@ namespace CTCodePrint
             ctCodeInfo.Cusname = this.textBox10.Text.Trim();        //customer name
             ctCodeInfo.Offino = this.textBox6.Text.Trim();  //officialNo
             ctCodeInfo.SoOrder = this.comboBox5.Text == null ? "" : this.comboBox5.Text.ToString().Trim();   //so_order
-            ctCodeInfo.Mactype = this.comboBox2.SelectedValue == null ? "" : this.comboBox2.SelectedValue.ToString().Trim();  //macType
+            //ctCodeInfo.Mactype = this.comboBox2.SelectedValue == null ? "" : this.comboBox2.SelectedValue.ToString().Trim();  //macType
+            ctCodeInfo.Ruleno = this.comboBox2.SelectedValue == null ? "" : this.comboBox2.SelectedValue.ToString().Trim();     //编码规则
             ctCodeInfo.Verno = this.comboBox3.SelectedValue == null ? "" : this.comboBox3.SelectedValue.ToString().Trim();      //version number
             ctCodeInfo.Woquantity = this.textBox4.Text.Trim();  //wnquantity
             ctCodeInfo.Completedqty = this.textBox9.Text.Trim();    //completed quantity
             ctCodeInfo.Cusmatno = this.comboBox4.SelectedValue == null ? "" : this.comboBox4.SelectedValue.ToString().Trim();   //customer material number 
-            FileRelDel fileRelDel = fileRelDelService.queryFileRelDelCusNo(ctCodeInfo.Cusno, ctCodeInfo.Delmatno);
+            FileRelDel fileRelDel = fileRelDelService.queryFileRelDelCusNo(ctCodeInfo.Cusno, ctCodeInfo.Delmatno,"0");
             if(fileRelDel != null)
             {
                 ctCodeInfo.Modelno = fileRelDel.FileNo;
@@ -397,7 +415,10 @@ namespace CTCodePrint
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-            this.generateCTList();
+            if(ctCodeInfo.Ruleno != null)
+            {
+                this.generateCTList();
+            }
         }
 
         private void comboBox7_SelectedValueChanged(object sender, EventArgs e)
@@ -435,7 +456,7 @@ namespace CTCodePrint
             {
                 delMatno = this.comboBox6.SelectedValue == null ? "" : this.comboBox6.SelectedValue.ToString().Trim();
             }
-            FileRelDel fileRelDel = fileRelDelService.queryFileRelDelCusNo(this.textBox11.Text, delMatno);
+            FileRelDel fileRelDel = fileRelDelService.queryFileRelDelCusNo(this.textBox11.Text, delMatno,"0");
             if (fileRelDel != null)
             {
                 //下載模板並預覽
@@ -449,9 +470,9 @@ namespace CTCodePrint
                 }
             }
             //計算剩餘打印數量
-            int ceilQty = this.getPrintCeiling(int.Parse(this.textBox2.Text.Trim().ToString()), int.Parse(this.textBox4.Text.Trim().ToString()));
-            this.numericUpDown1.Maximum = ceilQty;
-            this.numericUpDown1.Value = ceilQty;
+            //int ceilQty = this.getPrintCeiling(int.Parse(this.textBox2.Text.Trim().ToString()), int.Parse(this.textBox4.Text.Trim().ToString()));
+            //this.numericUpDown1.Maximum = ceilQty;
+            //this.numericUpDown1.Value = ceilQty;
             this.generateCTList();
         }
 
@@ -480,23 +501,25 @@ namespace CTCodePrint
             {
                 delmatno = this.comboBox6.SelectedValue == null ? "" : this.comboBox6.SelectedValue.ToString().Trim();
             }           
-            DataSet ds = selectQ.getMacByCus(comboxValue, delmatno);
+            DataSet ds = selectQ.getMacByCus(comboxValue, delmatno,"0");                //0代表CT碼編碼規則
             DataTable itemTable = null;
-            string mactypeno = null;
+            //string mactypeno = null;
+            string ruleno = null;
             if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
-                mactypeno = ds.Tables[0].Rows[0]["mactypeno"].ToString();
+                //mactypeno = ds.Tables[0].Rows[0]["mactypeno"].ToString();
+                ruleno = ds.Tables[0].Rows[0]["rule_no"].ToString();
             }
-            if (mactypeno != null)
+            if (ruleno != null)
             {
-                DataSet mactDS = printQ.queryMacType(mactypeno);
+                DataSet mactDS = printQ.queryCodeInfo(ruleno);
                 if (mactDS.Tables.Count > 0 && mactDS.Tables[0].Rows.Count > 0)
                 {
                     itemTable = mactDS.Tables[0];
                 }
             }
-            this.comboBox2.DisplayMember = "mactypename";
-            this.comboBox2.ValueMember = "mactypeno";
+            this.comboBox2.DisplayMember = "rule_desc";
+            this.comboBox2.ValueMember = "rule_no";
             this.comboBox2.DataSource = itemTable;
         }
 
@@ -506,7 +529,6 @@ namespace CTCodePrint
             this.textBox3.Text = "";
             this.textBox4.Text = "";
             this.textBox5.Text = "";
-            this.textBox6.Text = "";
             this.textBox7.Text = "";
             this.textBox8.Text = "";
             this.textBox9.Text = "";
@@ -519,6 +541,39 @@ namespace CTCodePrint
             this.comboBox3.DataSource = null;
             this.comboBox4.DataSource = null;
             this.comboBox5.DataSource = null;
+        }
+
+        private List<Dictionary<string, string>> ctListToArray(List<CTCode> ctCodeList, List<MandUnionFieldType> mandUnionFieldTypeList)
+        {
+            List<Dictionary<string, string>> ctList = new List<Dictionary<string, string>>();
+
+            foreach (CTCode ctcode in ctCodeList)
+            {
+                Dictionary<string, string> ctDict = new Dictionary<string, string>();
+
+                foreach (MandUnionFieldType mandUnionFieldType in mandUnionFieldTypeList)
+                {
+                    bool judge = false;
+                    string FieldName = mandUnionFieldType.FieldName.ToUpper();
+                    PropertyInfo[] propertyInfoARR = ctcode.GetType().GetProperties();
+                    foreach (PropertyInfo propertyInfo in propertyInfoARR)
+                    {
+                        if (propertyInfo.Name == mandUnionFieldType.FieldName)
+                        {
+                            string entityValue = ctcode.GetType().GetProperty(propertyInfo.Name).GetValue(ctcode, null).ToString();
+                            ctDict.Add(FieldName, entityValue);
+                            judge = true;
+                            break;
+                        }
+                    }
+                    if (!judge)
+                    {
+                        ctDict.Add(FieldName, mandUnionFieldType.FieldValue);
+                    }
+                }
+                ctList.Add(ctDict);
+            }
+            return ctList;
         }
     }
 }

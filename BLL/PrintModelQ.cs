@@ -98,6 +98,30 @@ namespace BLL
         }
 
         /// <summary>
+        /// 根据工单、PO、CT码中间码查询最大的CT码
+        /// </summary>
+        /// <param name="ctCode"></param>
+        /// <param name="workNo"></param>
+        /// <param name="cusPo"></param>
+        /// <returns></returns>
+        public string queryInspurCodeNo(string ctCode, string workNo, String cusPo)
+        {
+            return printM.queryInspurCodeNo(ctCode, workNo, cusPo);
+        }
+
+        /// <summary>
+        /// 根据客户PO 和CT 模糊查询最大的CT码
+        /// </summary>
+        /// <param name="ctCode"></param>
+        /// <param name="cusPo"></param>
+        /// <returns></returns>
+        public string queryInspurMaxCode(string ctCode, String cusPo)
+        {
+            return printM.queryInspurMaxCode(ctCode, cusPo);
+        }
+
+
+        /// <summary>
         /// 根據工單號查詢已經生成的CT碼數量
         /// </summary>
         /// <param name="workno"></param>
@@ -240,7 +264,7 @@ namespace BLL
                         item.Seqno = dr["seq_no"].ToString();
                         item.Ruletype = dr["rule_type"].ToString();
                         item.Rulevalue = dr["rule_value"].ToString();
-                        item.Rulelength = dr["rule_length"].ToString();
+                        item.Rulelength = int.Parse(dr["rule_length"].ToString());
                         item.Opuser = dr["op_user"].ToString();
                         item.Createtime = dr["create_time"].ToString();
                         item.Updatetime = dr["update_time"].ToString();
@@ -477,6 +501,25 @@ namespace BLL
             return modelFile;
         }
 
+        public ModelFile queryModelFileByExactFileNo(string fileNo)
+        {
+            ModelFile modelFile = null;
+            DataSet ds = printM.queryModelFileByExactNo(fileNo);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                modelFile = new ModelFile();
+                modelFile.Uuid = ds.Tables[0].Rows[0]["uuid"].ToString();
+                modelFile.Fileno = ds.Tables[0].Rows[0]["file_no"].ToString();
+                modelFile.Filename = ds.Tables[0].Rows[0]["fileName"].ToString();
+                modelFile.Filedescription = ds.Tables[0].Rows[0]["fileDescription"].ToString();
+                modelFile.Fileaddress = (byte[])ds.Tables[0].Rows[0]["fileAddress"];
+                modelFile.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
+                modelFile.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
+            }
+            return modelFile;
+        }
+
+
         public ModelFile saveModelFile(ModelFile modelFile)
         {
             ModelFile reModelFile = null;
@@ -486,6 +529,20 @@ namespace BLL
             if (printM.saveModelFile(modelFile))
             {
                 reModelFile = queryModelFileByUUID(modelFile.Uuid);
+            }
+            return reModelFile;
+        }
+
+
+        public ModelFile updateModelFile(ModelFile modelFile)
+        {
+            ModelFile reModelFile = null;
+          
+            modelFile.Updatetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            modelFile.Updateuser = Auxiliary.loginName;
+            if (printM.updateModelFile(modelFile))
+            {
+                reModelFile = queryModelFileByExactFileNo(modelFile.Fileno);
             }
             return reModelFile;
         }

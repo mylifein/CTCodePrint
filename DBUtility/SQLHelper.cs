@@ -40,6 +40,8 @@ namespace DBUtility
             }
         }
 
+
+
         /**
          * NonQuery Method
          * 
@@ -191,6 +193,52 @@ namespace DBUtility
                 //
             }
             return CS_1_0000;
+        }
+
+
+        /// <summary>
+        /// 开启事务，批量插入
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <param name="conn"></param>
+        /// <param name="trans"></param>
+        /// <param name="cmdType"></param>
+        /// <param name="cmdText"></param>
+        /// <param name="cmdParms"></param>
+        private static void PrepareCommandTrans(MySqlCommand cmd, MySqlConnection conn, MySqlTransaction trans, CommandType cmdType, string cmdText, MySqlParameter[] cmdParms)
+        {
+            cmd.Connection = conn;
+            cmd.CommandText = cmdText;
+            if (trans != null)
+            {
+                cmd.Transaction = trans;
+            }
+            cmd.CommandType = cmdType;
+            if (cmdParms != null)
+            {
+                foreach (MySqlParameter parm in cmdParms)
+                {
+                    cmd.Parameters.Add(parm);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 开启事务保存
+        /// </summary>
+        /// <param name="connectionString"></param>
+        /// <param name="cmdType"></param>
+        /// <param name="cmdText"></param>
+        /// <param name="commandParameters"></param>
+        /// <returns></returns>
+        public static int ExecuteNonQueryTrans(MySqlConnection conn, MySqlTransaction mysqlTrans, CommandType cmdType, string cmdText, params MySqlParameter[] commandParameters)
+        {
+            MySqlCommand cmd = new MySqlCommand();
+            PrepareCommandTrans(cmd, conn, mysqlTrans, cmdType, cmdText, commandParameters);
+            int val = cmd.ExecuteNonQuery();
+            cmd.Parameters.Clear();
+            return val;
+
         }
 
     }

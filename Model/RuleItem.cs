@@ -13,7 +13,7 @@ namespace Model
         private string _seqno;
         private string _ruletype;
         private string _rulevalue;
-        private string _rulelength;
+        private int _rulelength;
         private string _opuser;
         private string _createtime;
         private string _updateUser;
@@ -85,18 +85,6 @@ namespace Model
             }
         }
 
-        public string Rulelength
-        {
-            get
-            {
-                return _rulelength;
-            }
-
-            set
-            {
-                _rulelength = value;
-            }
-        }
 
         public string Opuser
         {
@@ -160,6 +148,19 @@ namespace Model
             set
             {
                 _updateUser = value;
+            }
+        }
+
+        public int Rulelength
+        {
+            get
+            {
+                return _rulelength;
+            }
+
+            set
+            {
+                _rulelength = value;
             }
         }
     }

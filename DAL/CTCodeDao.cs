@@ -49,7 +49,7 @@ namespace DAL
             return cTCode;
         }
 
-        public bool saveCTInfo(CTCode ctCode)
+        public bool saveCTInfo(CTCode ctCode, MySqlConnection conn, MySqlTransaction mysqlTrans)
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
@@ -95,7 +95,7 @@ namespace DAL
             parameters[16].Value = ctCode.Orderqty;
             parameters[17].Value = ctCode.SoOrder;
             parameters[18].Value = ctCode.Cusname;
-            int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            int rows = SQLHelper.ExecuteNonQueryTrans(conn, mysqlTrans, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
                 saveMark = true;

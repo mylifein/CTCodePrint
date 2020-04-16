@@ -13,6 +13,10 @@ namespace Model
         private int _cartonQty;
         private string _cartonStatus;           // 狀態標識; 0 剛產生， 1，入庫 2，OQC ok， 3. OQC NG 4.出庫
         private string _capacityNo;
+        private string _currentNo;
+        private string _capacityQty;
+        private string _batchNo;                //浪潮批次號
+        private int _boxNo;                     //工单箱数
         private string _ruleno;
         private string _workno;
         private string _cusno;
@@ -20,6 +24,8 @@ namespace Model
         private string _cuspo;
         private string _orderqty;
         private string _cusmatno;
+        private string _cusmatDesc;             //客户料号描述
+        private string _unionField;             //顺达联合字段
         private string _delmatno;
         private string _offino;
         private string _verno;
@@ -46,6 +52,7 @@ namespace Model
         private string _ct8;
         private string _ct9;
         private string _ct10;
+        private string specialField;
         
 
 
@@ -541,6 +548,97 @@ namespace Model
             set
             {
                 _datecode = value;
+            }
+        }
+
+        public string CapacityQty
+        {
+            get
+            {
+                return _capacityQty;
+            }
+
+            set
+            {
+                _capacityQty = value;
+            }
+        }
+
+        public string BatchNo
+        {
+            get
+            {
+                return _batchNo;
+            }
+
+            set
+            {
+                _batchNo = value;
+            }
+        }
+
+        public string CurrentNo
+        {
+            get
+            {
+                return _currentNo;
+            }
+
+            set
+            {
+                _currentNo = value;
+            }
+        }
+
+        public int BoxNo
+        {
+            get
+            {
+                return _boxNo;
+            }
+
+            set
+            {
+                _boxNo = value;
+            }
+        }
+
+        public string CusmatDesc
+        {
+            get
+            {
+                return _cusmatDesc;
+            }
+
+            set
+            {
+                _cusmatDesc = value;
+            }
+        }
+
+        public string UnionField
+        {
+            get
+            {
+                return _unionField;
+            }
+
+            set
+            {
+                _unionField = value;
+            }
+        }
+
+        public string SpecialField
+        {
+            get
+            {
+                return specialField;
+            }
+
+            set
+            {
+                specialField = value;
             }
         }
     }

@@ -2,6 +2,7 @@
 using Model;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -19,28 +20,51 @@ namespace GenerateCTCode
         {
             StringBuilder cartonNo = new StringBuilder();
             CodeRule codeRule = codeRuleService.queryRuleById(carton.Ruleno);
-            if(codeRule.RuleItem != null)
+            if(codeRule != null)
             {
                 foreach(RuleItem ruleItem in codeRule.RuleItem){
+                    int ruleInt = ruleItem.Rulelength;
                     switch (ruleItem.Ruletype)
                     {
                         case "T001":
+                            string poOrWorkNo = "";
+                            if (carton.Cuspo != null && carton.Cuspo != "")
+                            {
+                                poOrWorkNo = carton.Cuspo;
+                            }
+                            else
+                            {
+                                poOrWorkNo = carton.Workno;
+                            }
+                            cartonNo.Append(poOrWorkNo.Substring(0, ruleInt));
+                          
                             break;
                         case "T002":
+                            cartonNo.Append(GenerateTimeCode(ruleInt));
                             break;
                         case "T003":
+                            cartonNo.Append(carton.Cusmatno.Trim().Substring(0, ruleInt));
                             break;
                         case "T004":
+                            string assistT004 = carton.Offino.Trim().Substring(0, ruleInt);
+                            cartonNo.Append(assistT004);
                             break;
                         case "T005":
+                            string assistT005 = "A10";
+                            if (carton.Verno.Length > ruleInt)
+                            {
+                                assistT005 = carton.Verno.Trim().Substring(0, ruleInt);
+                            }
+                            cartonNo.Append(assistT005);
                             break;
-                        case "T006":
+                        case "T006":        //流水碼34進制
                             break;
                         case "T007":
                             cartonNo.Append(ruleItem.Rulevalue);
                             break;
                         case "T008":
-                            cartonNo.Append(carton.SoOrder);
+                            string subOperation = extractString(carton.SoOrder, ruleInt);
+                            cartonNo.Append(subOperation);
                             break;
                         case "T009":
                             //机种号3-7位
@@ -55,10 +79,10 @@ namespace GenerateCTCode
                             string prefixCarton = cartonNo.ToString();
                             if (maxCarton == null || maxCarton == "")
                             {
-                                    string seqCode = "0";
+                                    string seqCode = "1";
                                     for (int numLength = seqCode.Length; numLength < Convert.ToInt32(ruleItem.Rulelength); numLength++)
                                     {
-                                    seqCode += "0";
+                                    seqCode = "0" + seqCode;
                                     }
                                 cartonNo.Append(seqCode);                               
                             }
@@ -90,6 +114,141 @@ namespace GenerateCTCode
                             int modReuslt = modNum % 43;
                             string modString = base43Code[modReuslt];
                             cartonNo.Append(modString);
+                            break;
+                        case "T013":                //十進制流水碼
+                            string maxCarton10 = cartonService.getMaxCartonNo(cartonNo.ToString());
+                            string prefixCarton10 = cartonNo.ToString();
+                            if (maxCarton10 == null || maxCarton10 == "")
+                            {
+                                string seqCode = "1";
+                                for (int numLength = seqCode.Length; numLength < Convert.ToInt32(ruleItem.Rulelength); numLength++)
+                                {
+                                    seqCode = "0" + seqCode;
+                                }
+                                cartonNo.Append(seqCode);
+                            }
+                            else
+                            {
+                                //獲取流水號
+                                string subCode10 = maxCarton10.Substring(prefixCarton10.Length, Convert.ToInt32(ruleItem.Rulelength));
+                                int cartonSeq10 = int.Parse(subCode10);
+                                string carton10Code = (cartonSeq10 + 1).ToString();
+                                string seqNo = "";
+                                for (int i = carton10Code.Length; i < Convert.ToInt32(ruleItem.Rulelength); i++)
+                                {
+                                    seqNo += 0;
+                                }
+                                carton10Code = seqNo + carton10Code;
+                                cartonNo.Append(carton10Code);
+                            
+                            }
+
+                            break;
+                        case "T015":                //年月日進制表示
+                            StringBuilder inspurTime = new StringBuilder();
+                            string inspurYearString = DateTime.Now.Year.ToString();
+                            int inspurYearInt = int.Parse(inspurYearString.Substring(inspurYearString.Length - 2)); //獲取兩位年
+                            int inspurmonthInt = DateTime.Now.Month;
+                            string dd2 = DateTime.Now.ToString("dd");                       //获得两位日
+                            inspurTime.Append(Base33Code[inspurYearInt]);
+                            inspurTime.Append(Base33Code[inspurmonthInt]);
+                            inspurTime.Append(dd2);
+                            //             ctCode.Append(inspurTime.ToString());
+                            cartonNo.Append(inspurTime.ToString());
+      
+                            break;
+                        case "T016":                //浪潮批次号                        
+                            string batchCT = cartonService.queryInspurBoxNo(cartonNo.ToString(), carton.Workno, carton.Cuspo);
+                            string batchNo = "1";
+                            if (batchCT != null)
+                            {
+                                batchNo = batchCT.Substring(cartonNo.Length, 1);
+                            }
+                            else
+                            {
+                                batchCT = cartonService.queryInspurMaxBoxNo(cartonNo.ToString(), carton.Cusno);
+                                if (batchCT != null)
+                                {
+                                    string tempBatchNo = batchNo = batchCT.Substring(cartonNo.Length, 1);
+                                    int tempMathNo = InverseBase34Code[tempBatchNo];
+                                    batchNo = Base34Code[tempMathNo + 1];
+                                }
+                            }
+                            cartonNo.Append(batchNo);
+                            carton.BatchNo = cartonNo.ToString();
+                            break;
+
+                        case "T017":                //批次号                        
+                            string selfBatchNo = cartonService.queryBatchNoWorkNo(cartonNo.ToString(), carton.Workno);
+                            string batchCustom = "1";
+                            if (selfBatchNo != null)
+                            {
+                                batchCustom = selfBatchNo.Substring(cartonNo.Length, ruleItem.Rulelength);
+                            }
+                            else
+                            {
+                                selfBatchNo = cartonService.queryInspurMaxBoxNo(cartonNo.ToString(), carton.Cusno);
+                                if (selfBatchNo != null)
+                                {
+                                    string tempBatchNo = selfBatchNo.Substring(cartonNo.Length, ruleItem.Rulelength);
+                                    int tempMathNo = int.Parse(tempBatchNo);
+                                    batchCustom = (tempMathNo + 1).ToString();
+                                }
+                                string tempZero = "";
+                                for(int i = batchCustom.Length; i < ruleItem.Rulelength; i++)
+                                {
+                                    tempZero = 0 + tempZero;
+                                }
+                                batchCustom = tempZero + batchCustom;
+                            }
+                            cartonNo.Append(batchCustom);
+                            carton.BatchNo = cartonNo.ToString();
+                            break;
+                        case "T018":                //年月日進制表示
+                            StringBuilder h3cTime = new StringBuilder();
+                            string h3cYearString = DateTime.Now.Year.ToString();
+                            int h3cYearInt = int.Parse(h3cYearString.Substring(h3cYearString.Length - 2)); //獲取兩位年
+                            int h3cInt = DateTime.Now.Month;
+                            string h3cDD = DateTime.Now.ToString("dd");                       //获得两位日
+                            h3cTime.Append(h3cYearInt);
+                            h3cTime.Append(Base33Code[h3cInt]);
+                            h3cTime.Append(h3cDD);
+                            //             ctCode.Append(inspurTime.ToString());
+                            cartonNo.Append(h3cTime.ToString());
+
+                            break;
+                        case "T019":                //工单十进制流水
+                            string maxCartonWO = cartonService.getMaxCartonNoByWO(carton.Workno);
+                            string prefixCartonWO = cartonNo.ToString();
+                            if (maxCartonWO == null || maxCartonWO == "")
+                            {
+                                string seqCode = "1";
+                                for (int numLength = seqCode.Length; numLength < ruleItem.Rulelength; numLength++)
+                                {
+                                    seqCode = "0" + seqCode;
+                                }
+                                cartonNo.Append(seqCode);
+                            }
+                            else
+                            {
+                                //獲取流水號
+                                string subCode10 = maxCartonWO.Substring(prefixCartonWO.Length, ruleItem.Rulelength);
+                                int cartonSeq10 = int.Parse(subCode10);
+                                string carton10Code = (cartonSeq10 + 1).ToString();
+                                string seqNo = "";
+                                for (int i = carton10Code.Length; i < ruleItem.Rulelength; i++)
+                                {
+                                    seqNo += 0;
+                                }
+                                carton10Code = seqNo + carton10Code;
+                                cartonNo.Append(carton10Code);
+
+                            }
+
+                            break;
+                        case "T020":
+                            string extractResult = extractString(carton.Woquantity, ruleInt);
+                            cartonNo.Append(extractResult);
                             break;
                     }
                 }
@@ -200,5 +359,125 @@ namespace GenerateCTCode
         };
 
 
+        public static string GenerateTimeCode(int length)
+        {
+
+            System.Text.StringBuilder timeString = new System.Text.StringBuilder(10);
+
+
+            switch (length)
+            {
+                case 2:
+                    //若为2位，只取周别
+                    timeString.Append(getWeek());
+                    break;
+                case 3:
+                    //若为3位，年周别，分别为1位，2位
+                    string yearString = DateTime.Now.Year.ToString();
+                    timeString.Append(yearString.Substring(yearString.Length - 1));
+                    timeString.Append(getWeek());
+                    break;
+                case 4:
+                    //获得4位，年周别，分别为2位
+                    timeString.Append(DateTime.Now.ToString("yy"));
+                    timeString.Append(getWeek());
+                    break;
+                case 6:
+                    //获得6位,获得年、月、日
+                    timeString.Append(DateTime.Now.ToString("yyMMdd"));
+                    break;
+                case 7:
+                    //获得7位,获得4位年，2位周别,1位日
+                    timeString.Append(DateTime.Now.ToString("yyyy"));
+                    timeString.Append(getWeek());
+                    timeString.Append(IntConvert(DateTime.Now.Day));
+                    break;
+            }
+            return timeString.ToString();
+        }
+
+
+        public static string extractString(string operaField, int ruleLength)
+        {
+            string result = "";
+            if (operaField.Count() < ruleLength)
+            {
+                result = operaField;
+            }
+            else
+            {
+                result = operaField.Substring(0, ruleLength);
+            }
+            int fieldLen = result.Count();
+            if (fieldLen < ruleLength)
+            {
+                for (int i = fieldLen; i < ruleLength; i++)
+                {
+                    result = 0 + result;
+                }
+            }
+            return result;
+        }
+
+        public static string getWeek()
+        {
+            GregorianCalendar gc = new GregorianCalendar();
+            string weekString = "";
+            int week = gc.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+            if (week.ToString().Length < 2)
+            {
+                weekString = "0" + week.ToString();
+            }
+            else
+            {
+                weekString = week.ToString();
+            }
+            return weekString;
+        }
+
+        public static string IntConvert(int convertValue)
+        {
+            return Base32Code[convertValue];
+        }
+
+
+        /// <summary>
+        /// 设置日期和月份的Dictionary 
+        /// </summary>
+        public static Dictionary<int, string> Base32Code = new Dictionary<int, string>() {
+            {   0  ,"0"}, {   1  ,"1"}, {   2  ,"2"}, {   3  ,"3"}, {   4  ,"4"}, {   5  ,"5"}, {   6  ,"6"}, {   7  ,"7"}, {   8  ,"8"}, {   9  ,"9"},
+            {   10  ,"A"}, {   11  ,"B"}, {   12  ,"C"}, {   13  ,"D"}, {   14  ,"E"}, {   15  ,"F"}, {   16  ,"G"}, {   17  ,"H"}, {   18  ,"I"}, {   19  ,"J"},
+            {   20  ,"K"}, {   21  ,"L"}, {   22  ,"M"}, {   23  ,"N"}, {   24  ,"O"}, {   25  ,"P"}, {   26  ,"Q"}, {   27  ,"R"}, {   28  ,"S"}, {   29  ,"T"},
+            {   30  ,"U"}, {   31  ,"V"}
+        };
+
+
+        /// <summary>
+        ///  浪潮年编码 
+        /// </summary>
+        public static Dictionary<int, string> Base33Code = new Dictionary<int, string>() {
+            {   0  ,"0"}, {   1  ,"1"}, {   2  ,"2"}, {   3  ,"3"}, {   4  ,"4"}, {   5  ,"5"}, {   6  ,"6"}, {   7  ,"7"}, {   8  ,"8"}, {   9  ,"9"},
+            {   10  ,"A"}, {   11  ,"B"}, {   12  ,"C"}, {   13  ,"D"}, {   14  ,"E"}, {   15  ,"F"}, {   16  ,"G"}, {   17  ,"H"}, {   18  ,"J"}, {   19  ,"K"},
+            {   20  ,"L"}, {   21  ,"M"}, {   22  ,"N"}, {   23  ,"P"}, {   24  ,"Q"}, {   25  ,"R"}, {   26  ,"S"}, {   27  ,"T"}, {   28  ,"U"}, {   29  ,"V"},
+            {   30  ,"W"}, {   31  ,"X"},{   32  ,"Y"},{   33  ,"Z"}
+        };
+
+        public static Dictionary<string, int> InverseBase34Code = new Dictionary<string, int>() {
+            {   "0",0}, {   "1"  ,1}, {   "2"  ,2}, {   "3" ,3}, {   "4",4}, {   "5"  ,5}, {   "6" ,6}, {   "7",7}, {   "8" ,8}, {   "9"  ,9},
+            {   "A",10  }, {   "B",11}, {   "C",12 }, {   "D",13  }, {   "E",14  }, {   "F",15  }, {   "G",16 }, {   "H",17 }, {   "J",18  }, {   "K",19  },
+            {   "L",20  }, {   "M",21  }, {   "N",22  }, {   "P",23  }, {   "Q",24  }, {   "R",25  }, {   "S",26  }, {   "T",27  }, {   "U",28  }, {   "V",29  },
+            {   "W",30  }, {   "X",31  }, { "Y",32},{"Z",33 }
+        };
+
+
+        /// <summary>
+        /// 设置34进制编码 
+        /// </summary>
+        public static Dictionary<int, string> Base34Code = new Dictionary<int, string>() {
+            {   0  ,"0"}, {   1  ,"1"}, {   2  ,"2"}, {   3  ,"3"}, {   4  ,"4"}, {   5  ,"5"}, {   6  ,"6"}, {   7  ,"7"}, {   8  ,"8"}, {   9  ,"9"},
+            {   10  ,"A"}, {   11  ,"B"}, {   12  ,"C"}, {   13  ,"D"}, {   14  ,"E"}, {   15  ,"F"}, {   16  ,"G"}, {   17  ,"H"}, {   18  ,"J"}, {   19  ,"K"},
+            {   20  ,"L"}, {   21  ,"M"}, {   22  ,"N"}, {   23  ,"P"}, {   24  ,"Q"}, {   25  ,"R"}, {   26  ,"S"}, {   27  ,"T"}, {   28  ,"U"}, {   29  ,"V"},
+            {   30  ,"W"}, {   31  ,"X"}, { 32,"Y"},{33,"Z" }
+        };
     }
 }

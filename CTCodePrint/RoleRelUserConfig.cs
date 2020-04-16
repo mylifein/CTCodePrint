@@ -17,7 +17,7 @@ namespace CTCodePrint
         {
             InitializeComponent();
         }
-        private readonly BLL.User userService = new BLL.User();
+        private readonly BLL.UserService userService = new BLL.UserService();
         private readonly RoleRelUserService roleRelUserService = new RoleRelUserService();
         private readonly RoleService roleService = new RoleService();
 

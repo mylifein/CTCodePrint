@@ -211,6 +211,7 @@ namespace CTCodePrint.common
                                         {
                                             string entityValue = ctcode.GetType().GetProperty(propertyInfo.Name).GetValue(ctcode, null).ToString();
                                             doc.Variables.FormVariables.Item(i).Value = entityValue;
+                                           
                                             judge = true;
                                             dic1.Add(i, propertyInfo.Name);
                                             isObjectDic.Add(i, true);
@@ -276,6 +277,52 @@ namespace CTCodePrint.common
 
         }
 
+
+        internal bool BactchPrintCTByModel(string templateFileName, List<Dictionary<string, string>> ctCode, string printerName)
+        {
+            if (lbl == null)
+            {
+                lbl = new ApplicationClass();
+            }
+            //未加載模板文件或者模板發生變更時，重新加載新的模板
+            if (lbl.Documents.Count == 0 || templateFileName.IndexOf(lbl.ActiveDocument.Name) == -1)
+            {
+                lbl.Documents.Open(templateFileName, false);// 调用设计好的label文件
+            }
+            Document doc = lbl.ActiveDocument;
+            doc.Printer.SwitchTo(printerName);  //設置打印機
+            try
+            {
+                foreach (Dictionary<string, string> ctDict in ctCode)
+                {
+                    for (int i = 1; i <= doc.Variables.FormVariables.Count; i++)
+                    {
+                        string variableName = doc.Variables.FormVariables.Item(i).Name.ToString().ToUpper();
+                        doc.Variables.FormVariables.Item(i).Value = ctDict[variableName];
+                    }
+                    int Num = 1;
+                    doc.PrintLabel(1, 1, 1, Num, 1, "");
+                }
+                doc.FormFeed();
+            }
+            catch (Exception ex)
+            {
+                return false;                          //返回,後面代碼不執行
+            }
+            finally
+            {
+                //內存釋放和回收
+                lbl.Documents.CloseAll();
+                lbl.Quit();
+                lbl = null;
+                doc = null;
+                GC.Collect(0);
+            }
+            return true;
+        }
+
+
+
         /// <summary>
         /// TODO 打印装箱单
         /// </summary>
@@ -323,6 +370,85 @@ namespace CTCodePrint.common
                             }
                             if (!judge)
                             {
+                                doc.Variables.FormVariables.Item(i).Value = mandUnionFieldType.FieldValue;                            
+                            }
+                        }
+                    }
+                }
+
+                int Num = 1;                      //打印数量
+                doc.Printer.SwitchTo(DefaultPrinter());
+                //doc.Printer.SwitchTo(printerName);  //設置打印機
+                doc.PrintLabel(1, 1, 1, Num, 1, "");
+                doc.FormFeed();
+                //doc.PrintDocument(Num);           //打印               
+
+            }
+            catch (Exception ex)
+            {
+                return false;                          //返回,後面代碼不執行
+            }
+            finally
+            {
+                //內存釋放和回收
+                lbl.Documents.CloseAll();
+                lbl.Quit();
+                lbl = null;
+                doc = null;
+                GC.Collect(0);
+
+            }
+            return true;
+
+        }
+
+
+        /// <summary>
+        /// 打印棧板標籤
+        /// </summary>
+        /// <param name="templateFileName"></param>
+        /// <param name="carton"></param>
+        /// <param name="mandUnionFieldTypeList"></param>
+        /// <returns></returns>
+        public bool printPalletByModel(string templateFileName, Pallet pallet, List<MandUnionFieldType> mandUnionFieldTypeList)
+        {
+            if (lbl == null)
+            {
+                lbl = new ApplicationClass();
+            }
+            //未加載模板文件或者模板發生變更時，重新加載新的模板
+            if (lbl.Documents.Count == 0 || templateFileName.IndexOf(lbl.ActiveDocument.Name) == -1)
+            {
+                lbl.Documents.Open(templateFileName, false);// 调用设计好的label文件
+
+            }
+            Document doc = lbl.ActiveDocument;
+            try
+            {
+
+                for (int i = 1; i <= doc.Variables.FormVariables.Count; i++)
+                {
+                    string variableName = doc.Variables.FormVariables.Item(i).Name.ToString();
+                    foreach (MandUnionFieldType mandUnionFieldType in mandUnionFieldTypeList)
+                    {
+                        if (mandUnionFieldType.FieldName.ToUpper() == variableName.ToUpper())
+                        {
+                            bool judge = false;
+                            PropertyInfo[] propertyInfoARR = pallet.GetType().GetProperties();
+                            foreach (PropertyInfo propertyInfo in propertyInfoARR)
+                            {
+                                if (propertyInfo.Name.ToUpper() == mandUnionFieldType.FieldName.ToUpper())
+                                {
+                                    string entityValue = pallet.GetType().GetProperty(propertyInfo.Name).GetValue(pallet, null).ToString();
+                                    doc.Variables.FormVariables.Item(i).Value = entityValue;
+                                    judge = true;
+                                    break;
+                                }
+
+
+                            }
+                            if (!judge)
+                            {
                                 doc.Variables.FormVariables.Item(i).Value = mandUnionFieldType.FieldValue;
                                 break;
                             }
@@ -355,6 +481,8 @@ namespace CTCodePrint.common
             return true;
 
         }
+
+
 
 
         public string PreviewPrintBC(string templateFileName)

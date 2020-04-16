@@ -42,6 +42,38 @@ namespace CTCodePrint
                 this.comboBox2.ValueMember = "mactypeno";
                 this.comboBox2.DataSource = dsRule.Tables[0];
             }
+            DataSet dsRealRule = printQ.queryCodeInfo("");
+            if (dsRealRule != null && dsRealRule.Tables.Count > 0 && dsRealRule.Tables[0].Rows.Count > 0)
+            {
+                this.comboBox4.DisplayMember = "rule_desc";
+                this.comboBox4.ValueMember = "rule_no";
+                this.comboBox4.DataSource = dsRealRule.Tables[0];
+            }
+
+            DataTable itemTable2 = new DataTable();   // construct selects value
+            DataColumn columnType;
+            DataRow rowType;
+            columnType = new DataColumn("Name");
+            itemTable2.Columns.Add(columnType);
+            columnType = new DataColumn("Value");
+            itemTable2.Columns.Add(columnType);
+            rowType = itemTable2.NewRow();
+            rowType["Name"] = "CT";
+            rowType["Value"] = "0";
+            itemTable2.Rows.Add(rowType);
+            rowType = itemTable2.NewRow();
+            rowType["Name"] = "裝箱";
+            rowType["Value"] = "1";
+            itemTable2.Rows.Add(rowType);
+            rowType = itemTable2.NewRow();
+            rowType["Name"] = "棧板";
+            rowType["Value"] = "2";
+            itemTable2.Rows.Add(rowType);
+            this.comboBox3.DisplayMember = "Name";
+            this.comboBox3.ValueMember = "Value";
+            this.comboBox3.DataSource = itemTable2;
+
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -52,10 +84,13 @@ namespace CTCodePrint
                 this.textBox1.Focus();
                 return;
             }
+            string boundType = this.comboBox1.SelectedValue == null ? "0" : this.comboBox3.SelectedValue.ToString();
             CusRule cusRule = new CusRule();
             cusRule.Delmatno = this.textBox1.Text.Trim();
             cusRule.Cusno = this.comboBox1.SelectedValue.ToString().Trim();
             cusRule.Mactypeno = this.comboBox2.SelectedValue.ToString().Trim();
+            cusRule.Ruleno = this.comboBox4.SelectedValue.ToString().Trim();
+            cusRule.Boundtype = boundType;
             if (cusRuleService.checkAdd(cusRule))
             {
                 MessageBox.Show("該客戶和出貨料號已經綁定幾種！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -69,6 +104,16 @@ namespace CTCodePrint
             {
                 MessageBox.Show("保存失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

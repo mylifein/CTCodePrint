@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,10 +26,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -37,8 +37,8 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>true</Prefer32Bit>
+    <WarningLevel>1</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -48,6 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>20190903115541809_easyicon_net_48.ico</ApplicationIcon>
@@ -57,8 +58,9 @@
       <HintPath>..\..\..\..\..\Source\Repos\mylifein\CPSscan\CPSscan\obj\Debug\Interop.LabelManager2.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="MySql.Data">
-      <HintPath>D:\DriverPackage\MySql.Data.dll</HintPath>
+    <Reference Include="MySql.Data, Version=8.0.19.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DBUtility\bin\Debug\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -70,7 +72,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -87,6 +88,36 @@
     </Compile>
     <Compile Include="BoundModel.Designer.cs">
       <DependentUpon>BoundModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BoundCapacity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BoundCapacity.Designer.cs">
+      <DependentUpon>BoundCapacity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CartonDirectPrint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CartonDirectPrint.Designer.cs">
+      <DependentUpon>CartonDirectPrint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateCapacity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateCapacity.Designer.cs">
+      <DependentUpon>CreateCapacity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateUser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateUser.Designer.cs">
+      <DependentUpon>CreateUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PalletPrint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PalletPrint.Designer.cs">
+      <DependentUpon>PalletPrint.cs</DependentUpon>
     </Compile>
     <Compile Include="CreateDepartment.cs">
       <SubType>Form</SubType>
@@ -105,6 +136,12 @@
     </Compile>
     <Compile Include="CartonPrint.Designer.cs">
       <DependentUpon>CartonPrint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReprintCarton.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReprintCarton.Designer.cs">
+      <DependentUpon>ReprintCarton.cs</DependentUpon>
     </Compile>
     <Compile Include="SubmatMaintain.cs">
       <SubType>Form</SubType>
@@ -232,6 +269,12 @@
       <DependentUpon>RuleConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="SQLHelper.cs" />
+    <Compile Include="ModifyModelFile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModifyModelFile.Designer.cs">
+      <DependentUpon>ModifyModelFile.cs</DependentUpon>
+    </Compile>
     <Compile Include="UploadFile.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -244,6 +287,21 @@
     <EmbeddedResource Include="BoundModel.resx">
       <DependentUpon>BoundModel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="BoundCapacity.resx">
+      <DependentUpon>BoundCapacity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CartonDirectPrint.resx">
+      <DependentUpon>CartonDirectPrint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateCapacity.resx">
+      <DependentUpon>CreateCapacity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateUser.resx">
+      <DependentUpon>CreateUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PalletPrint.resx">
+      <DependentUpon>PalletPrint.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CreateDepartment.resx">
       <DependentUpon>CreateDepartment.cs</DependentUpon>
     </EmbeddedResource>
@@ -252,6 +310,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CartonPrint.resx">
       <DependentUpon>CartonPrint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReprintCarton.resx">
+      <DependentUpon>ReprintCarton.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SubmatMaintain.resx">
       <DependentUpon>SubmatMaintain.cs</DependentUpon>
@@ -322,6 +383,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RuleConfig.resx">
       <DependentUpon>RuleConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModifyModelFile.resx">
+      <DependentUpon>ModifyModelFile.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UploadFile.resx">
       <DependentUpon>UploadFile.cs</DependentUpon>

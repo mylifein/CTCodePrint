@@ -33,6 +33,10 @@
             this.fileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.裝箱單號打印ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.单出件装箱单打印ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.棧板標籤打印ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.重印裝箱單ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.編碼配置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,9 +48,10 @@
             this.字段規則配置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.模板字段規則綁定ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.模板文件綁定ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.創建容量ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.容量綁定ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.模板修改ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.機種信息配置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.機種信息ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.機種關係綁定ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.料號子階維護ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UserManagement = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,6 +59,7 @@
             this.用戶角色分配ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.部門創建ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.線別設定ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.創建用戶ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AuthorizationConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.創建權限菜單ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.菜單權限分配ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,7 +71,6 @@
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.裝箱單號打印ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -92,7 +97,10 @@
             this.fileMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
             this.toolStripMenuItem2,
-            this.裝箱單號打印ToolStripMenuItem});
+            this.裝箱單號打印ToolStripMenuItem,
+            this.单出件装箱单打印ToolStripMenuItem,
+            this.棧板標籤打印ToolStripMenuItem,
+            this.重印裝箱單ToolStripMenuItem});
             this.fileMenu.ImageTransparentColor = System.Drawing.SystemColors.ActiveBorder;
             this.fileMenu.Name = "fileMenu";
             this.fileMenu.Size = new System.Drawing.Size(69, 24);
@@ -101,16 +109,44 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(181, 26);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(204, 26);
             this.toolStripMenuItem1.Text = "產生CT碼";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(181, 26);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(204, 26);
             this.toolStripMenuItem2.Text = "重印CT碼";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            // 
+            // 裝箱單號打印ToolStripMenuItem
+            // 
+            this.裝箱單號打印ToolStripMenuItem.Name = "裝箱單號打印ToolStripMenuItem";
+            this.裝箱單號打印ToolStripMenuItem.Size = new System.Drawing.Size(204, 26);
+            this.裝箱單號打印ToolStripMenuItem.Text = "裝箱單號打印";
+            this.裝箱單號打印ToolStripMenuItem.Click += new System.EventHandler(this.裝箱單號打印ToolStripMenuItem_Click);
+            // 
+            // 单出件装箱单打印ToolStripMenuItem
+            // 
+            this.单出件装箱单打印ToolStripMenuItem.Name = "单出件装箱单打印ToolStripMenuItem";
+            this.单出件装箱单打印ToolStripMenuItem.Size = new System.Drawing.Size(204, 26);
+            this.单出件装箱单打印ToolStripMenuItem.Text = "单出件装箱单打印";
+            this.单出件装箱单打印ToolStripMenuItem.Click += new System.EventHandler(this.单出件装箱单打印ToolStripMenuItem_Click);
+            // 
+            // 棧板標籤打印ToolStripMenuItem
+            // 
+            this.棧板標籤打印ToolStripMenuItem.Name = "棧板標籤打印ToolStripMenuItem";
+            this.棧板標籤打印ToolStripMenuItem.Size = new System.Drawing.Size(204, 26);
+            this.棧板標籤打印ToolStripMenuItem.Text = "棧板標籤打印";
+            this.棧板標籤打印ToolStripMenuItem.Click += new System.EventHandler(this.棧板標籤打印ToolStripMenuItem_Click);
+            // 
+            // 重印裝箱單ToolStripMenuItem
+            // 
+            this.重印裝箱單ToolStripMenuItem.Name = "重印裝箱單ToolStripMenuItem";
+            this.重印裝箱單ToolStripMenuItem.Size = new System.Drawing.Size(204, 26);
+            this.重印裝箱單ToolStripMenuItem.Text = "重印裝箱單";
+            this.重印裝箱單ToolStripMenuItem.Click += new System.EventHandler(this.重印裝箱單ToolStripMenuItem_Click);
             // 
             // editMenu
             // 
@@ -119,8 +155,8 @@
             this.編碼配置ToolStripMenuItem,
             this.編碼查詢ToolStripMenuItem});
             this.editMenu.Name = "editMenu";
-            this.editMenu.Size = new System.Drawing.Size(103, 24);
-            this.editMenu.Text = "CT碼配置(&E)";
+            this.editMenu.Size = new System.Drawing.Size(99, 24);
+            this.editMenu.Text = "編碼配置(&E)";
             // 
             // toolStripMenuItem3
             // 
@@ -151,7 +187,10 @@
             this.字段類型配置ToolStripMenuItem,
             this.字段規則配置ToolStripMenuItem,
             this.模板字段規則綁定ToolStripMenuItem,
-            this.模板文件綁定ToolStripMenuItem});
+            this.模板文件綁定ToolStripMenuItem,
+            this.創建容量ToolStripMenuItem,
+            this.容量綁定ToolStripMenuItem,
+            this.模板修改ToolStripMenuItem});
             this.viewMenu.Name = "viewMenu";
             this.viewMenu.Size = new System.Drawing.Size(101, 24);
             this.viewMenu.Text = "模板配置(&V)";
@@ -198,42 +237,47 @@
             this.模板文件綁定ToolStripMenuItem.Text = "模板文件綁定";
             this.模板文件綁定ToolStripMenuItem.Click += new System.EventHandler(this.模板文件綁定ToolStripMenuItem_Click);
             // 
+            // 創建容量ToolStripMenuItem
+            // 
+            this.創建容量ToolStripMenuItem.Name = "創建容量ToolStripMenuItem";
+            this.創建容量ToolStripMenuItem.Size = new System.Drawing.Size(204, 26);
+            this.創建容量ToolStripMenuItem.Text = "創建容量";
+            this.創建容量ToolStripMenuItem.Click += new System.EventHandler(this.創建容量ToolStripMenuItem_Click);
+            // 
+            // 容量綁定ToolStripMenuItem
+            // 
+            this.容量綁定ToolStripMenuItem.Name = "容量綁定ToolStripMenuItem";
+            this.容量綁定ToolStripMenuItem.Size = new System.Drawing.Size(204, 26);
+            this.容量綁定ToolStripMenuItem.Text = "容量綁定";
+            this.容量綁定ToolStripMenuItem.Click += new System.EventHandler(this.容量綁定ToolStripMenuItem_Click);
+            // 
+            // 模板修改ToolStripMenuItem
+            // 
+            this.模板修改ToolStripMenuItem.Name = "模板修改ToolStripMenuItem";
+            this.模板修改ToolStripMenuItem.Size = new System.Drawing.Size(204, 26);
+            this.模板修改ToolStripMenuItem.Text = "模板修改";
+            this.模板修改ToolStripMenuItem.Click += new System.EventHandler(this.模板修改ToolStripMenuItem_Click);
+            // 
             // toolsMenu
             // 
             this.toolsMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.機種信息配置ToolStripMenuItem,
-            this.機種信息ToolStripMenuItem,
             this.機種關係綁定ToolStripMenuItem,
             this.料號子階維護ToolStripMenuItem});
             this.toolsMenu.Name = "toolsMenu";
             this.toolsMenu.Size = new System.Drawing.Size(100, 24);
-            this.toolsMenu.Text = "機種配置(&T)";
-            // 
-            // 機種信息配置ToolStripMenuItem
-            // 
-            this.機種信息配置ToolStripMenuItem.Name = "機種信息配置ToolStripMenuItem";
-            this.機種信息配置ToolStripMenuItem.Size = new System.Drawing.Size(174, 26);
-            this.機種信息配置ToolStripMenuItem.Text = "機種信息維護";
-            this.機種信息配置ToolStripMenuItem.Click += new System.EventHandler(this.機種信息配置ToolStripMenuItem_Click);
-            // 
-            // 機種信息ToolStripMenuItem
-            // 
-            this.機種信息ToolStripMenuItem.Name = "機種信息ToolStripMenuItem";
-            this.機種信息ToolStripMenuItem.Size = new System.Drawing.Size(174, 26);
-            this.機種信息ToolStripMenuItem.Text = "機種信息查詢";
-            this.機種信息ToolStripMenuItem.Click += new System.EventHandler(this.機種信息ToolStripMenuItem_Click);
+            this.toolsMenu.Text = "料號配置(&T)";
             // 
             // 機種關係綁定ToolStripMenuItem
             // 
             this.機種關係綁定ToolStripMenuItem.Name = "機種關係綁定ToolStripMenuItem";
-            this.機種關係綁定ToolStripMenuItem.Size = new System.Drawing.Size(174, 26);
-            this.機種關係綁定ToolStripMenuItem.Text = "機種關係維護";
+            this.機種關係綁定ToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.機種關係綁定ToolStripMenuItem.Text = "編碼規則綁定";
             this.機種關係綁定ToolStripMenuItem.Click += new System.EventHandler(this.機種關係綁定ToolStripMenuItem_Click);
             // 
             // 料號子階維護ToolStripMenuItem
             // 
             this.料號子階維護ToolStripMenuItem.Name = "料號子階維護ToolStripMenuItem";
-            this.料號子階維護ToolStripMenuItem.Size = new System.Drawing.Size(174, 26);
+            this.料號子階維護ToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.料號子階維護ToolStripMenuItem.Text = "料號子階維護";
             this.料號子階維護ToolStripMenuItem.Click += new System.EventHandler(this.料號子階維護ToolStripMenuItem_Click);
             // 
@@ -243,7 +287,8 @@
             this.創建角色ToolStripMenuItem,
             this.用戶角色分配ToolStripMenuItem,
             this.部門創建ToolStripMenuItem,
-            this.線別設定ToolStripMenuItem});
+            this.線別設定ToolStripMenuItem,
+            this.創建用戶ToolStripMenuItem});
             this.UserManagement.Name = "UserManagement";
             this.UserManagement.Size = new System.Drawing.Size(102, 24);
             this.UserManagement.Text = "用戶管理(&U)";
@@ -275,6 +320,13 @@
             this.線別設定ToolStripMenuItem.Size = new System.Drawing.Size(174, 26);
             this.線別設定ToolStripMenuItem.Text = "線別設定";
             this.線別設定ToolStripMenuItem.Click += new System.EventHandler(this.線別設定ToolStripMenuItem_Click);
+            // 
+            // 創建用戶ToolStripMenuItem
+            // 
+            this.創建用戶ToolStripMenuItem.Name = "創建用戶ToolStripMenuItem";
+            this.創建用戶ToolStripMenuItem.Size = new System.Drawing.Size(174, 26);
+            this.創建用戶ToolStripMenuItem.Text = "創建用戶";
+            this.創建用戶ToolStripMenuItem.Click += new System.EventHandler(this.創建用戶ToolStripMenuItem_Click);
             // 
             // AuthorizationConfig
             // 
@@ -351,13 +403,6 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // 裝箱單號打印ToolStripMenuItem
-            // 
-            this.裝箱單號打印ToolStripMenuItem.Name = "裝箱單號打印ToolStripMenuItem";
-            this.裝箱單號打印ToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
-            this.裝箱單號打印ToolStripMenuItem.Text = "裝箱單號打印";
-            this.裝箱單號打印ToolStripMenuItem.Click += new System.EventHandler(this.裝箱單號打印ToolStripMenuItem_Click);
-            // 
             // MainMenuMDI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -398,8 +443,6 @@
         private System.Windows.Forms.ToolStripMenuItem 編碼查詢ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem 模板上傳ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 機種信息配置ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 機種信息ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 機種關係綁定ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem UserManagement;
         private System.Windows.Forms.ToolStripMenuItem 創建角色ToolStripMenuItem;
@@ -420,6 +463,13 @@
         private System.Windows.Forms.ToolStripMenuItem 部門創建ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 線別設定ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 裝箱單號打印ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 单出件装箱单打印ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 棧板標籤打印ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 創建容量ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 容量綁定ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 創建用戶ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 模板修改ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 重印裝箱單ToolStripMenuItem;
     }
 }
 

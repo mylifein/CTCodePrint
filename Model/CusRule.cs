@@ -12,6 +12,8 @@ namespace Model
         private string _cusno;
         private string _delmatno;
         private string _mactypeno;
+        private string _ruleno;
+        private string _boundtype;
         private string _opuser;
         private string _createtime;
         private string _updatetime;
@@ -122,6 +124,32 @@ namespace Model
             set
             {
                 _mactypeno = value;
+            }
+        }
+
+        public string Boundtype
+        {
+            get
+            {
+                return _boundtype;
+            }
+
+            set
+            {
+                _boundtype = value;
+            }
+        }
+
+        public string Ruleno
+        {
+            get
+            {
+                return _ruleno;
+            }
+
+            set
+            {
+                _ruleno = value;
             }
         }
     }

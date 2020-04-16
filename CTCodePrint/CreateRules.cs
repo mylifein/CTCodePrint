@@ -132,7 +132,7 @@ namespace CTCodePrint
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string funcType = this.comboBox1.SelectedValue == null ? "1" : this.comboBox1.SelectedValue.ToString();
+            string funcType = this.comboBox1.SelectedValue == null ? "0" : this.comboBox1.SelectedValue.ToString();
             if (this.textBox2.Text == null || this.textBox2.Text.Trim() == "")
             {
                 MessageBox.Show("規則描述不能為空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -159,7 +159,7 @@ namespace CTCodePrint
                 ruleItem.Seqno = this.dataGridView1.Rows[i].Cells[2].Value == null ? "": this.dataGridView1.Rows[i].Cells[2].Value.ToString();
                 ruleItem.Ruletype = this.dataGridView1.Rows[i].Cells[3].Value == null ? "":this.dataGridView1.Rows[i].Cells[3].Value.ToString();
                 ruleItem.Rulevalue = this.dataGridView1.Rows[i].Cells[4].Value == null ? "" : this.dataGridView1.Rows[i].Cells[4].Value.ToString();
-                ruleItem.Rulelength = this.dataGridView1.Rows[i].Cells[5].Value == null ? "": this.dataGridView1.Rows[i].Cells[5].Value.ToString();
+                ruleItem.Rulelength = int.Parse(this.dataGridView1.Rows[i].Cells[5].Value == null ? "0": this.dataGridView1.Rows[i].Cells[5].Value.ToString());
                 list.Add(ruleItem);
             }
             codeR.RuleItem = list;

@@ -30,9 +30,6 @@ namespace BLL
                 foreach (string ctcode in carton.CtCodeList)
                 {
                     CtRelCarton ctRelCarton = new CtRelCarton();
-                    ctRelCarton.Uuid = Auxiliary.Get_UUID();
-                    ctRelCarton.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                    ctRelCarton.Opuser = Auxiliary.loginName;
                     ctRelCarton.Ctcode = ctcode;
                     ctRelCarton.CartonNo = carton.CartonNo;
                     mark = saveCartonRelation(ctRelCarton);
@@ -54,6 +51,17 @@ namespace BLL
         {
             return cartonDao.queryMaxCartonNo(prefCartonNo);
         }
+
+        /// <summary>
+        /// 根据工单查询最大流水号
+        /// </summary>
+        /// <param name="workNo"></param>
+        /// <returns></returns>
+        public string getMaxCartonNoByWO(string workNo)
+        {
+            return cartonDao.getMaxCartonNoByWO(workNo);
+        }
+
 
         /// <summary>
         /// TODO 保存裝箱單號與CT碼的關係
@@ -86,6 +94,84 @@ namespace BLL
         public string getCartonQtyByWO(string workno)
         {
             return cartonDao.getCartonQtyByWO(workno);
+        }
+
+        /// <summary>
+        /// 根據箱號查詢裝箱單信息
+        /// </summary>
+        /// <param name="cartonNo"></param>
+        /// <returns></returns>
+        public Carton queryCartonByCartonNo(string cartonNo)
+        {
+            return cartonDao.queryCartonByCartonNo(cartonNo);
+        }
+
+
+        /// <summary>
+        /// 更新裝箱單狀態, 1是已綁定棧板，2是入庫 3是出庫 
+        /// </summary>
+        /// <param name="carton"></param>
+        /// <returns></returns>
+        public bool updateCartonStatus(Carton carton, int status)
+        {
+            carton.Updatetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            carton.Updateser = Auxiliary.loginName;
+            return cartonDao.updateCartonStatus(carton, status);
+        }
+
+        /// <summary>
+        /// 查詢模板號
+        /// </summary>
+        /// <param name="cusNo"></param>
+        /// <param name="delMatno"></param>
+        /// <param name="boundType"></param>
+        /// <returns></returns>
+        public string queryFileNo(string cusNo, string delMatno, string boundType)
+        {
+            return cartonDao.queryFileNo(cusNo, delMatno, boundType);
+        }
+
+        public string queryInspurBoxNo(string cartonNo, string workno, string cuspo)
+        {
+            return cartonDao.queryInspurCartonNo(cartonNo,workno,cuspo);
+        }
+
+        /// <summary>
+        /// 根据工单计算批次
+        /// </summary>
+        /// <param name="cartonNo"></param>
+        /// <param name="workno"></param>
+        /// <param name="cuspo"></param>
+        /// <returns></returns>
+        public string queryBatchNoWorkNo(string cartonNo, string workno)
+        {
+            return cartonDao.queryBatchNoWorkNo(cartonNo, workno);
+        }
+
+        public string queryInspurMaxBoxNo(string cartonNo, string cusno)
+        {
+            return cartonDao.queryInspurMaxBox(cartonNo,cusno);
+        }
+
+        public int queryCurrentBoxQty(String workNo)
+        {
+            return cartonDao.queryCurrentBoxQty(workNo);
+        }
+
+
+        public DataSet getCartonsInfo(string condition, string conditionV)
+        {
+            DataSet ds = null;
+            if (condition == "1")
+            {
+                ds = cartonDao.querygetCartonsInfoByWorkNo(conditionV);
+            }
+            else
+            {
+                ds = cartonDao.querygetCartonsInfoByCartonNo(conditionV);
+            }
+
+            return ds;
         }
     }
 }

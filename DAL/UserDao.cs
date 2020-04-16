@@ -1,4 +1,5 @@
 ﻿using DBUtility;
+using Model;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DAL
 {
-    public class User
+    public class UserDao
     {
 
         /// <summary>
@@ -93,6 +94,71 @@ namespace DAL
                 }
                 return user;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public bool saveUser(User user)
+        {
+            bool saveMark = true;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into t_user (uuid,username,password,userdesc,department,op_user,create_time)");
+            strSql.Append("values(@uuid,@username,@password,@userdesc,@department,@opuser,@createtime)");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@username", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@password", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@userdesc", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@department", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = user.Uuid;
+            parameters[1].Value = user.Username;
+            parameters[2].Value = user.Password;
+            parameters[3].Value = user.Userdesc;
+            parameters[4].Value = user.Department;
+            parameters[5].Value = user.Opuser;
+            parameters[6].Value = user.Createtime;
+            int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                saveMark = true;
+            }
+            else
+            {
+                saveMark = false;
+            }
+            return saveMark;
+        }
+
+
+        public User queryUserById(string uuid)
+        {
+            User user = null;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_user where uuid=@uuid");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = uuid;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                user = new User();
+                user.Uuid = ds.Tables[0].Rows[0]["uuid"].ToString();
+                user.Userid = ds.Tables[0].Rows[0]["user_id"].ToString();
+                user.Username = ds.Tables[0].Rows[0]["username"].ToString();
+                user.Password = ds.Tables[0].Rows[0]["password"].ToString();
+                user.Userdesc = ds.Tables[0].Rows[0]["userdesc"].ToString();
+                user.Department = ds.Tables[0].Rows[0]["department"].ToString();
+                user.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
+                user.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
+            }
+            return user;
         }
     }
 }

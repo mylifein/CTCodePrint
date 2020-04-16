@@ -19,7 +19,7 @@ namespace DAL
         /// <param name="cusNo"></param>
         /// <param name="delMatNo"></param>
         /// <returns></returns>
-        public DataSet queryModelNo(string cusNo,string delMatNo)
+        public DataSet queryModelNo(string cusNo, string delMatNo)
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("SELECT * FROM t_model_rel where cus_no =@cusNo and del_matno =@delMatNo ");
@@ -49,7 +49,7 @@ namespace DAL
             DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             return ds;
         }
-        
+
 
         /// <summary>
         /// 根據模板號查詢必填信息
@@ -166,7 +166,7 @@ namespace DAL
         /// </summary>
         /// <param name="ctCode"></param>
         /// <returns></returns>
-        public string queryCodeNo(string ctCode,string delMatno)
+        public string queryCodeNo(string ctCode, string delMatno)
         {
             string maxCtCode = "";
             StringBuilder strSql = new StringBuilder();
@@ -178,9 +178,61 @@ namespace DAL
             parameters[0].Value = "%" + ctCode + "%"; ;
             parameters[1].Value = delMatno;
             Object maxCode = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
-            if(maxCode != null && maxCode != DBNull.Value)
+            if (maxCode != null && maxCode != DBNull.Value)
             {
-                 maxCtCode = maxCode.ToString();
+                maxCtCode = maxCode.ToString();
+            }
+            return maxCtCode;
+        }
+
+        /// <summary>
+        /// 根据工单、PO、CT码中间码查询最大的CT码
+        /// </summary>
+        /// <param name="ctCode"></param>
+        /// <param name="delMatno"></param>
+        /// <returns></returns>
+        public string queryInspurCodeNo(string ctCode, string workNo, String cusPo)
+        {
+            string maxCtCode = null;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select MAX(ct_code) from t_code_info where ct_code like @ctCode AND work_no=@workNo AND cus_po=@cusPo");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@ctCode", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@workNo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cusPo", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = "%" + ctCode + "%";
+            parameters[1].Value = workNo;
+            parameters[2].Value = cusPo;
+            Object maxCode = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (maxCode != null && maxCode != DBNull.Value)
+            {
+                maxCtCode = maxCode.ToString();
+            }
+            return maxCtCode;
+        }
+
+        /// <summary>
+        /// 根据客户PO 和CT 模糊查询最大的CT码
+        /// </summary>
+        /// <param name="ctCode"></param>
+        /// <param name="cusPo"></param>
+        /// <returns></returns>
+        public string queryInspurMaxCode(string ctCode, String cusNo)
+        {
+            string maxCtCode = null;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select MAX(ct_code) from t_code_info where ct_code like @ctCode AND cus_no=@cusNo");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@ctCode", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cusNo", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = "%" + ctCode + "%";
+            parameters[1].Value = cusNo;
+            Object maxCode = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (maxCode != null && maxCode != DBNull.Value)
+            {
+                maxCtCode = maxCode.ToString();
             }
             return maxCtCode;
         }
@@ -213,7 +265,7 @@ namespace DAL
         /// <param name="workno"></param>
         /// <param name="subMaterial"></param>
         /// <returns></returns>
-        public string getCTCountBySubMat(string workno,string subMaterial)
+        public string getCTCountBySubMat(string workno, string subMaterial)
         {
             string countNo = "";
             StringBuilder strSql = new StringBuilder();
@@ -238,7 +290,7 @@ namespace DAL
         /// <param name="workno"></param>
         /// <param name="po"></param>
         /// <returns></returns>
-        public string getCTCountByPO(string workno,string po)
+        public string getCTCountByPO(string workno, string po)
         {
             string countNo = "";
             StringBuilder strSql = new StringBuilder();
@@ -263,7 +315,7 @@ namespace DAL
         /// </summary>
         /// <param name="record"></param>
         /// <returns></returns>
-        public bool savePrintRecord(CTCode ctCode) 
+        public bool savePrintRecord(CTCode ctCode)
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
@@ -308,7 +360,7 @@ namespace DAL
                 new MySqlParameter("@seqno", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@ruletype", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@rulevalue", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@rulelength", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@rulelength", MySqlDbType.Int16, 900),
                 new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
             };
@@ -382,12 +434,50 @@ namespace DAL
             };
             parameters[0].Value = uuid;
             DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
-            if(ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
                 ruleNo = ds.Tables[0].Rows[0]["rule_no"].ToString();
             }
             return ruleNo;
         }
+
+        /// <summary>
+        /// 更新上传文件
+        /// </summary>
+        /// <param name="modelFile"></param>
+        /// <returns></returns>
+        public bool updateModelFile(ModelFile modelFile)
+        {
+            bool updateMark = true;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("update t_model_file set fileName=@fileName,fileDescription=@fileDescription,fileAddress=@fileAddress,update_user=@updateUser,update_time=@updateTime where file_no=@fileNo");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@fileName", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@fileDescription", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@fileAddress", MySqlDbType.LongBlob, 900),
+                new MySqlParameter("@updateUser", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@updateTime", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@fileNo", MySqlDbType.VarChar, 900)
+
+            };
+            parameters[0].Value = modelFile.Filename;
+            parameters[1].Value = modelFile.Filedescription;
+            parameters[2].Value = modelFile.Fileaddress;
+            parameters[3].Value = modelFile.Updateuser;
+            parameters[4].Value = modelFile.Updatetime;
+            parameters[5].Value = modelFile.Fileno;
+            int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                updateMark = true;
+            }
+            else
+            {
+                updateMark = false;
+            }
+            return updateMark;
+        }
+
 
         /// <summary>
         /// 根據規則號模糊查詢
@@ -401,7 +491,7 @@ namespace DAL
             MySqlParameter[] parameters = {
                 new MySqlParameter("@ruleNo", MySqlDbType.VarChar, 900)
             };
-            parameters[0].Value = "%"+ruleNo+"%";
+            parameters[0].Value = "%" + ruleNo + "%";
             DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             return ds;
         }
@@ -432,8 +522,8 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_cus_codrule (uuid,cus_no,del_matno,mactypeno,op_user,create_time)");
-            strSql.Append("values(@uuid,@cusno,@delmatno,@mactypeno,@opuser,@createtime)");
+            strSql.Append("insert into t_cus_codrule (uuid,cus_no,del_matno,mactypeno,op_user,create_time,bound_type,rule_no)");
+            strSql.Append("values(@uuid,@cusno,@delmatno,@mactypeno,@opuser,@createtime,@boundType,@ruleno)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@cusno", MySqlDbType.VarChar, 900),
@@ -441,6 +531,8 @@ namespace DAL
                 new MySqlParameter("@mactypeno", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@boundType", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@ruleno", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = cusRule.Uuid;
             parameters[1].Value = cusRule.Cusno;
@@ -448,6 +540,8 @@ namespace DAL
             parameters[3].Value = cusRule.Mactypeno;
             parameters[4].Value = cusRule.Opuser;
             parameters[5].Value = cusRule.Createtime;
+            parameters[6].Value = cusRule.Boundtype;
+            parameters[7].Value = cusRule.Ruleno;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
@@ -493,7 +587,7 @@ namespace DAL
             }
             return saveMark;
         }
-        
+
 
         /// <summary>
         /// 查詢打印字段規則
@@ -717,7 +811,7 @@ namespace DAL
         /// <param name="cusno"></param>
         /// <param name="delmatno"></param>
         /// <returns></returns>
-        public string getModelRelationCount(string cusno,string delmatno)
+        public string getModelRelationCount(string cusno, string delmatno)
         {
             string countNo = "";
             StringBuilder strSql = new StringBuilder();
@@ -807,6 +901,18 @@ namespace DAL
             return ds;
         }
 
-        
+        public DataSet queryModelFileByExactNo(string fileNo)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_model_file where file_no=@fileNo");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@fileNo", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = fileNo ;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
+        }
+
+
     }
 }

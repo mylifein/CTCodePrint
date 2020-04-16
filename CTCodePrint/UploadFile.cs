@@ -31,8 +31,12 @@ namespace CTCodePrint
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.ShowDialog();
             this.textBox1.Text = ofd.FileName;
-            string filePath = barPrint.PreviewPrintBC(ofd.FileName);
-            this.pictureBox1.Load(filePath);
+            if(ofd.FileName != null && ofd.FileName != "")
+            {
+                string filePath = barPrint.PreviewPrintBC(ofd.FileName);
+                this.pictureBox1.Load(filePath);
+            }
+
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -128,15 +132,11 @@ namespace CTCodePrint
             fs.Close();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+
+
+        private void UploadFile_Load(object sender, EventArgs e)
         {
-            ModelFile modelfile = printQ.queryModelFileByFileNo("F008");
-            if(modelfile != null)
-            {
-                string templateFile = System.IO.Directory.GetCurrentDirectory() + "\\" + modelfile.Filename;
-                CreateFile(modelfile.Fileaddress, templateFile);
-            }
-            
+
         }
     }
 }

@@ -37,9 +37,9 @@ namespace BLL
         }
 
 
-        public FileRelDel queryFileRelDelCusNo(string cusNo, string delMatNo)
+        public FileRelDel queryFileRelDelCusNo(string cusNo, string delMatNo,string boundType)
         {
-            return fileRelDelDao.queryFileRelDelCusNo(cusNo, delMatNo);
+            return fileRelDelDao.queryFileRelDelCusNo(cusNo, delMatNo,boundType);
         }
     }
 }

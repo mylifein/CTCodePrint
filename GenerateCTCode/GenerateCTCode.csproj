@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -38,10 +40,10 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeneratePallet.cs" />
     <Compile Include="GenerateCarton.cs" />
     <Compile Include="GenerateCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -52,11 +54,11 @@
       <Name>BLL</Name>
     </ProjectReference>
     <ProjectReference Include="..\DBUtility\DBUtility.csproj">
-      <Project>{706ECC32-96B9-4218-95BF-25000AB4588E}</Project>
+      <Project>{706ecc32-96b9-4218-95bf-25000ab4588e}</Project>
       <Name>DBUtility</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
-      <Project>{D7F73F21-E199-4866-B818-4830D6A1934A}</Project>
+      <Project>{d7f73f21-e199-4866-b818-4830d6a1934a}</Project>
       <Name>Model</Name>
     </ProjectReference>
   </ItemGroup>

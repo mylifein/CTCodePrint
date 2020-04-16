@@ -17,9 +17,10 @@ namespace DAL
         /// <param name="workno"></param>
         /// <returns></returns>
         public DataSet getWorkNoInofo(string workno)
-        {
+        {   
+            //385  572 CIN：833
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT MWORK.ORGANIZATION_ID,MWORK.CUSTOMER_ITEM_NUMBER,MWORK.WIP_ENTITY_NAME,MWORK.START_QUANTITY,MWORK.QUANTITY_COMPLETED,MWORK.SO_ORDER,MWORK.ITEM_CODE,MWORK.ITEM_DESC,MWORK.CUST_PO_NUMBER,MWORK.CUSTOMER_ID,MWORK.CUST_NAME,MWORK.ORDER_QTY FROM MES_WORKINFO_V  MWORK WHERE MWORK.ORGANIZATION_ID = '385' AND MWORK.WIP_ENTITY_NAME =:workno");
+            strSql.Append("SELECT MWORK.ORGANIZATION_ID,MWORK.CUSTOMER_ITEM_NUMBER,MWORK.WIP_ENTITY_NAME,MWORK.START_QUANTITY,MWORK.QUANTITY_COMPLETED,MWORK.SO_ORDER,MWORK.ITEM_CODE,MWORK.ITEM_DESC,MWORK.CUST_PO_NUMBER,MWORK.CUSTOMER_ID,MWORK.CUST_NAME,MWORK.ORDER_QTY FROM MES_WORKINFO_V  MWORK WHERE MWORK.WIP_ENTITY_NAME =:workno");
             OracleParameter[] parameters =
             {
                 new OracleParameter(":workno",OracleDbType.Varchar2,900)
@@ -33,7 +34,7 @@ namespace DAL
         public DataSet getRevisionByDel(string delmatno)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT ORGANIZATION_ID,ITEM_CODE,ITEM_DESC,REVISION,EFFECTIVITY_DATE,IMPLEMENTATION_DATE FROM MES_ITEM_REVISIONS_V MIR WHERE MIR.ORGANIZATION_ID  = '385' AND MIR.ITEM_CODE =:delmatno");
+            strSql.Append("SELECT ORGANIZATION_ID,ITEM_CODE,ITEM_DESC,REVISION,EFFECTIVITY_DATE,IMPLEMENTATION_DATE FROM MES_ITEM_REVISIONS_V MIR WHERE MIR.ITEM_CODE =:delmatno");
             OracleParameter[] parameters =
             {
                 new OracleParameter(":delmatno",OracleDbType.Varchar2,900)

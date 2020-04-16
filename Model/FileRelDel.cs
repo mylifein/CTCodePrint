@@ -11,6 +11,7 @@ namespace Model
         private string _fileNo;
         private string _cusNo;
         private string _delMatno;
+        private string _boundType;
         private string _opUser;
         private string _createTime;
         private string _updateTime;
@@ -117,6 +118,19 @@ namespace Model
             set
             {
                 _delFlag = value;
+            }
+        }
+
+        public string BoundType
+        {
+            get
+            {
+                return _boundType;
+            }
+
+            set
+            {
+                _boundType = value;
             }
         }
     }

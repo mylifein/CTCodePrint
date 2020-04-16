@@ -28,7 +28,7 @@ namespace CTCodePrint
         }
         public static string user = "";
         public string User { get { return user;}set { user = value; } }
-        private readonly BLL.User userBLL = new BLL.User();
+        private readonly BLL.UserService userBLL = new BLL.UserService();
         private readonly RoleRelUserService roleRelUserService = new RoleRelUserService();
         
 
@@ -39,6 +39,11 @@ namespace CTCodePrint
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // System.DateTime currentTime = System.DateTime.Now;                      //獲取當前時間
+            //DateTime dtStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(2020, 3, 9));
+            //String Month = dtStart.ToString("dd");
+            //int month = currentTime.Month;
+
             string username = this.textBox1.Text.Trim();
             string password = this.textBox2.Text.Trim();
             if(username == "" || password == "")
