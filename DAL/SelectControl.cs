@@ -98,37 +98,7 @@ namespace DAL
             return ds;
         }
 
-        /// <summary>
-        /// 通過客戶編號搜索客戶
-        /// </summary>
-        /// <param name="cusNo"></param>
-        /// <returns></returns>
-        public DataSet getCusInfoByCusNo(string cusNo)
-        {
-            StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_cus_info where cus_no like '%"+ cusNo.Trim() +"%'");
-            MySqlParameter[] parameters = {
-                new MySqlParameter("@CusNo", MySqlDbType.VarChar, 900)
-            };
-            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
-            return ds;
-        }
 
-        /// <summary>
-        /// 通過客戶名搜索客戶
-        /// </summary>
-        /// <param name="cusName"></param>
-        /// <returns></returns>
-        public DataSet getCusInfoByCusName(string cusName)
-        {
-            StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_cus_info where cus_name like '%" + cusName.Trim() + "%'");
-            MySqlParameter[] parameters = {
-                new MySqlParameter("@CusName", MySqlDbType.VarChar, 900)
-            };
-            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
-            return ds;
-        }
 
         public DataSet getRulesByRuleNo(string ruleNo)
         {

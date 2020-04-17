@@ -31,6 +31,7 @@ namespace CTCodePrint
             this.comboBox2.ValueMember = "MenuNo";
             this.comboBox2.DisplayMember = "MenuDescription";
 
+
             this.displayList(this.comboBox1.SelectedValue.ToString());
             
         }

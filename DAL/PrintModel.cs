@@ -111,8 +111,8 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_code_info (uuid,ct_code,rule_no,work_no,cus_no,cus_po,po_qty,cus_matno,del_matno,mac_type,offi_no,ver_no,wo_quantity,completed_qty,model_no,op_user,create_time)");
-            strSql.Append("values(@uuid,@ctcode,@ruleno,@workno,@cusno,@cuspo,@poqty,@cusmatno,@delmatno,@mac_type,@offino,@verno,@woquantity,@completedQty,@model_no,@opuser,@createtime)");
+            strSql.Append("insert into t_code_info (uuid,ct_code,rule_no,work_no,cus_no,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,completed_qty,model_no,op_user,create_time)");
+            strSql.Append("values(@uuid,@ctcode,@ruleno,@workno,@cusno,@cuspo,@poqty,@cusmatno,@delmatno,@offino,@verno,@woquantity,@completedQty,@model_no,@opuser,@createtime)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@ctcode", MySqlDbType.VarChar, 900),
@@ -122,7 +122,6 @@ namespace DAL
                 new MySqlParameter("@cuspo", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@cusmatno", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@delmatno", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@mac_type", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@offino", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@verno", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@woquantity", MySqlDbType.VarChar, 900),
@@ -140,15 +139,14 @@ namespace DAL
             parameters[5].Value = ctCode.Cuspo;
             parameters[6].Value = ctCode.Cusmatno;
             parameters[7].Value = ctCode.Delmatno;
-            parameters[8].Value = ctCode.Mactype;
-            parameters[9].Value = ctCode.Offino;
-            parameters[10].Value = ctCode.Verno;
-            parameters[11].Value = ctCode.Woquantity;
-            parameters[12].Value = ctCode.Opuser;
-            parameters[13].Value = ctCode.Createtime;
-            parameters[14].Value = ctCode.Completedqty;
-            parameters[15].Value = ctCode.Modelno;
-            parameters[16].Value = ctCode.Orderqty;
+            parameters[8].Value = ctCode.Offino;
+            parameters[9].Value = ctCode.Verno;
+            parameters[10].Value = ctCode.Woquantity;
+            parameters[11].Value = ctCode.Opuser;
+            parameters[12].Value = ctCode.Createtime;
+            parameters[13].Value = ctCode.Completedqty;
+            parameters[14].Value = ctCode.Modelno;
+            parameters[15].Value = ctCode.Orderqty;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
@@ -393,20 +391,18 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_rule_info (uuid,rule_desc,func_type,op_user,create_time)");
-            strSql.Append("values(@uuid,@ruledesc,@funcType,@opuser,@createtime)");
+            strSql.Append("insert into t_rule_info (uuid,rule_desc,op_user,create_time)");
+            strSql.Append("values(@uuid,@ruledesc,@opuser,@createtime)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@ruledesc", MySqlDbType.VarChar, 900),
-                 new MySqlParameter("@funcType", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
             };
             parameters[0].Value = codeRule.Uuid;
             parameters[1].Value = codeRule.RuleDesc;
-            parameters[2].Value = codeRule.FuncType;
-            parameters[3].Value = codeRule.Opuser;
-            parameters[4].Value = codeRule.Createtime;
+            parameters[2].Value = codeRule.Opuser;
+            parameters[3].Value = codeRule.Createtime;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
@@ -522,13 +518,12 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_cus_codrule (uuid,cus_no,del_matno,mactypeno,op_user,create_time,bound_type,rule_no)");
-            strSql.Append("values(@uuid,@cusno,@delmatno,@mactypeno,@opuser,@createtime,@boundType,@ruleno)");
+            strSql.Append("insert into t_cus_codrule (uuid,cus_no,del_matno,op_user,create_time,bound_type,rule_no)");
+            strSql.Append("values(@uuid,@cusno,@delmatno,@opuser,@createtime,@boundType,@ruleno)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@cusno", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@delmatno", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@mactypeno", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@boundType", MySqlDbType.VarChar, 900),
@@ -537,11 +532,10 @@ namespace DAL
             parameters[0].Value = cusRule.Uuid;
             parameters[1].Value = cusRule.Cusno;
             parameters[2].Value = cusRule.Delmatno;
-            parameters[3].Value = cusRule.Mactypeno;
-            parameters[4].Value = cusRule.Opuser;
-            parameters[5].Value = cusRule.Createtime;
-            parameters[6].Value = cusRule.Boundtype;
-            parameters[7].Value = cusRule.Ruleno;
+            parameters[3].Value = cusRule.Opuser;
+            parameters[4].Value = cusRule.Createtime;
+            parameters[5].Value = cusRule.Boundtype;
+            parameters[6].Value = cusRule.Ruleno;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
@@ -745,23 +739,6 @@ namespace DAL
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
             };
             parameters[0].Value = uuid;
-            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
-            return ds;
-        }
-
-        /// <summary>
-        /// 根據機種類型編號，模糊查詢
-        /// </summary>
-        /// <param name="mactypeno"></param>
-        /// <returns></returns>
-        public DataSet queryMacTypeByNo(string mactypeno)
-        {
-            StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_mactype_info where mactypeno like @macTypeNo");
-            MySqlParameter[] parameters = {
-                new MySqlParameter("@macTypeNo", MySqlDbType.VarChar, 900),
-            };
-            parameters[0].Value = "%" + mactypeno + "%";
             DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             return ds;
         }

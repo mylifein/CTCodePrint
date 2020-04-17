@@ -482,7 +482,6 @@
             this.comboBox7.Size = new System.Drawing.Size(159, 23);
             this.comboBox7.TabIndex = 47;
             this.comboBox7.SelectedIndexChanged += new System.EventHandler(this.comboBox7_SelectedIndexChanged);
-            this.comboBox7.SelectedValueChanged += new System.EventHandler(this.comboBox7_);
             // 
             // textBox13
             // 

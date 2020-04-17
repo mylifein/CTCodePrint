@@ -116,13 +116,6 @@ namespace CTCodePrint
                     MessageBox.Show("保存CT碼列表失敗！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
-                //if (!printQ.savePrintRecordList(ctList))
-                //{
-                //    MessageBox.Show("保存CT碼打印記錄失敗！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //    return;
-                //}
-                // MessageBox.Show("生成CT碼並打印完成！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
             }
             else
             {
@@ -384,11 +377,9 @@ namespace CTCodePrint
             ctCodeInfo.Cusname = this.textBox10.Text.Trim();        //customer name
             ctCodeInfo.Offino = this.textBox6.Text.Trim();  //officialNo
             ctCodeInfo.SoOrder = this.comboBox5.Text == null ? "" : this.comboBox5.Text.ToString().Trim();   //so_order
-            //ctCodeInfo.Mactype = this.comboBox2.SelectedValue == null ? "" : this.comboBox2.SelectedValue.ToString().Trim();  //macType
             ctCodeInfo.Ruleno = this.comboBox2.SelectedValue == null ? "" : this.comboBox2.SelectedValue.ToString().Trim();     //编码规则
             ctCodeInfo.Verno = this.comboBox3.SelectedValue == null ? "" : this.comboBox3.SelectedValue.ToString().Trim();      //version number
             ctCodeInfo.Woquantity = this.textBox4.Text.Trim();  //wnquantity
-            ctCodeInfo.Completedqty = this.textBox9.Text.Trim();    //completed quantity
             ctCodeInfo.Cusmatno = this.comboBox4.SelectedValue == null ? "" : this.comboBox4.SelectedValue.ToString().Trim();   //customer material number 
             FileRelDel fileRelDel = fileRelDelService.queryFileRelDelCusNo(ctCodeInfo.Cusno, ctCodeInfo.Delmatno,"0");
             if(fileRelDel != null)
@@ -421,15 +412,6 @@ namespace CTCodePrint
             }
         }
 
-        private void comboBox7_SelectedValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void comboBox7_(object sender, EventArgs e)
-        {
-
-        }
 
         private void comboBox7_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -503,11 +485,9 @@ namespace CTCodePrint
             }           
             DataSet ds = selectQ.getMacByCus(comboxValue, delmatno,"0");                //0代表CT碼編碼規則
             DataTable itemTable = null;
-            //string mactypeno = null;
             string ruleno = null;
             if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
-                //mactypeno = ds.Tables[0].Rows[0]["mactypeno"].ToString();
                 ruleno = ds.Tables[0].Rows[0]["rule_no"].ToString();
             }
             if (ruleno != null)
@@ -522,6 +502,7 @@ namespace CTCodePrint
             this.comboBox2.ValueMember = "rule_no";
             this.comboBox2.DataSource = itemTable;
         }
+
 
         private void clearAll()
         {

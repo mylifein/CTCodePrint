@@ -23,6 +23,7 @@ namespace CTCodePrint
             ct();
         }
         private readonly RoleRelMenuService roleRelMenuService = new RoleRelMenuService();
+
         private void ExitToolsStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -41,12 +42,6 @@ namespace CTCodePrint
             generateCTCode.Show();
         }
 
-        private void toolStripMenuItem3_Click(object sender, EventArgs e)
-        {
-            CusConfig cusConfig = new CusConfig();
-            cusConfig.MdiParent = this;
-            cusConfig.Show();
-        }
 
         private void 編碼配置ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -76,13 +71,6 @@ namespace CTCodePrint
             modelConfig.Show();
         }
 
-        private void 模板綁定ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            BoundModel boundModel = new BoundModel();
-            boundModel.MdiParent = this;
-            boundModel.Show();
-        }
-
         private void 模板上傳ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UploadFile uploadFile = new UploadFile();
@@ -90,17 +78,7 @@ namespace CTCodePrint
             uploadFile.Show();
         }
 
-        private void 機種信息配置ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MachineTypeConfig macTypeConfig = new MachineTypeConfig();
-            macTypeConfig.MdiParent = this;
-            macTypeConfig.Show();
-        }
 
-        private void 機種信息ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void 機種關係綁定ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -176,24 +154,45 @@ namespace CTCodePrint
             List<RoleUnionMenu> roleUnionMenuList = roleRelMenuService.queryRoleUionMenuList(Auxiliary.RoleNo);
             if (roleUnionMenuList != null)
             {
-                for (int i = 0; i < this.menuStrip.Items.Count; i++)
+                foreach (ToolStripMenuItem item in this.menuStrip.Items)  //获取一级菜单
                 {
+                    string name = item.Name;
+                    bool isVisible = this.compareMenu(name, roleUnionMenuList);
+                    item.Visible = isVisible;
+                    //if (isVisible)
+                    //{
+                    //    foreach (ToolStripMenuItem subItem in item.DropDownItems)//获取二级菜单
+                    //    {
+                    //        name = subItem.Name;
+                    //        isVisible = this.compareMenu(name, roleUnionMenuList);
+                    //        subItem.Visible = isVisible;
+                    //    }
+                    //}
 
-                    if (!(this.menuStrip.Items[i] is ToolStripSeparator))
-                    {
-                        this.menuStrip.Items[i].Visible = false;
-                        foreach (RoleUnionMenu roleUnionMenu in roleUnionMenuList)
-                        {
-                            if (roleUnionMenu.Menuname == this.menuStrip.Items[i].Name.ToString().Trim())
-                            {
-                                this.menuStrip.Items[i].Visible = true;
-                            }
-                        }
-
-                    }
                 }
             }
         }
+
+
+
+        /// <summary>
+        /// 比较角色中是否包含该菜单
+        /// </summary>
+        /// <param name="menuName"></param>
+        /// <param name="roleUnionMenuList"></param>
+        /// <returns></returns>
+        private bool compareMenu(string menuName, List<RoleUnionMenu> roleUnionMenuList)
+        {
+            foreach (RoleUnionMenu roleUnionMenu in roleUnionMenuList)
+            {
+                if(menuName == roleUnionMenu.Menuname)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -306,6 +305,25 @@ namespace CTCodePrint
         {
             ReprintCarton reprintCarton = new ReprintCarton();
             reprintCarton.Show();
+        }
+
+        private void 编码规则绑定ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BoundRule boundRule = new BoundRule();
+            boundRule.MdiParent = this;
+            boundRule.Show();
+        }
+
+        private void 子阶料号维护ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SubmatMaintain submatMaintain = new SubmatMaintain();
+            submatMaintain.MdiParent = this;
+            submatMaintain.Show();
+        }
+
+        private void BoundRuleToolStripMenuItem(object sender, EventArgs e)
+        {
+
         }
     }
 }

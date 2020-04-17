@@ -39,11 +39,6 @@ namespace CTCodePrint
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // System.DateTime currentTime = System.DateTime.Now;                      //獲取當前時間
-            //DateTime dtStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(2020, 3, 9));
-            //String Month = dtStart.ToString("dd");
-            //int month = currentTime.Month;
-
             string username = this.textBox1.Text.Trim();
             string password = this.textBox2.Text.Trim();
             if(username == "" || password == "")
@@ -79,22 +74,6 @@ namespace CTCodePrint
 
         private void textBox1_Leave(object sender, EventArgs e)
         {
-            //测试产生箱号：
-            /** Carton carton = new Carton();
-            ProdLine prodLine = new ProdLine();
-            prodLine.ProdlineId = "PL001";
-            carton.ProdLine = prodLine;
-            carton.Delmatno = "383-19855-3015A0";
-            carton.Ruleno = "R007";
-            Carton cartonNo = GenerateCarton.generateCartonNo(carton);  **/
-            //SelectQuery selectQ = new SelectQuery();
-            //PrintModelQ printQ = new PrintModelQ();
-            //printQ.queryMacType("MT005");
-            //DepartmentService depService = new DepartmentService();
-            //List<Department> depList =  depService.queryDepartmentList("");
-            // DataSet ds = selectQ.getRulesByNo("");
-            //MacTypeDao macDao = new MacTypeDao();
-           // macDao.queryDepartmentById("MT005");
             if (this.textBox1.Text == null || this.textBox1.Text.Trim() == "")
             {
                 MessageBox.Show("用戶名不能為空", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);

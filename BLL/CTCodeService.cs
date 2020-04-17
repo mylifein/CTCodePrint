@@ -39,9 +39,6 @@ namespace BLL
             }
             //3.开启事务.
             MySqlTransaction mysqlTrans = conn.BeginTransaction();
-
-
-
             foreach (CTCode ctCode in ctCodeList)
             {
                 if (!this.saveCTCodeInfo(ctCode, conn, mysqlTrans))

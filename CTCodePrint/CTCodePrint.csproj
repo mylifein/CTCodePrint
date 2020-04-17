@@ -83,12 +83,6 @@
     <Compile Include="BoundModelFile.Designer.cs">
       <DependentUpon>BoundModelFile.cs</DependentUpon>
     </Compile>
-    <Compile Include="BoundModel.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="BoundModel.Designer.cs">
-      <DependentUpon>BoundModel.cs</DependentUpon>
-    </Compile>
     <Compile Include="BoundCapacity.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -188,29 +182,11 @@
     <Compile Include="CTCodeLogin.Designer.cs">
       <DependentUpon>CTCodeLogin.cs</DependentUpon>
     </Compile>
-    <Compile Include="CusConfig.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CusConfig.Designer.cs">
-      <DependentUpon>CusConfig.cs</DependentUpon>
-    </Compile>
     <Compile Include="GenerateCTCode.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GenerateCTCode.Designer.cs">
       <DependentUpon>GenerateCTCode.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MachineTypeConfig.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MachineTypeConfig.Designer.cs">
-      <DependentUpon>MachineTypeConfig.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MainMenu.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainMenu.Designer.cs">
-      <DependentUpon>MainMenu.cs</DependentUpon>
     </Compile>
     <Compile Include="MainMenuMDI.cs">
       <SubType>Form</SubType>
@@ -284,9 +260,6 @@
     <EmbeddedResource Include="BoundModelFile.resx">
       <DependentUpon>BoundModelFile.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BoundModel.resx">
-      <DependentUpon>BoundModel.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="BoundCapacity.resx">
       <DependentUpon>BoundCapacity.cs</DependentUpon>
     </EmbeddedResource>
@@ -335,17 +308,8 @@
     <EmbeddedResource Include="CTCodeLogin.resx">
       <DependentUpon>CTCodeLogin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CusConfig.resx">
-      <DependentUpon>CusConfig.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GenerateCTCode.resx">
       <DependentUpon>GenerateCTCode.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MachineTypeConfig.resx">
-      <DependentUpon>MachineTypeConfig.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainMenu.resx">
-      <DependentUpon>MainMenu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainMenuMDI.resx">
       <DependentUpon>MainMenuMDI.cs</DependentUpon>

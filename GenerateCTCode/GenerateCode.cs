@@ -616,8 +616,6 @@ namespace GenerateCTCode
             ctCode1.SoOrder = ctCode2.SoOrder;
             ctCode1.Opuser = Auxiliary.loginName;
             ctCode1.Woquantity = ctCode2.Woquantity;
-            ctCode1.Completedqty = ctCode2.Completedqty;
-            ctCode1.Mactype = ctCode2.Mactype;
             ctCode1.Offino = ctCode2.Offino;
             ctCode1.Delmatno = ctCode2.Delmatno;
             ctCode1.Ruleno = ctCode2.Ruleno;

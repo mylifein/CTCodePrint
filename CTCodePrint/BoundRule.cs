@@ -35,13 +35,6 @@ namespace CTCodePrint
                 this.comboBox1.DataSource = dsCus.Tables[0];
             }
                
-            DataSet dsRule = printQ.queryMacType("");
-            if (dsRule != null && dsRule.Tables.Count > 0 && dsRule.Tables[0].Rows.Count > 0)
-            {
-                this.comboBox2.DisplayMember = "mactypename";
-                this.comboBox2.ValueMember = "mactypeno";
-                this.comboBox2.DataSource = dsRule.Tables[0];
-            }
             DataSet dsRealRule = printQ.queryCodeInfo("");
             if (dsRealRule != null && dsRealRule.Tables.Count > 0 && dsRealRule.Tables[0].Rows.Count > 0)
             {
@@ -88,7 +81,6 @@ namespace CTCodePrint
             CusRule cusRule = new CusRule();
             cusRule.Delmatno = this.textBox1.Text.Trim();
             cusRule.Cusno = this.comboBox1.SelectedValue.ToString().Trim();
-            cusRule.Mactypeno = this.comboBox2.SelectedValue.ToString().Trim();
             cusRule.Ruleno = this.comboBox4.SelectedValue.ToString().Trim();
             cusRule.Boundtype = boundType;
             if (cusRuleService.checkAdd(cusRule))

@@ -74,40 +74,7 @@ namespace CTCodePrint
 
             this.dataGridView1.Columns[0].ReadOnly = true;
             this.dataGridView1.Columns[1].ReadOnly = true;
-            //this.dataGridView1.ColumnCount = 10;
-            //this.dataGridView1.ColumnHeadersVisible = true;
-            //this.dataGridView1.Columns[0].Name = "uuid";
-            //this.dataGridView1.Columns[1].Name = "規則號";
-            //this.dataGridView1.Columns[2].Name = "序列號";
-            //this.dataGridView1.Columns.Add(column1);
-            //this.dataGridView1.Columns[4].Name = "規則值";
-            //this.dataGridView1.Columns[5].Name = "規則長度";
-            //this.dataGridView1.Columns[6].Name = "操作用戶";
-            //this.dataGridView1.Columns[7].Name = "創建時間";
-            //this.dataGridView1.Columns[8].Name = "修改時間";
-            DataTable itemTable = new DataTable();   // construct selects value
-            DataColumn columnType;
-            DataRow rowType;
-            columnType = new DataColumn("Name");
-            itemTable.Columns.Add(columnType);
-            columnType = new DataColumn("Value");
-            itemTable.Columns.Add(columnType);
-            rowType = itemTable.NewRow();
-            rowType["Name"] = "CT碼編碼規則";
-            rowType["Value"] = "0";
-            itemTable.Rows.Add(rowType);
-            rowType = itemTable.NewRow();
-            rowType["Name"] = "機箱編碼規則";
-            rowType["Value"] = "1";
-            itemTable.Rows.Add(rowType);
-            rowType = itemTable.NewRow();
-            rowType["Name"] = "棧板編碼規則";
-            rowType["Value"] = "2";
-            itemTable.Rows.Add(rowType);
-            this.comboBox1.DisplayMember = "Name";
-            this.comboBox1.ValueMember = "Value";
-            this.comboBox1.DataSource = itemTable;
-
+        
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -132,7 +99,6 @@ namespace CTCodePrint
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string funcType = this.comboBox1.SelectedValue == null ? "0" : this.comboBox1.SelectedValue.ToString();
             if (this.textBox2.Text == null || this.textBox2.Text.Trim() == "")
             {
                 MessageBox.Show("規則描述不能為空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -151,7 +117,6 @@ namespace CTCodePrint
             }
             CodeRule codeR = new CodeRule();
             codeR.RuleDesc = this.textBox2.Text;
-            codeR.FuncType = funcType;
             List<RuleItem> list = new List<RuleItem>();
             for (int i=0; i < this.dataGridView1.Rows.Count; i++)
             {

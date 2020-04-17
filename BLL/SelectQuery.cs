@@ -57,20 +57,6 @@ namespace BLL
             return ds;
         }
 
-        public DataSet getCusByCondition(string condition,string conditionV)
-        {
-            DataSet ds = null;
-            if(condition == "1")
-            {
-                ds = selectControl.getCusInfoByCusNo(conditionV);
-            }
-            else
-            {
-                ds = selectControl.getCusInfoByCusName(conditionV);
-            }
-
-            return ds;
-        }
 
         public DataSet getRulesByRuleNo(string ruleNo)
         {

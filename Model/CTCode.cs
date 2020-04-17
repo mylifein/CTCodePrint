@@ -18,7 +18,6 @@ namespace Model
         private string _orderqty;
         private string _cusmatno;
         private string _delmatno;
-        private string _mactype;
         private string _offino;
         private string _verno;
         private string _woquantity;
@@ -225,18 +224,6 @@ namespace Model
             }
         }
 
-        public string Mactype
-        {
-            get
-            {
-                return _mactype;
-            }
-
-            set
-            {
-                _mactype = value;
-            }
-        }
 
         public string Completedqty
         {

@@ -203,7 +203,7 @@ namespace BLL
             bool mark = false;
             string saveResult = null;
             codeRule.Uuid = Auxiliary.Get_UUID();
-            codeRule.Createtime = DateTime.Now.ToString();
+            codeRule.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             codeRule.Opuser = Auxiliary.loginName;
             if (printM.saveRuleInfo(codeRule))
             {
@@ -410,14 +410,7 @@ namespace BLL
             return mactypeinfo;
         }
 
-        /// <summary>
-        /// 模糊查詢機種類型
-        /// </summary>
-        /// <returns></returns>
-        public DataSet queryMacType(string mactypeno)
-        {
-            return printM.queryMacTypeByNo(mactypeno);
-        }
+
 
         /// <summary>
         /// 模糊查詢所有模板信息

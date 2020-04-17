@@ -36,7 +36,6 @@ namespace DAL
                 cTCode.Orderqty = ds.Tables[0].Rows[0]["po_qty"].ToString();
                 cTCode.Cusmatno = ds.Tables[0].Rows[0]["cus_matno"].ToString();
                 cTCode.Delmatno = ds.Tables[0].Rows[0]["del_matno"].ToString();
-                cTCode.Mactype = ds.Tables[0].Rows[0]["mac_type"].ToString();
                 cTCode.Offino = ds.Tables[0].Rows[0]["offi_no"].ToString();
                 cTCode.Verno = ds.Tables[0].Rows[0]["ver_no"].ToString();
                 cTCode.Woquantity = ds.Tables[0].Rows[0]["wo_quantity"].ToString();
@@ -53,8 +52,8 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_code_info (uuid,ct_code,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,mac_type,offi_no,ver_no,wo_quantity,completed_qty,model_no,op_user,create_time,so_order)");
-            strSql.Append("values(@uuid,@ctcode,@ruleno,@workno,@cusno,@cusname,@cuspo,@poqty,@cusmatno,@delmatno,@mac_type,@offino,@verno,@woquantity,@completedQty,@model_no,@opuser,@createtime,@soOrder)");
+            strSql.Append("insert into t_code_info (uuid,ct_code,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,op_user,create_time,so_order)");
+            strSql.Append("values(@uuid,@ctcode,@ruleno,@workno,@cusno,@cusname,@cuspo,@poqty,@cusmatno,@delmatno,@offino,@verno,@woquantity,@model_no,@opuser,@createtime,@soOrder)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@ctcode", MySqlDbType.VarChar, 900),
@@ -64,13 +63,11 @@ namespace DAL
                 new MySqlParameter("@cuspo", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@cusmatno", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@delmatno", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@mac_type", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@offino", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@verno", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@woquantity", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@completedQty", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@model_no", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@poqty", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@soOrder", MySqlDbType.VarChar, 900),
@@ -84,17 +81,15 @@ namespace DAL
             parameters[5].Value = ctCode.Cuspo;
             parameters[6].Value = ctCode.Cusmatno;
             parameters[7].Value = ctCode.Delmatno;
-            parameters[8].Value = ctCode.Mactype;
-            parameters[9].Value = ctCode.Offino;
-            parameters[10].Value = ctCode.Verno;
-            parameters[11].Value = ctCode.Woquantity;
-            parameters[12].Value = ctCode.Opuser;
-            parameters[13].Value = ctCode.Createtime;
-            parameters[14].Value = ctCode.Completedqty;
-            parameters[15].Value = ctCode.Modelno;
-            parameters[16].Value = ctCode.Orderqty;
-            parameters[17].Value = ctCode.SoOrder;
-            parameters[18].Value = ctCode.Cusname;
+            parameters[8].Value = ctCode.Offino;
+            parameters[9].Value = ctCode.Verno;
+            parameters[10].Value = ctCode.Woquantity;
+            parameters[11].Value = ctCode.Opuser;
+            parameters[12].Value = ctCode.Createtime;
+            parameters[13].Value = ctCode.Modelno;
+            parameters[14].Value = ctCode.Orderqty;
+            parameters[15].Value = ctCode.SoOrder;
+            parameters[16].Value = ctCode.Cusname;
             int rows = SQLHelper.ExecuteNonQueryTrans(conn, mysqlTrans, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
