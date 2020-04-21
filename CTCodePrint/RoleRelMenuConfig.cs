@@ -18,7 +18,6 @@ namespace CTCodePrint
             InitializeComponent();
         }
         private readonly RoleService roleService = new RoleService();
-        private readonly MenuService menuService = new MenuService();
         private readonly RoleRelMenuService roleRelMenuService = new RoleRelMenuService();
 
         private void RoleRelMenuConfig_Load(object sender, EventArgs e)
@@ -27,9 +26,10 @@ namespace CTCodePrint
             this.comboBox1.DisplayMember = "Roledesc";
             this.comboBox1.ValueMember = "Roleno";
 
-            this.comboBox2.DataSource = menuService.queryMenuInfoList("");
-            this.comboBox2.ValueMember = "MenuNo";
-            this.comboBox2.DisplayMember = "MenuDescription";
+
+            this.comboBox2.DataSource = MainMenuMDI.list;
+            this.comboBox2.ValueMember = "Tag";
+            this.comboBox2.DisplayMember = "name";
 
 
             this.displayList(this.comboBox1.SelectedValue.ToString());
@@ -46,7 +46,9 @@ namespace CTCodePrint
         {
             RoleRelMenu roleRelMenu = new RoleRelMenu();
             roleRelMenu.Roleno = this.comboBox1.SelectedValue.ToString().Trim();
-            roleRelMenu.Menuno = this.comboBox2.SelectedValue.ToString().Trim();
+            roleRelMenu.MenuName = this.comboBox2.SelectedValue.ToString().Trim();
+            roleRelMenu.MenuDesc = this.comboBox2.Text;
+
             if (!roleRelMenuService.checkAdd(roleRelMenu))
             {
                 RoleRelMenu reRoleRelMenu = roleRelMenuService.saveRoleRelMenu(roleRelMenu);

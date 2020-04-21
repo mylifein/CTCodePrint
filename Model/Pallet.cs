@@ -12,6 +12,7 @@ namespace Model
         private int _palletQty;
         private string _woNo;
         private string _ruleno;
+        private string _cusNo;
         private string _cusmatno;
         private List<Carton> _cartonList;
         private string _delmatno;
@@ -229,6 +230,19 @@ namespace Model
             set
             {
                 _batchNo = value;
+            }
+        }
+
+        public string CusNo
+        {
+            get
+            {
+                return _cusNo;
+            }
+
+            set
+            {
+                _cusNo = value;
             }
         }
     }

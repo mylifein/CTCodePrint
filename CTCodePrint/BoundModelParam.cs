@@ -12,24 +12,25 @@ using System.Windows.Forms;
 
 namespace CTCodePrint
 {
-    public partial class BoundModelFile : Form
+    public partial class BoundModelParam : Form
     {
-        public BoundModelFile()
+        public BoundModelParam()
         {
             InitializeComponent();
         }
 
-        private readonly ModelInfoService modelInfoService = new ModelInfoService();
-        private readonly FileRelDelService fileRelDelService = new FileRelDelService();
+        private readonly MandatoryFieldService mandatoryFieldService = new MandatoryFieldService();
+        private readonly MandRelDelService mandRelDelService = new MandRelDelService();
         private readonly OracleQueryB oracleQueryB = new OracleQueryB();
 
         private bool saveMark = false;
 
         private void BoundModel_Load(object sender, EventArgs e)
         {
-            this.comboBox1.DataSource = modelInfoService.queryModelFileList("");
-            this.comboBox1.ValueMember = "Fileno";
-            this.comboBox1.DisplayMember = "Filedescription";
+            this.comboBox1.DataSource = mandatoryFieldService.queryMandatoryInfoList("");
+            this.comboBox1.ValueMember = "Manno";
+            this.comboBox1.DisplayMember = "Mandesc";
+
 
 
             this.comboBox2.DisplayMember = "CusName";
@@ -75,22 +76,22 @@ namespace CTCodePrint
                 return;
             }
             string boundType = this.comboBox3.SelectedValue == null ? "0" : this.comboBox3.SelectedValue.ToString();
-            FileRelDel fileRelDel = new FileRelDel();
-            fileRelDel.FileNo = this.comboBox1.SelectedValue.ToString();
-            fileRelDel.CusNo = this.comboBox2.SelectedValue.ToString().Trim();
-            fileRelDel.DelMatno = this.textBox1.Text.Trim().ToString().Trim();
-            fileRelDel.BoundType = boundType;
+            MandRelDel mandRelDel = new MandRelDel();
+            mandRelDel.ManNo = this.comboBox1.SelectedValue.ToString();
+            mandRelDel.CusNo = this.comboBox2.SelectedValue.ToString().Trim();
+            mandRelDel.DelMatno = this.textBox1.Text.Trim().ToString().Trim();
+            mandRelDel.BoundType = boundType;
 
-            if (fileRelDelService.checkAdd(fileRelDel))
+            if (mandRelDelService.checkAdd(mandRelDel))
             {
-                MessageBox.Show("該客戶和出貨料號的打印模板已經綁定，請勿重複綁定！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("該客戶和出貨料號的参数字段已經綁定，請勿重複綁定！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.textBox1.Focus();
                 return;
             }
-            FileRelDel reFileRelDel = fileRelDelService.saveFileRelDel(fileRelDel);
-            if (reFileRelDel != null)
+            MandRelDel reMandRelDel = mandRelDelService.saveMandRelDel(mandRelDel);
+            if (reMandRelDel != null)
             {
-                this.textBox2.Text = reFileRelDel.CreateTime;
+                this.textBox2.Text = reMandRelDel.CreateTime;
                 saveMark = true;
                 MessageBox.Show("保存成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

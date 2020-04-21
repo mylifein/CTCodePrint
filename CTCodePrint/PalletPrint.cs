@@ -27,9 +27,9 @@ namespace CTCodePrint
         private List<Carton> cartonList = new List<Carton>();
         private readonly CartonService cartonService = new CartonService();
         private readonly BarCodePrint barPrint = BarCodePrint.getInstance();
-        private readonly ModelRelMandService modelRelMandService = new ModelRelMandService();  //查詢模板的字段規則
+        private readonly MandRelDelService mandRelDelService = new MandRelDelService();                  //查詢模板的参数字段
         private readonly ManRelFieldTypeService manRelFieldTypeService = new ManRelFieldTypeService();  //根據字段規則 查詢字段規則值
-        private readonly ModelInfoService modelInfoService = new ModelInfoService();        //查詢模板內容並下載
+        private readonly ModelInfoService modelInfoService = new ModelInfoService();                    //查詢模板內容並下載
         private readonly PrintModelQ printQ = new PrintModelQ();
         private readonly SelectQuery selectQ = new SelectQuery();
         private readonly PalletService palletService = new PalletService();
@@ -256,16 +256,15 @@ namespace CTCodePrint
             //打印装箱单号
             if (this.dataGridView1.Rows.Count > 0)
             {
-
-                ModelRelMand modelRelMand = modelRelMandService.queryMenuInfoByFileNo(pallet.Modelno);
-                if (modelRelMand == null)
+                MandRelDel mandRelDel = mandRelDelService.queryManNoByDel(pallet.CusNo, pallet.Delmatno, "2");
+                if (mandRelDel == null)
                 {
                     MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.textBox2.Focus();
                     return;
                 }
                 //查詢字段對應的規則信息
-                List<MandUnionFieldType> mandUnionFieldTypeList = manRelFieldTypeService.queryMandUnionFieldTypeList(modelRelMand.ManNo);
+                List<MandUnionFieldType> mandUnionFieldTypeList = manRelFieldTypeService.queryMandUnionFieldTypeList(mandRelDel.ManNo);
                 if (mandUnionFieldTypeList == null)
                 {
                     MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);

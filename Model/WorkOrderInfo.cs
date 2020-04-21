@@ -7,44 +7,22 @@ namespace Model
 {
     public class WorkOrderInfo
     {
-        private string _organizationId;
-        private string _customerItemNumber;
+        private string _orgId;
+        private string _cusItemNum;
         private string _workNo;
         private string _startQty;               //工单数量
         private string _completedQty;           //完工数量
         private string _soOrder;
         private string _itemCode;
         private string _itemDesc;
-        private string _custPONuber;
+        private string _custPO;
         private string _custId;
         private string _custName;
         private string _orderQty;
 
-        public string OrganizationId
-        {
-            get
-            {
-                return _organizationId;
-            }
 
-            set
-            {
-                _organizationId = value;
-            }
-        }
 
-        public string CustomerItemNumber
-        {
-            get
-            {
-                return _customerItemNumber;
-            }
 
-            set
-            {
-                _customerItemNumber = value;
-            }
-        }
 
         public string WorkNo
         {
@@ -124,18 +102,7 @@ namespace Model
             }
         }
 
-        public string CustPONuber
-        {
-            get
-            {
-                return _custPONuber;
-            }
 
-            set
-            {
-                _custPONuber = value;
-            }
-        }
 
         public string CustId
         {
@@ -173,6 +140,45 @@ namespace Model
             set
             {
                 _orderQty = value;
+            }
+        }
+
+        public string OrgId
+        {
+            get
+            {
+                return _orgId;
+            }
+
+            set
+            {
+                _orgId = value;
+            }
+        }
+
+        public string CusItemNum
+        {
+            get
+            {
+                return _cusItemNum;
+            }
+
+            set
+            {
+                _cusItemNum = value;
+            }
+        }
+
+        public string CustPO
+        {
+            get
+            {
+                return _custPO;
+            }
+
+            set
+            {
+                _custPO = value;
             }
         }
     }

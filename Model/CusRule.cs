@@ -11,11 +11,11 @@ namespace Model
         private string _uuid;
         private string _cusno;
         private string _delmatno;
-        private string _mactypeno;
         private string _ruleno;
         private string _boundtype;
         private string _opuser;
         private string _createtime;
+        private string _updateuser;
         private string _updatetime;
         private string _delflag;
 
@@ -114,18 +114,6 @@ namespace Model
             }
         }
 
-        public string Mactypeno
-        {
-            get
-            {
-                return _mactypeno;
-            }
-
-            set
-            {
-                _mactypeno = value;
-            }
-        }
 
         public string Boundtype
         {
@@ -150,6 +138,19 @@ namespace Model
             set
             {
                 _ruleno = value;
+            }
+        }
+
+        public string Updateuser
+        {
+            get
+            {
+                return _updateuser;
+            }
+
+            set
+            {
+                _updateuser = value;
             }
         }
     }

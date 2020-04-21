@@ -9,7 +9,8 @@ namespace Model
     {
         private string _uuid;
         private string _roleno;
-        private string _menuno;
+        private string _menuName;
+        private string _menuDesc;
         private string _opuser;
         private string _createtime;
         private string _updatetime;
@@ -41,18 +42,7 @@ namespace Model
             }
         }
 
-        public string Menuno
-        {
-            get
-            {
-                return _menuno;
-            }
 
-            set
-            {
-                _menuno = value;
-            }
-        }
 
         public string Opuser
         {
@@ -103,6 +93,32 @@ namespace Model
             set
             {
                 _delflag = value;
+            }
+        }
+
+        public string MenuName
+        {
+            get
+            {
+                return _menuName;
+            }
+
+            set
+            {
+                _menuName = value;
+            }
+        }
+
+        public string MenuDesc
+        {
+            get
+            {
+                return _menuDesc;
+            }
+
+            set
+            {
+                _menuDesc = value;
             }
         }
     }

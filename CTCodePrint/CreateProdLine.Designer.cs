@@ -137,19 +137,21 @@
             // 
             // button1
             // 
+            this.button1.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.button1.Location = new System.Drawing.Point(839, 320);
             this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 29);
+            this.button1.Size = new System.Drawing.Size(114, 59);
             this.button1.TabIndex = 10;
             this.button1.Text = "保存";
-            this.button1.UseVisualStyleBackColor = true;
+            this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // CreateProdLine
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.ClientSize = new System.Drawing.Size(1197, 514);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox4);
@@ -164,7 +166,7 @@
             this.Controls.Add(this.label1);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "CreateProdLine";
-            this.Text = "機種類型配置";
+            this.Text = "线别创建";
             this.Load += new System.EventHandler(this.MachineTypeConfig_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -156,7 +156,7 @@ namespace DAL
 
             List<ProdLine> prodLineList = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_prodline WHERE dept_id=@depId AND del_flag is null ");
+            strSql.Append("SELECT * FROM t_prodline WHERE dept_id=@depId AND del_flag is null order by create_time");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@depId", MySqlDbType.VarChar, 900),
             };

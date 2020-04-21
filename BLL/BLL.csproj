@@ -56,7 +56,6 @@
     <Compile Include="FileRelDelService.cs" />
     <Compile Include="MandatoryFieldService.cs" />
     <Compile Include="ManRelFieldTypeService.cs" />
-    <Compile Include="MenuService.cs" />
     <Compile Include="ModelInfoService.cs" />
     <Compile Include="ModelRelMandService.cs" />
     <Compile Include="OracleQueryB.cs" />

@@ -47,16 +47,35 @@ namespace DAL
         }
 
 
-        public DataSet queryCapacityAll(string capacityNo)
+        public List<Capacity> queryCapacityAll(string capacityNo)
         {
+            List<Capacity> capacityList = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_capacity where capacity_no like @capacityNo");
+            strSql.Append("SELECT * FROM t_capacity where capacity_no like @capacityNo and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@capacityNo", MySqlDbType.VarChar, 900),
             };
             parameters[0].Value = "%" + capacityNo + "%";
             DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
-            return ds;
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                capacityList = new List<Capacity>();
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    Capacity capacity = new Capacity();
+                    capacity.Uuid = dr["uuid"].ToString();
+                    capacity.Capacityno = dr["capacity_no"].ToString();
+                    capacity.Capacityqty = (int)dr["capacity_qty"];
+                    capacity.Capacitydesc = dr["capacity_desc"].ToString();
+                    capacity.Opuser = dr["op_user"].ToString();
+                    capacity.Createtime = dr["create_time"].ToString();
+                    capacity.Updateser = dr["update_user"].ToString();
+                    capacity.Updatetime = dr["update_time"].ToString();
+                    capacityList.Add(capacity);
+
+                }
+            }
+            return capacityList;
         }
 
         public Capacity queryCapacityById(string uuid)
@@ -153,7 +172,14 @@ namespace DAL
         }
 
 
-        public string queryCapacityNo(CapacityRelCus capacityRelCus)
+        /// <summary>
+        /// 查询容量编号
+        /// </summary>
+        /// <param name="cusNo"></param>
+        /// <param name="delMatno"></param>
+        /// <param name="capacityType"></param>
+        /// <returns></returns>
+        public string queryCapacityNo(string cusNo,string delMatno,string capacityType)
         {
             string result = null;
             StringBuilder strSql = new StringBuilder();
@@ -163,9 +189,9 @@ namespace DAL
                 new MySqlParameter("@delMatno", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@capacityType", MySqlDbType.VarChar, 900)
             };
-            parameters[0].Value = capacityRelCus.CusNo;
-            parameters[1].Value = capacityRelCus.DelMatno;
-            parameters[2].Value = capacityRelCus.CapacityType;
+            parameters[0].Value = cusNo;
+            parameters[1].Value = delMatno;
+            parameters[2].Value = capacityType;
             Object obj = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (obj != null)
             {

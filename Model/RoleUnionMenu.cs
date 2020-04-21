@@ -10,7 +10,6 @@ namespace Model
         private string _uuid;
         private string _roleno;
         private string _rolename;
-        private string _menuno;
         private string _menuname;
         private string _menudesc;
         private string _opuser;
@@ -53,19 +52,6 @@ namespace Model
             set
             {
                 _rolename = value;
-            }
-        }
-
-        public string Menuno
-        {
-            get
-            {
-                return _menuno;
-            }
-
-            set
-            {
-                _menuno = value;
             }
         }
 

@@ -2,21 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Model
 {
-    public class CodeRule
+    public class RuleType
     {
         private string _uuid;
-        private string _ruleno;
-        private string _ruleDesc;
+        private string _typeNo;
+        private string _typeDesc;
         private string _opuser;
         private string _createtime;
-        private string _updatetime;
         private string _updateUser;
+        private string _updatetime;
         private string _delflag;
-        private List<RuleItem> _ruleItem;
 
         public string Uuid
         {
@@ -31,29 +29,29 @@ namespace Model
             }
         }
 
-        public string Ruleno
+        public string TypeNo
         {
             get
             {
-                return _ruleno;
+                return _typeNo;
             }
 
             set
             {
-                _ruleno = value;
+                _typeNo = value;
             }
         }
 
-        public string RuleDesc
+        public string TypeDesc
         {
             get
             {
-                return _ruleDesc;
+                return _typeDesc;
             }
 
             set
             {
-                _ruleDesc = value;
+                _typeDesc = value;
             }
         }
 
@@ -83,6 +81,19 @@ namespace Model
             }
         }
 
+        public string UpdateUser
+        {
+            get
+            {
+                return _updateUser;
+            }
+
+            set
+            {
+                _updateUser = value;
+            }
+        }
+
         public string Updatetime
         {
             get
@@ -106,32 +117,6 @@ namespace Model
             set
             {
                 _delflag = value;
-            }
-        }
-
-        public List<RuleItem> RuleItem
-        {
-            get
-            {
-                return _ruleItem;
-            }
-
-            set
-            {
-                _ruleItem = value;
-            }
-        }
-
-        public string UpdateUser
-        {
-            get
-            {
-                return _updateUser;
-            }
-
-            set
-            {
-                _updateUser = value;
             }
         }
     }

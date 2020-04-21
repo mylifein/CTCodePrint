@@ -64,12 +64,7 @@ namespace CTCodePrint
             manConfig.Show();
         }
 
-        private void 模板字段維護ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ModelConfig modelConfig = new ModelConfig();
-            modelConfig.MdiParent = this;
-            modelConfig.Show();
-        }
+
 
         private void 模板上傳ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -101,19 +96,7 @@ namespace CTCodePrint
             roleRelUserConfig.Show();
         }
 
-        private void 創建權限菜單ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CreateMenu createMenu = new CreateMenu();
-            createMenu.MdiParent = this;
-            createMenu.Show();
-        }
 
-        private void 菜單權限分配ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            RoleRelMenuConfig roleRelMenuConfig = new RoleRelMenuConfig();
-            roleRelMenuConfig.MdiParent = this;
-            roleRelMenuConfig.Show();
-        }
 
         private void MainMenuMDI_Load(object sender, EventArgs e)
         {
@@ -159,15 +142,15 @@ namespace CTCodePrint
                     string name = item.Name;
                     bool isVisible = this.compareMenu(name, roleUnionMenuList);
                     item.Visible = isVisible;
-                    //if (isVisible)
-                    //{
-                    //    foreach (ToolStripMenuItem subItem in item.DropDownItems)//获取二级菜单
-                    //    {
-                    //        name = subItem.Name;
-                    //        isVisible = this.compareMenu(name, roleUnionMenuList);
-                    //        subItem.Visible = isVisible;
-                    //    }
-                    //}
+                    if (isVisible)
+                    {
+                        foreach (ToolStripMenuItem subItem in item.DropDownItems)//获取二级菜单
+                        {
+                            name = subItem.Name;
+                            isVisible = this.compareMenu(name, roleUnionMenuList);
+                            subItem.Visible = isVisible;
+                        }
+                    }
 
                 }
             }
@@ -215,9 +198,9 @@ namespace CTCodePrint
 
         private void 模板字段規則綁定ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ModelBoundField modelBoundField = new ModelBoundField();
-            modelBoundField.MdiParent = this;
-            modelBoundField.Show();
+            BoundModelParam boundModelParam = new BoundModelParam();
+            boundModelParam.MdiParent = this;
+            boundModelParam.Show();
         }
 
         private void 模板文件綁定ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -233,57 +216,54 @@ namespace CTCodePrint
             Application.Exit();
         }
 
-        private void 料號子階維護ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SubmatMaintain submatMaintain = new SubmatMaintain();
-            submatMaintain.MdiParent = this;
-            submatMaintain.Show();
-        }
 
-        private void AuthorizationConfig_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void 部門創建ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CreateDepartment createDepartment = new CreateDepartment();
+            createDepartment.MdiParent = this;
             createDepartment.Show();
         }
 
         private void 線別設定ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CreateProdLine createProdLine = new CreateProdLine();
+            createProdLine.MdiParent = this;
             createProdLine.Show();
         }
 
         private void 裝箱單號打印ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CartonPrint cartonPrint = new CartonPrint();
+            cartonPrint.MdiParent = this;
             cartonPrint.Show();
         }
 
         private void 单出件装箱单打印ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CartonDirectPrint cartonDirectPrint = new CartonDirectPrint();
+            cartonDirectPrint.MdiParent = this;
             cartonDirectPrint.Show();
         }
 
         private void 棧板標籤打印ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PalletPrint palletPrint = new PalletPrint();
+            palletPrint.MdiParent = this;
             palletPrint.Show();
         }
 
         private void 創建容量ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CreateCapacity createCapacity = new CreateCapacity();
+            createCapacity.MdiParent = this;
             createCapacity.Show();
         }
 
         private void 容量綁定ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             BoundCapacity boundCapacity = new BoundCapacity();
+            boundCapacity.MdiParent = this;
             boundCapacity.Show();
         }
 
@@ -292,27 +272,24 @@ namespace CTCodePrint
         private void 創建用戶ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CreateUser createUser = new CreateUser();
+            createUser.MdiParent = this;
             createUser.Show();
         }
 
         private void 模板修改ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ModifyModelFile modifyModelFile = new ModifyModelFile();
+            modifyModelFile.MdiParent = this;
             modifyModelFile.Show();
         }
 
         private void 重印裝箱單ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ReprintCarton reprintCarton = new ReprintCarton();
+            reprintCarton.MdiParent = this;
             reprintCarton.Show();
         }
 
-        private void 编码规则绑定ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            BoundRule boundRule = new BoundRule();
-            boundRule.MdiParent = this;
-            boundRule.Show();
-        }
 
         private void 子阶料号维护ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -323,7 +300,17 @@ namespace CTCodePrint
 
         private void BoundRuleToolStripMenuItem(object sender, EventArgs e)
         {
-
+            BoundRule boundRule = new BoundRule();
+            boundRule.MdiParent = this;
+            boundRule.Show();
         }
+
+        private void 角色权限分配ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RoleRelMenuConfig roleRelMenuConfig = new RoleRelMenuConfig();
+            roleRelMenuConfig.MdiParent = this;
+            roleRelMenuConfig.Show();
+        }
+
     }
 }

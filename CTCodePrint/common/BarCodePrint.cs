@@ -502,7 +502,7 @@ namespace CTCodePrint.common
             try
             {
                 filePath = "D:\\" + System.DateTime.Now.Year + System.DateTime.Now.Month + System.DateTime.Now.Day + System.DateTime.Now.Hour + System.DateTime.Now.Minute + System.DateTime.Now.Second + ".bmp";
-                string st = doc.CopyImageToFile(12, "BMP", 90, 60, filePath);
+                string st = doc.CopyImageToFile(12, "BMP", 0, 60, filePath);
             }
             catch (Exception ex)
             {

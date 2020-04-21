@@ -39,28 +39,7 @@ namespace DAL
             return ds;
         }
 
-        /// <summary>
-        /// 獲得機種類型 通過客戶編號
-        /// </summary>
-        /// <param name="cusNo"></param>
-        /// <returns></returns>
-        public DataSet getMacTypeByCus(string cusNo,string delmatno,string boundType)
-        {
-            StringBuilder strSql = new StringBuilder();
-            strSql.Append("select * from t_cus_codrule where cus_no=@cusNo and del_matno=@delmatno and bound_type=@BoundType and del_flag is null");
-            MySqlParameter[] parameters = {
-                new MySqlParameter("@cusNo", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@delmatno", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@BoundType", MySqlDbType.VarChar, 900)
-            };
 
-            parameters[0].Value = cusNo;
-            parameters[1].Value = delmatno;
-            parameters[2].Value = boundType;
-            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
-
-            return ds;
-        }
 
 
         /// <summary>

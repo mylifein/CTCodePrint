@@ -13,7 +13,6 @@ namespace Model
         private int _cartonQty;
         private string _cartonStatus;           // 狀態標識; 0 剛產生， 1，入庫 2，OQC ok， 3. OQC NG 4.出庫
         private string _capacityNo;
-        private string _currentNo;
         private string _capacityQty;
         private string _batchNo;                //浪潮批次號
         private int _boxNo;                     //工单箱数
@@ -53,6 +52,7 @@ namespace Model
         private string _ct9;
         private string _ct10;
         private string specialField;
+        private string _prodLineVal;
         
 
 
@@ -577,18 +577,6 @@ namespace Model
             }
         }
 
-        public string CurrentNo
-        {
-            get
-            {
-                return _currentNo;
-            }
-
-            set
-            {
-                _currentNo = value;
-            }
-        }
 
         public int BoxNo
         {
@@ -639,6 +627,19 @@ namespace Model
             set
             {
                 specialField = value;
+            }
+        }
+
+        public string ProdLineVal
+        {
+            get
+            {
+                return _prodLineVal;
+            }
+
+            set
+            {
+                _prodLineVal = value;
             }
         }
     }

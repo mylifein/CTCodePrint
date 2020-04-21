@@ -85,7 +85,7 @@ namespace DAL
 
             List<Department> departmentList = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_department WHERE dept_id LIKE @dept_id AND del_flag is null ");
+            strSql.Append("SELECT * FROM t_department WHERE dept_id LIKE @dept_id AND del_flag is null order by create_time");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@dept_id", MySqlDbType.VarChar, 900),
             };

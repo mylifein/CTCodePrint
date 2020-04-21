@@ -24,8 +24,8 @@ namespace CTCodePrint
         private readonly PrintModelQ printQ = new PrintModelQ();
         private readonly BarCodePrint barPrint = BarCodePrint.getInstance();
         private readonly CTCodeService cTCodeService = new CTCodeService();
-        private readonly ModelInfoService modelInfoService = new ModelInfoService();        //查詢模板內容並下載
-        private readonly ModelRelMandService modelRelMandService = new ModelRelMandService();  //查詢模板的字段規則
+        private readonly ModelInfoService modelInfoService = new ModelInfoService();                    //查詢模板內容並下載
+        private readonly MandRelDelService mandRelDelService = new MandRelDelService();                 //查詢模板的字段規則
         private readonly ManRelFieldTypeService manRelFieldTypeService = new ManRelFieldTypeService();  //根據字段規則 查詢字段規則值
 
         private void ReprintCT_Load(object sender, EventArgs e)
@@ -106,6 +106,8 @@ namespace CTCodePrint
             }
             int index = this.dataGridView1.CurrentRow.Index;
             string modelNo = this.dataGridView1.Rows[index].Cells["model_no"].Value.ToString();
+            string cusNo = this.dataGridView1.Rows[index].Cells["cus_no"].Value.ToString();
+            string delMatno = this.dataGridView1.Rows[index].Cells["del_matno"].Value.ToString();
             ModelFile modelFile = modelInfoService.queryModelFileByNo(modelNo);
             if (modelFile == null)
             {
@@ -114,13 +116,13 @@ namespace CTCodePrint
             }
             string filePath = Auxiliary.downloadModelFile(modelFile);
             //查詢打印模板的打印字段
-            ModelRelMand modelRelMand = modelRelMandService.queryMenuInfoByFileNo(modelFile.Fileno);
-            if (modelRelMand == null)
+            MandRelDel mandRelDel = mandRelDelService.queryManNoByDel(cusNo, delMatno, "0");
+            if (mandRelDel == null)
             {
                 MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            List<MandUnionFieldType> mandUnionFieldTypeList = manRelFieldTypeService.queryMandUnionFieldTypeList(modelRelMand.ManNo);
+            List<MandUnionFieldType> mandUnionFieldTypeList = manRelFieldTypeService.queryMandUnionFieldTypeList(mandRelDel.ManNo);
             if (mandUnionFieldTypeList == null)
             {
                 MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);

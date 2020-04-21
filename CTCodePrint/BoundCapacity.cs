@@ -24,22 +24,17 @@ namespace CTCodePrint
 
         private void BoundRule_Load(object sender, EventArgs e)
         {
-            DataSet dsCus = oracleQueryB.getCusInfo();
-            DataTable itemTable = null;
-            if (dsCus != null && dsCus.Tables.Count > 0 && dsCus.Tables[0].Rows.Count > 0)
-            {
-                this.comboBox1.DisplayMember = "PARTY_NAME";
-                this.comboBox1.ValueMember = "CUST_ACCOUNT_ID";
-                this.comboBox1.DataSource = dsCus.Tables[0];
-            }
-               
-            DataSet dsCapacity = capacityService.queryCapacityAll("");
-            if (dsCapacity != null && dsCapacity.Tables.Count > 0 && dsCapacity.Tables[0].Rows.Count > 0)
-            {
-                this.comboBox2.DisplayMember = "capacity_desc";
-                this.comboBox2.ValueMember = "capacity_no";
-                this.comboBox2.DataSource = dsCapacity.Tables[0];
-            }
+
+            this.comboBox1.DisplayMember = "CusName";
+            this.comboBox1.ValueMember = "CusNo";
+            this.comboBox1.DataSource = oracleQueryB.getCusInfo();
+
+
+
+            this.comboBox2.DisplayMember = "Capacitydesc";
+            this.comboBox2.ValueMember = "Capacityno";
+            this.comboBox2.DataSource = capacityService.queryCapacityAll("");
+
 
             DataTable itemTable2 = new DataTable();   // construct selects value
             DataColumn columnType;
@@ -63,7 +58,7 @@ namespace CTCodePrint
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(this.textBox1.Text == null || this.textBox1.Text.Trim() == "")
+            if (this.textBox1.Text == null || this.textBox1.Text.Trim() == "")
             {
                 MessageBox.Show("出貨料號不能為空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.textBox1.Focus();
@@ -84,7 +79,8 @@ namespace CTCodePrint
             if (capacityService.saveCapacityRelCus(capacityRelCus))
             {
                 MessageBox.Show("保存成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }else
+            }
+            else
             {
                 MessageBox.Show("保存失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

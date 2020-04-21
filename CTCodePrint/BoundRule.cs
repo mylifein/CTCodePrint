@@ -14,10 +14,9 @@ namespace CTCodePrint
 {
     public partial class BoundRule : Form
     {
-        private readonly PrintModelQ printQ = new PrintModelQ();
-        private readonly SelectQuery selectQ = new SelectQuery();
         private readonly CusRuleService cusRuleService = new CusRuleService();
         private readonly OracleQueryB oracleQueryB = new OracleQueryB();
+        private readonly CodeRuleService codeRuleService = new CodeRuleService();
 
         public BoundRule()
         {
@@ -26,22 +25,17 @@ namespace CTCodePrint
 
         private void BoundRule_Load(object sender, EventArgs e)
         {
-            DataSet dsCus = oracleQueryB.getCusInfo();
-            DataTable itemTable = null;
-            if (dsCus != null && dsCus.Tables.Count > 0 && dsCus.Tables[0].Rows.Count > 0)
-            {
-                this.comboBox1.DisplayMember = "PARTY_NAME";
-                this.comboBox1.ValueMember = "CUST_ACCOUNT_ID";
-                this.comboBox1.DataSource = dsCus.Tables[0];
-            }
-               
-            DataSet dsRealRule = printQ.queryCodeInfo("");
-            if (dsRealRule != null && dsRealRule.Tables.Count > 0 && dsRealRule.Tables[0].Rows.Count > 0)
-            {
-                this.comboBox4.DisplayMember = "rule_desc";
-                this.comboBox4.ValueMember = "rule_no";
-                this.comboBox4.DataSource = dsRealRule.Tables[0];
-            }
+
+            this.comboBox1.DisplayMember = "CusName";
+            this.comboBox1.ValueMember = "CusNo";
+            this.comboBox1.DataSource = oracleQueryB.getCusInfo();
+
+
+
+            this.comboBox4.DisplayMember = "RuleDesc";
+            this.comboBox4.ValueMember = "Ruleno";
+            this.comboBox4.DataSource = codeRuleService.queryRulesByRuleNo("");
+
 
             DataTable itemTable2 = new DataTable();   // construct selects value
             DataColumn columnType;
@@ -71,7 +65,7 @@ namespace CTCodePrint
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(this.textBox1.Text == null || this.textBox1.Text.Trim() == "")
+            if (this.textBox1.Text == null || this.textBox1.Text.Trim() == "")
             {
                 MessageBox.Show("出貨料號不能為空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.textBox1.Focus();
@@ -89,23 +83,17 @@ namespace CTCodePrint
                 return;
             }
 
-            if (printQ.saveCusCodeRule(cusRule))
+            if (cusRuleService.saveCusCodeRule(cusRule))
             {
                 MessageBox.Show("保存成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }else
+            }
+            else
             {
                 MessageBox.Show("保存失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
-        private void label5_Click(object sender, EventArgs e)
-        {
 
-        }
 
-        private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }

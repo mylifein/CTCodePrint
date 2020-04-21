@@ -74,7 +74,7 @@ namespace DAL
 
             List<RoleInfo> roleInfoList = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_role_info WHERE role_no LIKE @roleNo AND del_flag is null ");
+            strSql.Append("SELECT * FROM t_role_info WHERE role_no LIKE @roleNo AND del_flag is null order by role_no");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@roleNo", MySqlDbType.VarChar, 900),
             };

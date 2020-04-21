@@ -18,9 +18,9 @@ namespace CTCodePrint
         {
             InitializeComponent();
         }
-        private readonly PrintModelQ printQ = new PrintModelQ();
 
-        private readonly SelectQuery selectQ = new SelectQuery();
+
+        private readonly CodeRuleService codeRuleService = new CodeRuleService();
         private void button1_Click(object sender, EventArgs e)
         {
             this.dataGridView1.Rows.Add();
@@ -48,14 +48,13 @@ namespace CTCodePrint
             this.dataGridView1.Columns.Add(column2);
 
             DataGridViewComboBoxColumn column3 = new DataGridViewComboBoxColumn();
-            column3.Name = "type_desc";
-            column3.DataPropertyName = "type_no";//对应数据源的字段
-            column3.DisplayMember = "type_desc";
-            column3.ValueMember = "type_no";
+            column3.Name = "TypeDesc";
+            column3.DataPropertyName = "TypeNo";    //对应数据源的字段
+            column3.DisplayMember = "TypeDesc";
+            column3.ValueMember = "TypeNo";
             column3.HeaderText = "規則類型";
             column3.Width = 80;
-            DataSet typesDs =selectQ.getAllRuleTypes();
-            column3.DataSource = typesDs.Tables[0];
+            column3.DataSource = codeRuleService.queryAllRuleType();
             this.dataGridView1.Columns.Add(column3);
 
             DataGridViewTextBoxColumn column4 = new DataGridViewTextBoxColumn();
@@ -128,7 +127,7 @@ namespace CTCodePrint
                 list.Add(ruleItem);
             }
             codeR.RuleItem = list;
-            string saveResult = printQ.saveRuleInfo(codeR);
+            string saveResult = codeRuleService.saveRuleInfo(codeR);
             if (saveResult != null)
             {
                 this.textBox1.Text = saveResult;

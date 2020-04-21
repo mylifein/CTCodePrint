@@ -8,40 +8,43 @@ using System.Text;
 
 namespace BLL
 {
-    public class ModelRelMandService
+    public class MandRelDelService
     {
-        private readonly ModelRelMandDao modelRelMandDao = new ModelRelMandDao();
+        private readonly MandRelDelDao mandRelDelDao = new MandRelDelDao();
+
 
         /// <summary>
-        /// 保存模板信息
+        /// 保存字段
         /// </summary>
-        /// <param name="modelRelMand"></param>
+        /// <param name="MandRelDel"></param>
         /// <returns></returns>
-        public ModelRelMand saveModelRelMand(ModelRelMand modelRelMand)
+        public MandRelDel saveMandRelDel(MandRelDel modelRelMand)
         {
-            ModelRelMand reModelRelMand = null;
+            MandRelDel reMandRelDel = null;
             modelRelMand.Uuid = Auxiliary.Get_UUID();
             modelRelMand.OpUser = Auxiliary.loginName;
             modelRelMand.CreateTime = Auxiliary.Get_CurrentTime();
-            if (modelRelMandDao.saveModelRelMand(modelRelMand))
+            if (mandRelDelDao.saveMandRelDel(modelRelMand))
             {
-                reModelRelMand = modelRelMandDao.queryMenuInfoById(modelRelMand.Uuid);
+                reMandRelDel = mandRelDelDao.queryMandRelDelById(modelRelMand.Uuid);
             }
-            return reModelRelMand;
+            return reMandRelDel;
         }
 
-        /// <summary>
-        /// 根據文件編號查詢信息
-        /// </summary>
-        /// <param name="fileNo"></param>
-        /// <returns></returns>
-        public ModelRelMand queryMenuInfoByFileNo(string fileNo)
+        public MandRelDel queryManNoByDel(string cusNo,string delMatno,string boudType)
         {
-            return modelRelMandDao.queryMenuInfoByFileNo(fileNo);
+            MandRelDel mandRelDel = new MandRelDel();
+            mandRelDel.CusNo = cusNo;
+            mandRelDel.BoundType = boudType;
+            mandRelDel.DelMatno = delMatno;
+            return mandRelDelDao.queryManNoByDel(mandRelDel);
         }
-        public bool checkAdd(string fileNo)
+
+
+
+        public bool checkAdd(MandRelDel mandRelDel)
         {
-            return modelRelMandDao.exists(fileNo);
+            return mandRelDelDao.exists(mandRelDel);
         }
 
     }

@@ -49,7 +49,7 @@ namespace BLL
         }
 
 
-        public DataSet queryCapacityAll(string capacityNo)
+        public List<Capacity> queryCapacityAll(string capacityNo)
         {
             return capacityDao.queryCapacityAll(capacityNo);
         }
@@ -80,10 +80,10 @@ namespace BLL
         /// </summary>
         /// <param name="capacityRelCus"></param>
         /// <returns></returns>
-        public Capacity queryByRelation(CapacityRelCus capacityRelCus)
+        public Capacity queryByRelation(string cusNo,string delMatno,string capacityType)
         {
             Capacity result = null;
-            string capacityNo = capacityDao.queryCapacityNo(capacityRelCus);
+            string capacityNo = capacityDao.queryCapacityNo(cusNo, delMatno, capacityType);
             if (capacityNo != null)
             {
                 result = capacityDao.queryCapacityByNo(capacityNo);

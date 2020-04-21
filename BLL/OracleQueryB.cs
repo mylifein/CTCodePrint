@@ -1,5 +1,6 @@
 ﻿using BLL;
 using DAL;
+using Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,47 +19,44 @@ namespace BLL
         /// </summary>
         /// <param name="workno"></param>
         /// <returns></returns>
-        public DataSet getWorkInfoByNo(string workno)
+        public List<WorkOrderInfo> getWorkInfoByNo(string workno)
         {
             return oracleQ.getWorkNoInofo(workno);
         }
 
-        public DataSet getRevisionInfo(string workno)
+        public List<WoRevision> getRevisionInfo(string workno)
         {
-            DataSet ds = oracleQ.getWorkNoInofo(workno);
-            DataSet resultDS = null;
-            if(ds != null && ds.Tables.Count > 0)
+            List<WorkOrderInfo> workOrderInfos = oracleQ.getWorkNoInofo(workno);
+            List<WoRevision> reWoRevisions = null;
+            if (workOrderInfos.Count > 0)
             {
-                if(ds.Tables[0].Rows.Count > 0)
-                {
-                    string itemCode = ds.Tables[0].Rows[0]["ITEM_CODE"].ToString();
-                    resultDS = oracleQ.getRevisionByDel(itemCode);
-                }
+                string itemCode = workOrderInfos[0].ItemCode;
+                reWoRevisions = oracleQ.getRevisionByDel(itemCode);
+
             }
-            return resultDS;
+            return reWoRevisions;
         }
 
-        public DataSet getCusMatInfo(string workno)
+        public List<CusMatInfo> getCusMatInfo(string workno)
         {
-            DataSet ds = oracleQ.getWorkNoInofo(workno);
-            DataSet resultDS = null;
-            if (ds != null && ds.Tables.Count > 0)
+            List<WorkOrderInfo> workOrderInfos = oracleQ.getWorkNoInofo(workno);
+            List<CusMatInfo> cusMatInfos = null;
+            if (workOrderInfos.Count > 0)
             {
-                if (ds.Tables[0].Rows.Count > 0)
-                {
-                    string cusNo = ds.Tables[0].Rows[0]["CUSTOMER_ID"].ToString();
-                    string delNo = ds.Tables[0].Rows[0]["ITEM_CODE"].ToString();
-                    resultDS = oracleQ.getCusMatByDel(cusNo,delNo);
-                }
+
+                string cusNo = workOrderInfos[0].CustId;
+                string delNo = workOrderInfos[0].ItemCode;
+                cusMatInfos = oracleQ.getCusMatByDel(cusNo, delNo);
+
             }
-            return resultDS;
+            return cusMatInfos;
         }
 
         /// <summary>
         /// 獲得客戶ID和客戶名稱
         /// </summary>
         /// <returns></returns>
-        public DataSet getCusInfo()
+        public List<CusInfo> getCusInfo()
         {
             return oracleQ.getCusInfo();
         }

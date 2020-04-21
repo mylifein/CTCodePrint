@@ -50,6 +50,8 @@
     <Compile Include="CodeRule.cs" />
     <Compile Include="CTCode.cs" />
     <Compile Include="CtRelCarton.cs" />
+    <Compile Include="CusInfo.cs" />
+    <Compile Include="CusMatInfo.cs" />
     <Compile Include="CusRule.cs" />
     <Compile Include="Department.cs" />
     <Compile Include="FieldType.cs" />
@@ -75,8 +77,10 @@
     <Compile Include="RoleUnionMenu.cs" />
     <Compile Include="RoleUnionUser.cs" />
     <Compile Include="RuleItem.cs" />
+    <Compile Include="RuleType.cs" />
     <Compile Include="SubMatInfo.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="WoRevision.cs" />
     <Compile Include="WorkOrderInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

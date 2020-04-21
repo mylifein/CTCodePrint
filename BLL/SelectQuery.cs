@@ -46,16 +46,6 @@ namespace BLL
             return ds;
         }
 
-        /// <summary>
-        /// 通過客戶編號和出貨料號獲取客戶機種類型
-        /// </summary>
-        /// <param name="cusNo"></param>
-        /// <returns></returns>
-        public DataSet getMacByCus(string cusNo,string delmatno,string type)
-        {
-            DataSet ds = selectControl.getMacTypeByCus(cusNo,delmatno, type);
-            return ds;
-        }
 
 
         public DataSet getRulesByRuleNo(string ruleNo)

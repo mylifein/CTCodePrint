@@ -24,8 +24,8 @@ namespace CTCodePrint
         private readonly PrintModelQ printQ = new PrintModelQ();
         private readonly BarCodePrint barPrint = BarCodePrint.getInstance();
         private readonly CTCodeService cTCodeService = new CTCodeService();
-        private readonly ModelInfoService modelInfoService = new ModelInfoService();        //查詢模板內容並下載
-        private readonly ModelRelMandService modelRelMandService = new ModelRelMandService();  //查詢模板的字段規則
+        private readonly ModelInfoService modelInfoService = new ModelInfoService();                    //查詢模板內容並下載
+        private readonly MandRelDelService mandRelDelService = new MandRelDelService();                 //查詢模板的字段規則
         private readonly ManRelFieldTypeService manRelFieldTypeService = new ManRelFieldTypeService();  //根據字段規則 查詢字段規則值
         CartonService cartonService = new CartonService();
 
@@ -107,6 +107,8 @@ namespace CTCodePrint
             }
             int index = this.dataGridView1.CurrentRow.Index;
             string modelNo = this.dataGridView1.Rows[index].Cells["model_no"].Value.ToString();
+            string cusNo = this.dataGridView1.Rows[index].Cells["cus_no"].Value.ToString();
+            string delMatno = this.dataGridView1.Rows[index].Cells["del_matno"].Value.ToString();
             ModelFile modelFile = modelInfoService.queryModelFileByNo(modelNo);
             if (modelFile == null)
             {
@@ -115,44 +117,23 @@ namespace CTCodePrint
             }
             string filePath = Auxiliary.downloadModelFile(modelFile);
             //查詢打印模板的打印字段
-            ModelRelMand modelRelMand = modelRelMandService.queryMenuInfoByFileNo(modelFile.Fileno);
-            if (modelRelMand == null)
+            MandRelDel mandRelDel = mandRelDelService.queryManNoByDel(cusNo, delMatno, "1");
+            if (mandRelDel == null)
             {
                 MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            List<MandUnionFieldType> mandUnionFieldTypeList = manRelFieldTypeService.queryMandUnionFieldTypeList(modelRelMand.ManNo);
+            List<MandUnionFieldType> mandUnionFieldTypeList = manRelFieldTypeService.queryMandUnionFieldTypeList(mandRelDel.ManNo);
             if (mandUnionFieldTypeList == null)
             {
                 MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             string cartonNo = this.dataGridView1.Rows[index].Cells["cartonNo"].Value.ToString();
-            Carton carton = cartonService.queryCartonByCartonNo(cartonNo);
-            carton.Datecode = DateTime.Now.ToString("yyyyMMdd");
-            if (carton.Modelno == "F014")   //二維碼内容
+            Carton carton = cartonService.queryCartonDetailsByNo(cartonNo);
+            if(carton.CtCodeList != null)
             {
-                StringBuilder special = new StringBuilder();
-                foreach (MandUnionFieldType mandTYpe in mandUnionFieldTypeList)
-                {
-                    if (mandTYpe.FieldName.ToUpper().Equals("CusPN".ToUpper()))
-                    {
-                        special.Append(mandTYpe.FieldValue);
-                    }
-                }
-                special.Append(" {{" + carton.CartonQty + " {{PCS {{041098 {{" + carton.Datecode + " {{CHN {{" + carton.Cuspo + " {{/ {{" + carton.CartonNo + " {{" + carton.Datecode + " {{XY {{" + carton.Delmatno + " {{");
-                foreach (MandUnionFieldType mandTYpe in mandUnionFieldTypeList)
-                {
-                    if (mandTYpe.FieldName.ToUpper().Equals("versionNo".ToUpper()))
-                    {
-                        special.Append(mandTYpe.FieldValue);
-                    }
-                }
-                carton.SpecialField = special.ToString();
-            }
-            if(carton.PackType.Equals("1"))
-            {
-                
+                initCTSeq(carton);
             }
             bool judgePrint = barPrint.printCatonByModel(filePath, carton, mandUnionFieldTypeList);
             if (judgePrint)
@@ -166,6 +147,49 @@ namespace CTCodePrint
                 return;
             }
 
+        }
+
+
+        private void initCTSeq(Carton carton)
+        {
+            List<String> ctcodeList = carton.CtCodeList;
+            for (int i = 0; i < ctcodeList.Count; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        carton.Ct1 = ctcodeList[i];
+                        break;
+                    case 1:
+                        carton.Ct2 = ctcodeList[i];
+                        break;
+                    case 2:
+                        carton.Ct3 = ctcodeList[i];
+                        break;
+                    case 3:
+                        carton.Ct4 = ctcodeList[i];
+                        break;
+                    case 4:
+                        carton.Ct5 = ctcodeList[i];
+                        break;
+                    case 5:
+                        carton.Ct6 = ctcodeList[i];
+                        break;
+                    case 6:
+                        carton.Ct7 = ctcodeList[i];
+                        break;
+                    case 7:
+                        carton.Ct8 = ctcodeList[i];
+                        break;
+                    case 8:
+                        carton.Ct9 = ctcodeList[i];
+                        break;
+                    case 9:
+                        carton.Ct10 = ctcodeList[i];
+                        break;
+                }
+
+            }
         }
     }
 }

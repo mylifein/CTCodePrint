@@ -1,4 +1,5 @@
 ﻿using DAL;
+using DBUtility;
 using Model;
 using System;
 using System.Collections.Generic;
@@ -20,5 +21,20 @@ namespace BLL
         {
             return cusRuleDao.exists(cusRule);
         }
+
+        public bool saveCusCodeRule(CusRule cusRule)
+        {
+            cusRule.Uuid = Auxiliary.Get_UUID();
+            cusRule.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            cusRule.Opuser = Auxiliary.loginName;
+            return cusRuleDao.saveRuleRelation(cusRule);
+        }
+
+
+        public CusRule queryCusRuleByCond(string cusNo,string delMatno,string boundType)
+        {
+            return cusRuleDao.queryCusRuleByConds(cusNo,delMatno,boundType);
+        }
+
     }
 }

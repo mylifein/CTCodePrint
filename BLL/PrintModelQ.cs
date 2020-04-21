@@ -193,35 +193,6 @@ namespace BLL
             return ds;
         }
 
-        /// <summary>
-        /// 保存編碼規則
-        /// </summary>
-        /// <param name="codeRule"></param>
-        /// <returns></returns>
-        public string saveRuleInfo(CodeRule codeRule)
-        {
-            bool mark = false;
-            string saveResult = null;
-            codeRule.Uuid = Auxiliary.Get_UUID();
-            codeRule.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            codeRule.Opuser = Auxiliary.loginName;
-            if (printM.saveRuleInfo(codeRule))
-            {
-                string RuleNo = printM.queryRuleByID(codeRule.Uuid);
-                foreach(RuleItem item in codeRule.RuleItem){
-                    item.Uuid = Auxiliary.Get_UUID();
-                    item.Ruleno = RuleNo;
-                    item.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                    item.Opuser = Auxiliary.loginName;
-                    mark = printM.saveSaveRuleItem(item);
-                }
-            }
-            if (mark)
-            {
-                saveResult = printM.queryRuleByID(codeRule.Uuid);
-            }
-            return saveResult;
-        }
 
 
 
@@ -232,7 +203,7 @@ namespace BLL
         /// <returns></returns>
         public DataSet queryCodeInfo(string ruleNo)
         {
-            return printM.queryRules(ruleNo);
+            return null;
         }
 
         /// <summary>
@@ -276,18 +247,7 @@ namespace BLL
             return codeR;
         }
 
-        /// <summary>
-        /// 保存客戶幾種編碼規則
-        /// </summary>
-        /// <param name="cusRule"></param>
-        /// <returns></returns>
-        public bool saveCusCodeRule(CusRule cusRule)
-        {
-            cusRule.Uuid = Auxiliary.Get_UUID();
-            cusRule.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            cusRule.Opuser = Auxiliary.loginName;
-            return printM.saveRuleRelation(cusRule);
-        }
+
 
         /// <summary>
         /// 保存CT碼必填字段

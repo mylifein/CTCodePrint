@@ -61,7 +61,6 @@
     <Compile Include="MacTypeDao.cs" />
     <Compile Include="MandatoryFieldDao.cs" />
     <Compile Include="ManRelFieldTypeDao.cs" />
-    <Compile Include="MenuDao.cs" />
     <Compile Include="ModelInfoDao.cs" />
     <Compile Include="ModelRelMandDao.cs" />
     <Compile Include="OracleQuery.cs" />

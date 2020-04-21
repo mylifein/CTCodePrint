@@ -107,6 +107,23 @@ namespace BLL
         }
 
 
+        public Carton queryCartonDetailsByNo(string cartonNo)
+        {
+            Carton carton = cartonDao.queryCartonByCartonNo(cartonNo);
+            List<CtRelCarton> ctRelCartons = cartonDao.queryRelCTByCartonNo(cartonNo);
+            if(ctRelCartons != null)
+            {
+                List<String> ctList = new List<string>();
+                foreach (CtRelCarton ctRelCarton in ctRelCartons)
+                {
+                    ctList.Add(ctRelCarton.Ctcode);
+                }
+                carton.CtCodeList = ctList;
+            }
+            return carton;
+        }
+
+
         /// <summary>
         /// 更新裝箱單狀態, 1是已綁定棧板，2是入庫 3是出庫 
         /// </summary>

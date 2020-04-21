@@ -25,13 +25,14 @@ namespace CTCodePrint
             InitializeComponent();
         }
 
-        private readonly SelectQuery selectQ = new SelectQuery();
         private readonly PrintModelQ printQ = new PrintModelQ();
-        private readonly OracleQueryB queryB = new OracleQueryB();
+        private readonly OracleQueryB queryB = new OracleQueryB();                           //查询ERP信息
         private readonly BarCodePrint barPrint = BarCodePrint.getInstance();
-        private readonly ModelRelMandService modelRelMandService = new ModelRelMandService();  //查詢模板的字段規則
+        private readonly MandRelDelService mandRelDelService = new MandRelDelService();     //查詢模板的参数字段
         private readonly FileRelDelService fileRelDelService = new FileRelDelService();     //查詢模板的文件編號
         private readonly ModelInfoService modelInfoService = new ModelInfoService();        //查詢模板內容並下載
+        private readonly CodeRuleService codeRuleService = new CodeRuleService();           //查询编码规则
+        private readonly CusRuleService cusRuleService = new CusRuleService();
         private readonly ManRelFieldTypeService manRelFieldTypeService = new ManRelFieldTypeService();  //根據字段規則 查詢字段規則值
         private GenerateCode generateC = new GenerateCode();
         private readonly CTCodeService ctCodeService = new CTCodeService();
@@ -39,6 +40,8 @@ namespace CTCodePrint
         private string filePath = null;
         private CTCode ctCodeInfo = new CTCode();
         private List<CTCode> ctList = new List<CTCode>();
+
+
         private void GenerateCTCode_Load(object sender, EventArgs e)
         {
             DataTable itemTable = new DataTable();   // construct selects value
@@ -60,7 +63,7 @@ namespace CTCodePrint
             this.comboBox7.ValueMember = "Value";
             this.comboBox7.DataSource = itemTable;
             //初始化選擇打印機
-            for(int i = 0;i < PrinterSettings.InstalledPrinters.Count; i++)
+            for (int i = 0; i < PrinterSettings.InstalledPrinters.Count; i++)
             {
                 comboBox8.Items.Add(PrinterSettings.InstalledPrinters[i]);
             }
@@ -68,10 +71,6 @@ namespace CTCodePrint
 
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -79,35 +78,34 @@ namespace CTCodePrint
             {
                 return;
             }
-            if (this.comboBox2.SelectedValue == null || this.comboBox2.SelectedValue.ToString().Trim() == "")
+            if (this.textBox15.Text == null || this.textBox15.Text.Trim() == "")
             {
-                MessageBox.Show("客戶编码规则為空，請先維護該出貨料號/子階料號對應的機種類型!", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("客戶编码规则为空，请先维护该出货料号/子阶料号的编码规则!", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.textBox1.Focus();
                 return;
             }
             this.generateCTList();
-            ModelRelMand modelRelMand = modelRelMandService.queryMenuInfoByFileNo(ctCodeInfo.Modelno);
-            if (modelRelMand == null)
+            MandRelDel mandRelDel = mandRelDelService.queryManNoByDel(ctCodeInfo.Cusno, ctCodeInfo.Delmatno, "0");
+            if (mandRelDel == null)
             {
                 MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.textBox2.Focus();
                 return;
             }
             //查詢字段對應的規則信息
-            List<MandUnionFieldType> mandUnionFieldTypeList = manRelFieldTypeService.queryMandUnionFieldTypeList(modelRelMand.ManNo);
+            List<MandUnionFieldType> mandUnionFieldTypeList = manRelFieldTypeService.queryMandUnionFieldTypeList(mandRelDel.ManNo);
             if (mandUnionFieldTypeList == null)
             {
                 MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.textBox2.Focus();
                 return;
             }
-            if(comboBox8.SelectedItem == null || this.comboBox8.SelectedItem.ToString().Trim() == "")
+            if (comboBox8.SelectedItem == null || this.comboBox8.SelectedItem.ToString().Trim() == "")
             {
                 MessageBox.Show("請選擇/設置打印機", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.comboBox8.Focus();
                 return;
             }
-            // MessageBox.Show("正在打印中，不能做任何操作請耐心等待！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             bool judgePrint = barPrint.BactchPrintCTByModel(filePath, ctListToArray(ctList, mandUnionFieldTypeList), comboBox8.SelectedItem.ToString()); //barPrint.BactchPrintBCByModel(filePath, ctList, mandUnionFieldTypeList,comboBox8.SelectedItem.ToString());
             if (judgePrint)
             {
@@ -123,7 +121,6 @@ namespace CTCodePrint
                 return;
             }
 
-
         }
 
 
@@ -134,96 +131,63 @@ namespace CTCodePrint
             {
                 this.clearAll();
                 string workno = this.textBox1.Text;
-                DataSet ds = queryB.getWorkInfoByNo(workno.ToUpper());
-                if (ds != null && ds.Tables.Count > 0)
+                List<WorkOrderInfo> workOrderInfos = queryB.getWorkInfoByNo(workno.ToUpper());
+                if (workOrderInfos != null && workOrderInfos.Count > 0)
                 {
-                    if (ds.Tables[0].Rows.Count > 0)
+                    this.comboBox1.DataSource = workOrderInfos;
+                    this.comboBox1.DisplayMember = "CustPO";                                          
+                    this.comboBox1.ValueMember = "OrderQty";                              
+                    this.comboBox5.DataSource = workOrderInfos;
+                    this.comboBox5.DisplayMember = "SoOrder";                                       
+                    this.comboBox5.ValueMember = "SoOrder";
+                    this.textBox10.Text = workOrderInfos[0].CustName;                  
+                    this.textBox4.Text = workOrderInfos[0].StartQty;                 
+                    this.textBox9.Text = workOrderInfos[0].CompletedQty;
+                    this.textBox3.Text = workOrderInfos[0].ItemCode;
+                    this.textBox11.Text = workOrderInfos[0].CustId;
+                    this.textBox7.Text = this.getCountWorkNoCT(workno);                //CT Count
+                    if (workOrderInfos[0].CusItemNum != null && workOrderInfos[0].CusItemNum.Trim() != "")
                     {
-                        this.comboBox1.DataSource = ds.Tables[0];
-                        this.comboBox1.DisplayMember = "CUST_PO_NUMBER";                        //PO                    
-                        this.comboBox1.ValueMember = "ORDER_QTY";                               //QTY
-                        this.comboBox5.DataSource = ds.Tables[0];
-                        this.comboBox5.DisplayMember = "SO_ORDER";                        //SO                 
-                        this.comboBox5.ValueMember = "SO_ORDER";
-                        this.textBox10.Text = ds.Tables[0].Rows[0]["CUST_NAME"].ToString();     //customer name
-                        this.textBox4.Text = ds.Tables[0].Rows[0]["START_QUANTITY"].ToString();      //work number quantity
-                        this.textBox9.Text = ds.Tables[0].Rows[0]["QUANTITY_COMPLETED"].ToString();      //completed quantity
-                        this.textBox3.Text = ds.Tables[0].Rows[0]["ITEM_CODE"].ToString();          //delivery code
-                        this.textBox11.Text = ds.Tables[0].Rows[0]["CUSTOMER_ID"].ToString();      //customer number 
-                        this.textBox7.Text = this.getCountWorkNoCT(workno);                //CT Count
-                        //DataSet dsCusMaterial = queryB.getCusMatInfo(workno);
-                        //if (dsCusMaterial != null && dsCusMaterial.Tables.Count > 0)
-                        //{
-                        //    if (dsCusMaterial.Tables[0].Rows.Count > 0)
-                        //    {
-                        //        this.comboBox4.DisplayMember = "CUSTOMER_ITEM_NUMBER";
-                        //        this.comboBox4.ValueMember = "CUSTOMER_ITEM_NUMBER";
-                        //        this.comboBox4.DataSource = dsCusMaterial.Tables[0];
-                        //        this.textBox14.Text = dsCusMaterial.Tables[0].Rows[0]["CUSTOMER_ITEM_DESC"].ToString();
-                        //    }
-                        //}
-                        if (ds.Tables[0].Rows[0]["CUSTOMER_ITEM_NUMBER"] != null && ds.Tables[0].Rows[0]["CUSTOMER_ITEM_NUMBER"].ToString().Trim() != "")
-                        {
-                            this.comboBox4.DisplayMember = "CUSTOMER_ITEM_NUMBER";
-                            this.comboBox4.ValueMember = "CUSTOMER_ITEM_NUMBER";
-                            this.comboBox4.DataSource = ds.Tables[0];
-                        }
-                        else
-                        {
-                            DataSet dsCusMaterial = queryB.getCusMatInfo(workno);
-                            if (dsCusMaterial != null && dsCusMaterial.Tables.Count > 0)
-                            {
-                                if (dsCusMaterial.Tables[0].Rows.Count > 0)
-                                {
-                                    this.comboBox4.DisplayMember = "CUSTOMER_ITEM_NUMBER";
-                                    this.comboBox4.ValueMember = "CUSTOMER_ITEM_NUMBER";
-                                    this.comboBox4.DataSource = dsCusMaterial.Tables[0];
-                                    this.textBox14.Text = dsCusMaterial.Tables[0].Rows[0]["CUSTOMER_ITEM_DESC"].ToString();
-                                }
-                            }
-                        }
-
-                        if (this.comboBox1.Text != null && this.comboBox1.Text.Trim() != "")
-                        {
-                            this.textBox8.Text = this.getCountPOCT(workno, this.comboBox1.Text.Trim());
-                        }
-                        this.textBox2.Text = ds.Tables[0].Rows[0]["ORDER_QTY"].ToString();      //PO QTY
-
-
+                        this.comboBox4.DisplayMember = "CusItemNum";
+                        this.comboBox4.ValueMember = "CusItemNum";
+                        this.comboBox4.DataSource = workOrderInfos;
                     }
                     else
                     {
-                        MessageBox.Show("該工單不存在,請確認輸入的是有效工單！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        this.textBox1.Focus();
-                        return;
-                    }
-                }
+                        List<CusMatInfo> cusMatInfos = queryB.getCusMatInfo(workno);
 
-                ds = queryB.getRevisionInfo(workno);
-                if (ds != null && ds.Tables.Count > 0)
-                {
-                    if (ds.Tables[0].Rows.Count > 0)
-                    {
-                        this.comboBox3.DisplayMember = "REVISION";
-                        this.comboBox3.ValueMember = "REVISION";
-                        this.comboBox3.DataSource = ds.Tables[0];
+                        this.comboBox4.DisplayMember = "CusItemCode";
+                        this.comboBox4.ValueMember = "CusItemCode";
+                        this.comboBox4.DataSource = cusMatInfos;
+                        this.textBox14.Text = cusMatInfos[0].ItemDesc;
                     }
-                }
-                //查询子阶料号
-                if (this.textBox3.Text != null && this.textBox3.Text.Trim() != "")
-                {
-                    List<SubMatInfo> subMatInfoList = subMatInfoService.querySubMatInfoList(this.textBox3.Text.Trim());
-                    if (subMatInfoList != null && subMatInfoList.Count > 0)
-                    {
-                        this.comboBox6.DataSource = subMatInfoList;
-                        this.comboBox6.DisplayMember = "Submatno";
-                        this.comboBox6.ValueMember = "Submatno";
-                    }
-                }
-                this.updateMactype();   //更新機種
-                this.checkPrintInfo();  //更新CTCodeinfo信息
-                this.updateUIInfo();   //更新打印模板和預覽CT碼信息
 
+                    if (this.comboBox1.Text != null && this.comboBox1.Text.Trim() != "")
+                    {
+                        this.textBox8.Text = this.getCountPOCT(workno, this.comboBox1.Text.Trim());
+                    }
+                    this.textBox2.Text = workOrderInfos[0].OrderQty;    
+
+                    this.comboBox3.DisplayMember = "Revision";
+                    this.comboBox3.ValueMember = "Revision";
+                    this.comboBox3.DataSource = queryB.getRevisionInfo(workno);
+
+                    //查询子阶料号
+                    if (this.textBox3.Text != null && this.textBox3.Text.Trim() != "")
+                    {
+                        List<SubMatInfo> subMatInfoList = subMatInfoService.querySubMatInfoList(this.textBox3.Text.Trim());
+                        if (subMatInfoList != null && subMatInfoList.Count > 0)
+                        {
+                            this.comboBox6.DataSource = subMatInfoList;
+                            this.comboBox6.DisplayMember = "Submatno";
+                            this.comboBox6.ValueMember = "Submatno";
+                        }
+                    }
+                    this.updateMactype();   //更新機種
+                    this.checkPrintInfo();  //更新CTCodeinfo信息
+                    this.updateUIInfo();   //更新打印模板和預覽CT碼信息
+
+                }
             }
         }
 
@@ -236,6 +200,10 @@ namespace CTCodePrint
             {
                 this.textBox2.Text = this.comboBox1.SelectedValue.ToString().Trim();
                 this.textBox7.Text = this.getCountWorkNoCT(this.textBox1.Text);
+                List<WorkOrderInfo> workOrders = (List<WorkOrderInfo>)this.comboBox1.DataSource;
+                WorkOrderInfo workOrder = workOrders[this.comboBox1.SelectedIndex];
+                this.textBox10.Text = workOrder.CustName;
+                this.textBox11.Text = workOrder.CustId;
             }
         }
 
@@ -254,13 +222,15 @@ namespace CTCodePrint
             //獲得子階料號
             if (this.comboBox6.SelectedValue != null && this.comboBox6.SelectedValue.ToString().Trim() != "")
             {
-                this.textBox13.Text = printQ.getCTCountBySubMat(this.textBox1.Text,this.comboBox6.SelectedValue.ToString());
-            }else
+                this.textBox13.Text = printQ.getCTCountBySubMat(this.textBox1.Text, this.comboBox6.SelectedValue.ToString());
+            }
+            else
             {
                 this.textBox13.Text = "0";
             }
             //判斷是否以子階工單計算剩餘打印數量
-            if(this.comboBox7.SelectedValue.ToString() == "1"){
+            if (this.comboBox7.SelectedValue.ToString() == "1")
+            {
                 if (poQty > woQty)
                 {
                     return woQty - int.Parse(this.textBox7.Text.Trim().ToString());
@@ -300,17 +270,17 @@ namespace CTCodePrint
                 this.textBox11.Focus();
                 return false;
             }
-            if (this.comboBox2.SelectedValue == null || this.comboBox2.SelectedValue.ToString() == "")
+            if (this.textBox15.Text == null || this.textBox15.Text.Trim() == "")
             {
-                MessageBox.Show("請在本系統維護客戶和幾種類型關係！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("請在本系統維護客戶和编码规则關係！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return false;
             }
-            DataSet dsCheck = selectQ.getRulesByActualNo(ctCodeInfo.Ruleno);
-            if (dsCheck != null && dsCheck.Tables.Count > 0 && dsCheck.Tables[0].Rows.Count > 0)
+            CodeRule codeRule = codeRuleService.queryRuleById(ctCodeInfo.Ruleno);
+            if (codeRule != null && codeRule.RuleItem.Count > 0 )
             {
-                foreach (DataRow dr in dsCheck.Tables[0].Rows)
+                foreach (RuleItem ruleItem in codeRule.RuleItem)
                 {
-                    string ruleType = dr["rule_type"].ToString();
+                    string ruleType = ruleItem.Ruletype;
                     switch (ruleType.Trim())
                     {
                         case "T001":
@@ -357,7 +327,6 @@ namespace CTCodePrint
                 return false;
             }
             return true;
-
         }
 
         private void checkPrintInfo()
@@ -365,24 +334,24 @@ namespace CTCodePrint
             ctCodeInfo.Workno = this.textBox1.Text.Trim().ToUpper();           //workNo
             ctCodeInfo.Cuspo = this.comboBox1.Text == null ? "" : this.comboBox1.Text.ToString().Trim();            //Cuspo
             ctCodeInfo.Orderqty = this.textBox2.Text.Trim();        //order qty
-           
+
             if (this.comboBox7.SelectedValue.ToString() == "1")         //如果等於出貨料號
             {
                 ctCodeInfo.Delmatno = this.textBox3.Text.Trim();        //string deliveryMat
-            }else
+            }
+            else
             {
                 ctCodeInfo.Delmatno = this.comboBox6.SelectedValue.ToString();
             }
             ctCodeInfo.Cusno = this.textBox11.Text.Trim();          //customer number 
             ctCodeInfo.Cusname = this.textBox10.Text.Trim();        //customer name
-            ctCodeInfo.Offino = this.textBox6.Text.Trim();  //officialNo
+            ctCodeInfo.Offino = this.textBox6.Text.Trim();          //officialNo
             ctCodeInfo.SoOrder = this.comboBox5.Text == null ? "" : this.comboBox5.Text.ToString().Trim();   //so_order
-            ctCodeInfo.Ruleno = this.comboBox2.SelectedValue == null ? "" : this.comboBox2.SelectedValue.ToString().Trim();     //编码规则
             ctCodeInfo.Verno = this.comboBox3.SelectedValue == null ? "" : this.comboBox3.SelectedValue.ToString().Trim();      //version number
             ctCodeInfo.Woquantity = this.textBox4.Text.Trim();  //wnquantity
             ctCodeInfo.Cusmatno = this.comboBox4.SelectedValue == null ? "" : this.comboBox4.SelectedValue.ToString().Trim();   //customer material number 
-            FileRelDel fileRelDel = fileRelDelService.queryFileRelDelCusNo(ctCodeInfo.Cusno, ctCodeInfo.Delmatno,"0");
-            if(fileRelDel != null)
+            FileRelDel fileRelDel = fileRelDelService.queryFileRelDelCusNo(ctCodeInfo.Cusno, ctCodeInfo.Delmatno, "0");
+            if (fileRelDel != null)
             {
                 ctCodeInfo.Modelno = fileRelDel.FileNo;
             }
@@ -397,16 +366,16 @@ namespace CTCodePrint
                 return;
             }
             ctList = generateC.generateCTNumber(ctCodeInfo, printQty);
-            if(ctList.Count > 0)
+            if (ctList.Count > 0)
             {
                 this.textBox12.Text = ctList[0].Ctcode;
-                this.textBox5.Text = ctList[ctList.Count-1].Ctcode;
+                this.textBox5.Text = ctList[ctList.Count - 1].Ctcode;
             }
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-            if(ctCodeInfo.Ruleno != null)
+            if (ctCodeInfo.Ruleno != null)
             {
                 this.generateCTList();
             }
@@ -426,7 +395,7 @@ namespace CTCodePrint
 
         //更新打印模板和打印數量信息
         private void updateUIInfo()
-        {   
+        {
 
             //檢查是否建立模板
             string delMatno = "";
@@ -438,7 +407,7 @@ namespace CTCodePrint
             {
                 delMatno = this.comboBox6.SelectedValue == null ? "" : this.comboBox6.SelectedValue.ToString().Trim();
             }
-            FileRelDel fileRelDel = fileRelDelService.queryFileRelDelCusNo(this.textBox11.Text, delMatno,"0");
+            FileRelDel fileRelDel = fileRelDelService.queryFileRelDelCusNo(this.textBox11.Text, delMatno, "0");
             if (fileRelDel != null)
             {
                 //下載模板並預覽
@@ -451,10 +420,6 @@ namespace CTCodePrint
 
                 }
             }
-            //計算剩餘打印數量
-            //int ceilQty = this.getPrintCeiling(int.Parse(this.textBox2.Text.Trim().ToString()), int.Parse(this.textBox4.Text.Trim().ToString()));
-            //this.numericUpDown1.Maximum = ceilQty;
-            //this.numericUpDown1.Value = ceilQty;
             this.generateCTList();
         }
 
@@ -472,35 +437,26 @@ namespace CTCodePrint
         /// 查詢機種類型
         /// </summary>
         private void updateMactype()
-        {   
+        {
 
             string comboxValue = this.textBox11.Text;
             string delmatno = "";
             if (this.comboBox7.SelectedValue.ToString() == "1")
             {
                 delmatno = this.textBox3.Text == null ? "" : this.textBox3.Text.Trim();
-            }else
+            }
+            else
             {
                 delmatno = this.comboBox6.SelectedValue == null ? "" : this.comboBox6.SelectedValue.ToString().Trim();
-            }           
-            DataSet ds = selectQ.getMacByCus(comboxValue, delmatno,"0");                //0代表CT碼編碼規則
-            DataTable itemTable = null;
-            string ruleno = null;
-            if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-            {
-                ruleno = ds.Tables[0].Rows[0]["rule_no"].ToString();
             }
-            if (ruleno != null)
+            CusRule cusRule = cusRuleService.queryCusRuleByCond(comboxValue, delmatno, "0");                //0代表CT碼編碼規則
+     
+            if (cusRule.Ruleno != null)
             {
-                DataSet mactDS = printQ.queryCodeInfo(ruleno);
-                if (mactDS.Tables.Count > 0 && mactDS.Tables[0].Rows.Count > 0)
-                {
-                    itemTable = mactDS.Tables[0];
-                }
+                CodeRule codeRule = codeRuleService.queryRuleById(cusRule.Ruleno);
+                this.textBox15.Text = codeRule.RuleDesc;
+                ctCodeInfo.Ruleno = codeRule.Ruleno;
             }
-            this.comboBox2.DisplayMember = "rule_desc";
-            this.comboBox2.ValueMember = "rule_no";
-            this.comboBox2.DataSource = itemTable;
         }
 
 
@@ -517,12 +473,13 @@ namespace CTCodePrint
             this.textBox11.Text = "";
             this.textBox12.Text = "";
             this.textBox13.Text = "";
+            this.textBox15.Text = "";
             this.comboBox1.DataSource = null;
-            this.comboBox2.DataSource = null;
             this.comboBox3.DataSource = null;
             this.comboBox4.DataSource = null;
             this.comboBox5.DataSource = null;
         }
+
 
         private List<Dictionary<string, string>> ctListToArray(List<CTCode> ctCodeList, List<MandUnionFieldType> mandUnionFieldTypeList)
         {

@@ -20,8 +20,8 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_carton_info (uuid,cartonNo,cartonQty,prodline_id,carton_status,capacity_no,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,completed_qty,model_no,op_user,create_time,so_order,packType,box_No)");
-            strSql.Append("values(@uuid,@cartonNo,@cartonQty,@prodlineId,@cartonStatus,@capacityNo,@ruleno,@workno,@cusno,@cusName,@cuspo,@poqty,@cusmatno,@delmatno,@offino,@verno,@woquantity,@completedQty,@model_no,@opuser,@createtime,@soOrder,@packType,@boxNo)");
+            strSql.Append("insert into t_carton_info (uuid,cartonNo,cartonQty,prodline_id,carton_status,capacity_no,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,completed_qty,model_no,op_user,create_time,so_order,packType,box_No,special_Field,union_Field,prodLine_val,date_code,batchNo)");
+            strSql.Append("values(@uuid,@cartonNo,@cartonQty,@prodlineId,@cartonStatus,@capacityNo,@ruleno,@workno,@cusno,@cusName,@cuspo,@poqty,@cusmatno,@delmatno,@offino,@verno,@woquantity,@completedQty,@model_no,@opuser,@createtime,@soOrder,@packType,@boxNo,@specialField,@unionField,@prodLineVal,@dateCode,@batchNo)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@cartonNo", MySqlDbType.VarChar, 900),
@@ -46,7 +46,12 @@ namespace DAL
                 new MySqlParameter("@prodlineId", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@cusName", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@packType", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@boxNo", MySqlDbType.VarChar, 900)
+                new MySqlParameter("@boxNo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@specialField", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@unionField", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@prodLineVal", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@dateCode", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@batchNo", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = carton.Uuid;
             parameters[1].Value = carton.CartonNo;
@@ -72,6 +77,11 @@ namespace DAL
             parameters[21].Value = carton.Cusname;
             parameters[22].Value = carton.PackType;
             parameters[23].Value = carton.BoxNo;
+            parameters[24].Value = carton.SpecialField;
+            parameters[25].Value = carton.UnionField;
+            parameters[26].Value = carton.ProdLineVal;
+            parameters[27].Value = carton.Datecode;
+            parameters[28].Value = carton.BatchNo;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
@@ -273,6 +283,12 @@ namespace DAL
                 carton.Completedqty = ds.Tables[0].Rows[0]["completed_qty"].ToString();
                 carton.Modelno = ds.Tables[0].Rows[0]["model_no"].ToString();
                 carton.SoOrder = ds.Tables[0].Rows[0]["so_order"].ToString();
+                carton.BoxNo = (int)ds.Tables[0].Rows[0]["box_No"];
+                carton.SpecialField = ds.Tables[0].Rows[0]["special_Field"].ToString();
+                carton.UnionField = ds.Tables[0].Rows[0]["union_Field"].ToString();
+                carton.ProdLineVal = ds.Tables[0].Rows[0]["prodLine_val"].ToString();
+                carton.Datecode = ds.Tables[0].Rows[0]["date_code"].ToString();
+                carton.BatchNo = ds.Tables[0].Rows[0]["batchNo"].ToString();
                 carton.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
                 carton.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
                 carton.Updateser = ds.Tables[0].Rows[0]["update_user"].ToString();
@@ -281,6 +297,41 @@ namespace DAL
             return carton;
         }
 
+
+        /// <summary>
+        /// 查询装箱单对应的底座条码
+        /// </summary>
+        /// <param name="cartonNo"></param>
+        /// <returns></returns>
+        public List<CtRelCarton> queryRelCTByCartonNo(string cartonNo)
+        {
+            List<CtRelCarton> ctRelCartons = null;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM t_ct_carton where cartonNo=@cartonNo and del_flag is null order by create_time");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@cartonNo", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = cartonNo;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                ctRelCartons = new List<CtRelCarton>();
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    CtRelCarton ctRelCarton = new CtRelCarton();
+                    ctRelCarton.Uuid = dr["uuid"].ToString();
+                    ctRelCarton.Ctcode = dr["ct_code"].ToString();
+                    ctRelCarton.CartonNo = dr["cartonNo"].ToString();
+                    ctRelCarton.Opuser = dr["op_user"].ToString();
+                    ctRelCarton.Createtime = dr["create_time"].ToString();
+                    ctRelCarton.Updateser = dr["update_user"].ToString();
+                    ctRelCarton.Updatetime = dr["update_time"].ToString();
+                    ctRelCartons.Add(ctRelCarton);
+
+                }
+            }
+            return ctRelCartons;
+        }
 
         /// <summary>
         /// 更新裝箱單狀態, 1是已綁定棧板，2是入庫 3是出庫 

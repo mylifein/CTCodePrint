@@ -77,6 +77,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auxiliary.cs" />
+    <Compile Include="BoundModelParam.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BoundModelParam.Designer.cs">
+      <DependentUpon>BoundModelParam.cs</DependentUpon>
+    </Compile>
     <Compile Include="BoundModelFile.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -152,12 +158,6 @@
     <Compile Include="common\BarCodePrint.cs" />
     <Compile Include="common\BCPrint.cs" />
     <Compile Include="common\LocalIP.cs" />
-    <Compile Include="CreateMenu.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CreateMenu.Designer.cs">
-      <DependentUpon>CreateMenu.cs</DependentUpon>
-    </Compile>
     <Compile Include="CreateField.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -199,18 +199,6 @@
     </Compile>
     <Compile Include="MandatoryConfig.Designer.cs">
       <DependentUpon>MandatoryConfig.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ModelBoundField.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ModelBoundField.Designer.cs">
-      <DependentUpon>ModelBoundField.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ModelConfig.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ModelConfig.Designer.cs">
-      <DependentUpon>ModelConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -257,6 +245,9 @@
     <Compile Include="UploadFile.Designer.cs">
       <DependentUpon>UploadFile.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="BoundModelParam.resx">
+      <DependentUpon>BoundModelParam.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="BoundModelFile.resx">
       <DependentUpon>BoundModelFile.cs</DependentUpon>
     </EmbeddedResource>
@@ -293,9 +284,6 @@
     <EmbeddedResource Include="BoundRule.resx">
       <DependentUpon>BoundRule.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CreateMenu.resx">
-      <DependentUpon>CreateMenu.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="CreateField.resx">
       <DependentUpon>CreateField.cs</DependentUpon>
     </EmbeddedResource>
@@ -316,12 +304,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MandatoryConfig.resx">
       <DependentUpon>MandatoryConfig.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ModelBoundField.resx">
-      <DependentUpon>ModelBoundField.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ModelConfig.resx">
-      <DependentUpon>ModelConfig.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
