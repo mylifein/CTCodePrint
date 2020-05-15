@@ -17,7 +17,7 @@ namespace DAL
         {
             CTCode cTCode = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_code_info where ct_code=@ctcode");
+            strSql.Append("SELECT uuid,ct_code,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,so_order,op_user,create_time FROM t_code_info where ct_code=@ctcode");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@ctcode", MySqlDbType.VarChar, 900),
             };
@@ -39,7 +39,6 @@ namespace DAL
                 cTCode.Offino = ds.Tables[0].Rows[0]["offi_no"].ToString();
                 cTCode.Verno = ds.Tables[0].Rows[0]["ver_no"].ToString();
                 cTCode.Woquantity = ds.Tables[0].Rows[0]["wo_quantity"].ToString();
-                cTCode.Completedqty = ds.Tables[0].Rows[0]["completed_qty"].ToString();
                 cTCode.Modelno = ds.Tables[0].Rows[0]["model_no"].ToString();
                 cTCode.SoOrder = ds.Tables[0].Rows[0]["so_order"].ToString();
                 cTCode.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();

@@ -58,7 +58,7 @@ namespace DAL
         {
             ProdLine prodLine = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_prodline where uuid=@uuid");
+            strSql.Append("SELECT uuid,prodline_id,prodline_name,prodline_desc,dept_id,op_user,create_time FROM t_prodline where uuid=@uuid and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
             };
@@ -89,7 +89,7 @@ namespace DAL
         {
             ProdLine prodLine = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_prodline where prodline_id=@prodLineId");
+            strSql.Append("SELECT uuid,prodline_id,prodline_name,prodline_desc,dept_id,op_user,create_time FROM t_prodline where prodline_id=@prodLineId and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@prodLineId", MySqlDbType.VarChar, 900),
             };
@@ -121,7 +121,7 @@ namespace DAL
 
             List<ProdLine> prodLineList = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_prodline WHERE prodline_id LIKE @prodline_id AND del_flag is null ");
+            strSql.Append("SELECT uuid,prodline_id,prodline_name,prodline_desc,op_user,create_time FROM t_prodline WHERE prodline_id LIKE @prodline_id AND del_flag is null ");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@prodline_id", MySqlDbType.VarChar, 900),
             };
@@ -156,7 +156,7 @@ namespace DAL
 
             List<ProdLine> prodLineList = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_prodline WHERE dept_id=@depId AND del_flag is null order by create_time");
+            strSql.Append("SELECT uuid,prodline_id,prodline_name,prodline_desc,op_user,create_time FROM t_prodline WHERE dept_id=@depId AND del_flag is null order by create_time");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@depId", MySqlDbType.VarChar, 900),
             };

@@ -312,5 +312,11 @@ namespace CTCodePrint
             roleRelMenuConfig.Show();
         }
 
+        private void 品质首件质检标签ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            QualityCheckPrint qualityCheckPrint = new QualityCheckPrint();
+            qualityCheckPrint.MdiParent = this;
+            qualityCheckPrint.Show();
+        }
     }
 }

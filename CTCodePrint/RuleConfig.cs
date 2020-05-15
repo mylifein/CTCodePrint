@@ -19,14 +19,15 @@ namespace CTCodePrint
             InitializeComponent();
         }
 
-        private readonly SelectQuery selectQ = new SelectQuery();
         private readonly PrintModelQ printM = new PrintModelQ();
+        private readonly CodeRuleService codeRuleService = new CodeRuleService();
+
+
         private void button1_Click(object sender, EventArgs e)
         {
             string queryValue = this.textBox1.Text;
-            CodeRule codeR = printM.queryCodeByNo(queryValue);
-            DataSet ds = selectQ.getRulesByRuleNo(queryValue);
-            if (codeR != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            CodeRule codeR = codeRuleService.queryRuleById(queryValue);      
+            if (codeR != null)
             {
                 this.textBox2.Text = codeR.RuleDesc;
                 this.textBox3.Text = codeR.Opuser;

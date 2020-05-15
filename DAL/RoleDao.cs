@@ -45,7 +45,7 @@ namespace DAL
         {
             RoleInfo roleInfo = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_role_info where uuid=@uuid");
+            strSql.Append("SELECT uuid,role_no,role_name,role_desc,op_user,create_time FROM t_role_info where uuid=@uuid AND del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
             };
@@ -74,7 +74,7 @@ namespace DAL
 
             List<RoleInfo> roleInfoList = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_role_info WHERE role_no LIKE @roleNo AND del_flag is null order by role_no");
+            strSql.Append("SELECT uuid,role_no,role_name,role_desc,op_user,create_time FROM t_role_info WHERE role_no LIKE @roleNo AND del_flag is null order by role_no");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@roleNo", MySqlDbType.VarChar, 900),
             };

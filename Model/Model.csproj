@@ -66,11 +66,13 @@
     <Compile Include="ModelInfo.cs" />
     <Compile Include="ModelRelation.cs" />
     <Compile Include="ModelRelMand.cs" />
+    <Compile Include="PackCts.cs" />
     <Compile Include="Pallet.cs" />
     <Compile Include="PrintContent.cs" />
     <Compile Include="PrintRecord.cs" />
     <Compile Include="ProdLine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QualiatyInfo.cs" />
     <Compile Include="RoleInfo.cs" />
     <Compile Include="RoleRelMenu.cs" />
     <Compile Include="RoleRelUser.cs" />
@@ -80,6 +82,8 @@
     <Compile Include="RuleType.cs" />
     <Compile Include="SubMatInfo.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="WoBatch.cs" />
+    <Compile Include="WoInfo.cs" />
     <Compile Include="WoRevision.cs" />
     <Compile Include="WorkOrderInfo.cs" />
   </ItemGroup>

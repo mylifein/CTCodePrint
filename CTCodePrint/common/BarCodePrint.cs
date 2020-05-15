@@ -444,8 +444,6 @@ namespace CTCodePrint.common
                                     judge = true;
                                     break;
                                 }
-
-
                             }
                             if (!judge)
                             {

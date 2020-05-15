@@ -57,7 +57,7 @@ namespace DAL
         {
             MandatoryInfo mandatoryInfo = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_mandatory_info where uuid=@uuid");
+            strSql.Append("SELECT uuid,man_no,man_desc,op_user,create_time FROM t_mandatory_info where uuid=@uuid and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
             };
@@ -85,7 +85,7 @@ namespace DAL
 
             List<MandatoryInfo> mandatoryInfoList = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_mandatory_info WHERE man_no LIKE @manNo AND del_flag is null ");
+            strSql.Append("SELECT uuid,man_no,man_desc,op_user,create_time FROM t_mandatory_info WHERE man_no LIKE @manNo AND del_flag is null order by create_time");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@manNo", MySqlDbType.VarChar, 900),
             };
@@ -114,7 +114,7 @@ namespace DAL
         {
             MandatoryInfo mandatoryInfo = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_mandatory_info WHERE man_no=@manNo AND del_flag is null ");
+            strSql.Append("SELECT uuid,man_no,man_desc,op_user,create_time FROM t_mandatory_info WHERE man_no=@manNo AND del_flag is null ");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@manNo", MySqlDbType.VarChar, 900),
             };

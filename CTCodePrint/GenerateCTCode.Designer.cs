@@ -76,6 +76,8 @@
             this.label22 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.textBox15 = new System.Windows.Forms.TextBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
@@ -191,7 +193,7 @@
             // 
             // textBox8
             // 
-            this.textBox8.Location = new System.Drawing.Point(160, 440);
+            this.textBox8.Location = new System.Drawing.Point(160, 438);
             this.textBox8.Margin = new System.Windows.Forms.Padding(4);
             this.textBox8.Name = "textBox8";
             this.textBox8.ReadOnly = true;
@@ -201,7 +203,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(34, 444);
+            this.label10.Location = new System.Drawing.Point(34, 448);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(114, 15);
@@ -452,7 +454,6 @@
             this.comboBox6.Name = "comboBox6";
             this.comboBox6.Size = new System.Drawing.Size(234, 23);
             this.comboBox6.TabIndex = 46;
-            this.comboBox6.SelectedIndexChanged += new System.EventHandler(this.comboBox6_SelectedIndexChanged);
             // 
             // label19
             // 
@@ -473,11 +474,10 @@
             this.comboBox7.Name = "comboBox7";
             this.comboBox7.Size = new System.Drawing.Size(234, 23);
             this.comboBox7.TabIndex = 47;
-            this.comboBox7.SelectedIndexChanged += new System.EventHandler(this.comboBox7_SelectedIndexChanged);
             // 
             // textBox13
             // 
-            this.textBox13.Location = new System.Drawing.Point(544, 440);
+            this.textBox13.Location = new System.Drawing.Point(544, 438);
             this.textBox13.Margin = new System.Windows.Forms.Padding(4);
             this.textBox13.Name = "textBox13";
             this.textBox13.ReadOnly = true;
@@ -487,7 +487,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(436, 444);
+            this.label20.Location = new System.Drawing.Point(436, 448);
             this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(98, 15);
@@ -552,11 +552,30 @@
             this.textBox15.Size = new System.Drawing.Size(263, 25);
             this.textBox15.TabIndex = 55;
             // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(810, 448);
+            this.label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(82, 15);
+            this.label24.TabIndex = 64;
+            this.label24.Text = "标签日期：";
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Location = new System.Drawing.Point(905, 438);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(234, 25);
+            this.dateTimePicker1.TabIndex = 63;
+            // 
             // GenerateCTCode
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1416, 816);
+            this.Controls.Add(this.label24);
+            this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.textBox15);
             this.Controls.Add(this.label23);
             this.Controls.Add(this.textBox14);
@@ -666,5 +685,7 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.TextBox textBox15;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
     }
 }

@@ -15,7 +15,7 @@ namespace Model
         private string _capacityNo;
         private string _capacityQty;
         private string _batchNo;                //浪潮批次號
-        private int _boxNo;                     //工单箱数
+        private string _boxNo;                     //工单箱数
         private string _ruleno;
         private string _workno;
         private string _cusno;
@@ -29,7 +29,6 @@ namespace Model
         private string _offino;
         private string _verno;
         private string _woquantity;
-        private string _completedqty;
         private string _modelno;
         private string _soOrder;
         private string _packType;                   //包裝類型 ：0 機箱 整機。  1.單出
@@ -38,6 +37,7 @@ namespace Model
         private string _updateser;
         private string _updatetime;
         private string _delflag;
+        private string _vehicleNo;
         private ProdLine _prodLine;
         private List<String> ctCodeList;
         private string _datecode;
@@ -252,18 +252,6 @@ namespace Model
             }
         }
 
-        public string Completedqty
-        {
-            get
-            {
-                return _completedqty;
-            }
-
-            set
-            {
-                _completedqty = value;
-            }
-        }
 
         public string Modelno
         {
@@ -578,7 +566,7 @@ namespace Model
         }
 
 
-        public int BoxNo
+        public string BoxNo
         {
             get
             {
@@ -640,6 +628,19 @@ namespace Model
             set
             {
                 _prodLineVal = value;
+            }
+        }
+
+        public string VehicleNo
+        {
+            get
+            {
+                return _vehicleNo;
+            }
+
+            set
+            {
+                _vehicleNo = value;
             }
         }
     }

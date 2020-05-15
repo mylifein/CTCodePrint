@@ -51,7 +51,7 @@ namespace DAL
         {
             List<Capacity> capacityList = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_capacity where capacity_no like @capacityNo and del_flag is null");
+            strSql.Append("SELECT uuid,capacity_no,capacity_qty,capacity_desc,op_user,create_time,update_user,update_time FROM t_capacity where capacity_no like @capacityNo and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@capacityNo", MySqlDbType.VarChar, 900),
             };
@@ -82,7 +82,7 @@ namespace DAL
         {
             Capacity capacity = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_capacity where uuid=@uuid and del_flag is null");
+            strSql.Append("SELECT uuid,capacity_no,capacity_qty,capacity_desc,op_user,create_time,update_user,update_time FROM t_capacity where uuid=@uuid and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
             };
@@ -212,7 +212,7 @@ namespace DAL
         {
             Capacity capacity = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_capacity where capacity_no=@capacityNo and del_flag is null");
+            strSql.Append("SELECT uuid,capacity_no,capacity_qty,capacity_desc,op_user,create_time,update_user,update_time FROM t_capacity where capacity_no=@capacityNo and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@capacityNo", MySqlDbType.VarChar, 900),
             };

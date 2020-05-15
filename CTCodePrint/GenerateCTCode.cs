@@ -155,11 +155,13 @@ namespace CTCodePrint
                     else
                     {
                         List<CusMatInfo> cusMatInfos = queryB.getCusMatInfo(workno);
-
-                        this.comboBox4.DisplayMember = "CusItemCode";
-                        this.comboBox4.ValueMember = "CusItemCode";
-                        this.comboBox4.DataSource = cusMatInfos;
-                        this.textBox14.Text = cusMatInfos[0].ItemDesc;
+                        if (cusMatInfos != null && cusMatInfos.Count > 0)
+                        {
+                            this.comboBox4.DisplayMember = "CusItemCode";
+                            this.comboBox4.ValueMember = "CusItemCode";
+                            this.comboBox4.DataSource = cusMatInfos;
+                            this.textBox14.Text = cusMatInfos[0].ItemDesc;
+                        }
                     }
 
                     if (this.comboBox1.Text != null && this.comboBox1.Text.Trim() != "")
@@ -183,7 +185,8 @@ namespace CTCodePrint
                             this.comboBox6.ValueMember = "Submatno";
                         }
                     }
-                    this.updateMactype();   //更新機種
+                   
+                    this.updateMactype();   //更新编码规则
                     this.checkPrintInfo();  //更新CTCodeinfo信息
                     this.updateUIInfo();   //更新打印模板和預覽CT碼信息
 
@@ -341,7 +344,10 @@ namespace CTCodePrint
             }
             else
             {
-                ctCodeInfo.Delmatno = this.comboBox6.SelectedValue.ToString();
+                if(this.comboBox6.SelectedValue != null)
+                {
+                    ctCodeInfo.Delmatno = this.comboBox6.SelectedValue.ToString();
+                }
             }
             ctCodeInfo.Cusno = this.textBox11.Text.Trim();          //customer number 
             ctCodeInfo.Cusname = this.textBox10.Text.Trim();        //customer name
@@ -350,6 +356,7 @@ namespace CTCodePrint
             ctCodeInfo.Verno = this.comboBox3.SelectedValue == null ? "" : this.comboBox3.SelectedValue.ToString().Trim();      //version number
             ctCodeInfo.Woquantity = this.textBox4.Text.Trim();  //wnquantity
             ctCodeInfo.Cusmatno = this.comboBox4.SelectedValue == null ? "" : this.comboBox4.SelectedValue.ToString().Trim();   //customer material number 
+            this.numericUpDown1.Value = getPrintCeiling(int.Parse(ctCodeInfo.Orderqty), int.Parse(ctCodeInfo.Woquantity));
             FileRelDel fileRelDel = fileRelDelService.queryFileRelDelCusNo(ctCodeInfo.Cusno, ctCodeInfo.Delmatno, "0");
             if (fileRelDel != null)
             {
@@ -365,7 +372,7 @@ namespace CTCodePrint
                 MessageBox.Show("此工單已經生成所需數量的CT碼！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            ctList = generateC.generateCTNumber(ctCodeInfo, printQty);
+            ctList = generateC.generateCTNumber(ctCodeInfo, printQty, dateTimePicker1.Value);
             if (ctList.Count > 0)
             {
                 this.textBox12.Text = ctList[0].Ctcode;
@@ -382,16 +389,6 @@ namespace CTCodePrint
         }
 
 
-        private void comboBox7_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (this.textBox1.Text != null && this.textBox1.Text.Trim() != "")
-            {
-                this.updateMactype();  //更新機種類型
-                this.checkPrintInfo();  //更新打印模板
-                this.updateUIInfo();   //更新UI信息 和打印模板
-            }
-
-        }
 
         //更新打印模板和打印數量信息
         private void updateUIInfo()
@@ -423,18 +420,9 @@ namespace CTCodePrint
             this.generateCTList();
         }
 
-        private void comboBox6_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (this.textBox1.Text != null && this.textBox1.Text.Trim() != "")
-            {
-                this.updateMactype();  //更新機種類型
-                this.checkPrintInfo();  //更新打印模板
-                this.updateUIInfo();   //更新UI信息 和打印模板
-            }
-        }
 
         /// <summary>
-        /// 查詢機種類型
+        /// 查询编码规则
         /// </summary>
         private void updateMactype()
         {
@@ -451,7 +439,7 @@ namespace CTCodePrint
             }
             CusRule cusRule = cusRuleService.queryCusRuleByCond(comboxValue, delmatno, "0");                //0代表CT碼編碼規則
      
-            if (cusRule.Ruleno != null)
+            if (cusRule != null && cusRule.Ruleno != null)
             {
                 CodeRule codeRule = codeRuleService.queryRuleById(cusRule.Ruleno);
                 this.textBox15.Text = codeRule.RuleDesc;

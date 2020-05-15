@@ -46,6 +46,7 @@
     <Compile Include="GeneratePallet.cs" />
     <Compile Include="GenerateCarton.cs" />
     <Compile Include="GenerateCode.cs" />
+    <Compile Include="GenerateQuality.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
-﻿using DBUtility;
+﻿using BLL;
+using DBUtility;
 using Model;
 using System;
 using System.Collections.Generic;
@@ -12,26 +13,26 @@ namespace GenerateCTCode
 {
     public class GenerateCode
     {
-        private readonly BLL.SelectQuery selectControl = new BLL.SelectQuery();
-        private readonly BLL.PrintModelQ printM = new BLL.PrintModelQ();
 
-        //string po,string cusNo,string workNo,string macType,string cusMatNo,string officialNo,string verNo
-        public List<CTCode> generateCTNumber(CTCode ctCodeInfo,int printQty)
+        private readonly BLL.PrintModelQ printM = new BLL.PrintModelQ();
+        private readonly static CodeRuleService codeRuleService = new CodeRuleService();
+        private readonly WoBatchService woBatchService = new WoBatchService();
+
+    
+        public List<CTCode> generateCTNumber(CTCode ctCodeInfo,int printQty,DateTime currentTime)
         {
-            bool judgeSerial = false;                   //判断是否需要流水号
+            bool judgeSerial = false;                                               //判断是否需要流水号
             List<CTCode> listCode = new List<CTCode>();
             StringBuilder ctCode = new StringBuilder();
-            DataSet ds = selectControl.getRulesByActualNo(ctCodeInfo.Ruleno);
-            if(ds != null && ds.Tables.Count > 0)
+            CodeRule codeRule = codeRuleService.queryRuleById(ctCodeInfo.Ruleno);
+            if (codeRule != null)
             {
-                foreach (DataRow dr in ds.Tables[0].Rows)
+                foreach (RuleItem ruleItem in codeRule.RuleItem)
                 {
-                    string ruleType = dr["rule_type"].ToString();
-                    ctCodeInfo.Ruleno = dr["rule_no"].ToString();
-                    int ruleLength = Convert.ToInt32(dr["rule_length"].ToString());
-                    string ruleValue = dr["rule_value"].ToString();
-                    switch (ruleType.Trim())
+                    int ruleInt = ruleItem.Rulelength;
+                    switch (ruleItem.Ruletype)
                     {
+               
                         case "T001":
                             string poOrWorkNo = "";
                             if (ctCodeInfo.Cuspo != null && ctCodeInfo.Cuspo != "")
@@ -47,11 +48,11 @@ namespace GenerateCTCode
 
                                 for (int i= 0;i < listCode.Count;i++)
                                 {
-                                    listCode[i].Ctcode = listCode[i].Ctcode + poOrWorkNo.Substring(0, ruleLength);
+                                    listCode[i].Ctcode = listCode[i].Ctcode + poOrWorkNo.Substring(0, ruleInt);
                                 }
                             }else
                             {
-                                ctCode.Append(poOrWorkNo.Substring(0, ruleLength));
+                                ctCode.Append(poOrWorkNo.Substring(0, ruleInt));
                             }
                             break;
                         case "T002":
@@ -60,19 +61,19 @@ namespace GenerateCTCode
 
                                 for (int i = 0; i < listCode.Count; i++)
                                 {
-                                    listCode[i].Ctcode = listCode[i].Ctcode + GenerateTimeCode(ruleLength);
+                                    listCode[i].Ctcode = listCode[i].Ctcode + GenerateTimeCode(ruleInt, currentTime);
                                 }
                             }
                             else
                             {
-                                ctCode.Append(GenerateTimeCode(ruleLength));
+                                ctCode.Append(GenerateTimeCode(ruleInt, currentTime));
                             }
                             break;
                         case "T003":
                             string assistStr = "";
-                            if (ctCodeInfo.Cusmatno.Length > ruleLength)
+                            if (ctCodeInfo.Cusmatno.Length > ruleInt)
                             {
-                                assistStr = ctCodeInfo.Cusmatno.Trim().Substring(0, ruleLength);
+                                assistStr = ctCodeInfo.Cusmatno.Trim().Substring(0, ruleInt);
                             }
                             if (listCode.Count > 1)
                             {
@@ -88,14 +89,12 @@ namespace GenerateCTCode
                             }
                             break;
                         case "T004":
-                            //  ctCode.Append(ctCodeInfo.Offino.Trim().Substring(0, ruleLength));
-                            if(ctCodeInfo.Offino.Trim().Length > ruleLength)
+                            if(ctCodeInfo.Offino.Trim().Length > ruleInt)
                             {
-                                string assistT004 = ctCodeInfo.Offino.Trim().Substring(0, ruleLength);
+                                string assistT004 = ctCodeInfo.Offino.Trim().Substring(0, ruleInt);
 
                                 if (listCode.Count > 1)
                                 {
-
                                     for (int i = 0; i < listCode.Count; i++)
                                     {
                                         listCode[i].Ctcode = listCode[i].Ctcode + assistT004;
@@ -107,17 +106,24 @@ namespace GenerateCTCode
                                 }
                             }else
                             {
-                                ctCode.Append(ctCodeInfo.Offino.Trim());
-                            }
-
-                        
+                                if (listCode.Count > 1)
+                                {
+                                    for (int i = 0; i < listCode.Count; i++)
+                                    {
+                                        listCode[i].Ctcode = listCode[i].Ctcode + ctCodeInfo.Offino.Trim();
+                                    }
+                                }
+                                else
+                                {
+                                    ctCode.Append(ctCodeInfo.Offino.Trim());
+                                }
+                            }                        
                             break;
                         case "T005":
-                            // ctCode.Append(ctCodeInfo.Verno.Trim().Substring(0, ruleLength));
-                            string assistT005 = "A10";
-                            if (ctCodeInfo.Verno.Length > ruleLength)
+                            string assistT005 = "";
+                            if (ctCodeInfo.Verno.Length > ruleInt)
                             {
-                                assistT005 = ctCodeInfo.Verno.Trim().Substring(0, ruleLength);
+                                assistT005 = ctCodeInfo.Verno.Trim().Substring(0, ruleInt);
                             }
                             
                             if (listCode.Count >= 1)
@@ -146,7 +152,7 @@ namespace GenerateCTCode
                                     string seqNo = "";
                                     string tempCT = "";
                                     string seqCode = Convert34Code(i);
-                                    for (int numLength = seqCode.Length; numLength < ruleLength; numLength++)
+                                    for (int numLength = seqCode.Length; numLength < ruleInt; numLength++)
                                     {
                                         seqNo += "0";
                                     }
@@ -155,11 +161,16 @@ namespace GenerateCTCode
                                     ctCodeIn.Ctcode = tempCT;
                                     listCode.Add(ctCodeIn);
                                 }
+                                                                if(printQty == 1)
+                                {
+                                    ctCode.Clear();
+                                    ctCode.Append(listCode[0].Ctcode);
+                                }
                             }
                             else
                             {
                                 //獲取流水號
-                                string subCode = maxCode.Substring(ctCode.Length, ruleLength);
+                                string subCode = maxCode.Substring(ctCode.Length, ruleInt);
                                 int ctNo = convert34CodeTo10(subCode);
                                 for (int i = 0; i < printQty; i++)
                                 {
@@ -169,7 +180,7 @@ namespace GenerateCTCode
                                     string ct34Code = Convert34Code(ctNo);
                                     string temStr = "";
                                     string tempCT = "";
-                                    for (int j = ct34Code.Length; j < ruleLength; j++)
+                                    for (int j = ct34Code.Length; j < ruleInt; j++)
                                     {
                                         temStr += 0;
                                     }
@@ -178,31 +189,31 @@ namespace GenerateCTCode
                                     ctCodeIn.Ctcode = tempCT;
                                     listCode.Add(ctCodeIn);
                                 }
-
+                                if (printQty == 1)
+                                {
+                                    ctCode.Clear();
+                                    ctCode.Append(listCode[0].Ctcode);
+                                }
                             }
-                            //ctCode.Append(GenerateRandom(ruleLength));
                             break;
                         case "T007":
-                            //ctCode.Append(ruleValue);
                             if (listCode.Count > 1)
                             {
-
                                 for (int i = 0; i < listCode.Count; i++)
                                 {
-                                    listCode[i].Ctcode = listCode[i].Ctcode + ruleValue;
+                                    listCode[i].Ctcode = listCode[i].Ctcode + ruleItem.Rulevalue;
                                 }
                             }
                             else
                             {
-                                ctCode.Append(ruleValue);
+                                ctCode.Append(ruleItem.Rulevalue);
                             }
                             break;
                         case "T008":
-                            string subOperation = this.extractString(ctCodeInfo.SoOrder, ruleLength);
+                            string subOperation = this.extractString(ctCodeInfo.SoOrder, ruleInt);
                             //ctCode.Append(subOperation);
                             if (listCode.Count > 1)
                             {
-
                                 for (int i = 0; i < listCode.Count; i++)
                                 {
                                     listCode[i].Ctcode = listCode[i].Ctcode + subOperation;
@@ -226,7 +237,7 @@ namespace GenerateCTCode
                                     string seqNo = "";
                                     string tempCT = "";
                                     string seqCode = i.ToString();
-                                    for (int numLength = seqCode.Length; numLength < ruleLength; numLength++)
+                                    for (int numLength = seqCode.Length; numLength < ruleInt; numLength++)
                                     {
                                         seqNo += "0";
                                     }
@@ -235,11 +246,16 @@ namespace GenerateCTCode
                                     ctCodeIn.Ctcode = tempCT;
                                     listCode.Add(ctCodeIn);
                                 }
+                                if(printQty == 1)
+                                {
+                                    ctCode.Clear();
+                                    ctCode.Append(listCode[0].Ctcode);
+                                }
                             }
                             else
                             {
                                 //獲取流水號
-                                string subCode = maxTenCode.Substring(ctCode.Length, ruleLength);
+                                string subCode = maxTenCode.Substring(ctCode.Length, ruleInt);
                                 int ctNo = int.Parse(subCode);
                                 for (int i = 0; i < printQty; i++)
                                 {
@@ -249,7 +265,7 @@ namespace GenerateCTCode
                                     string ct34Code = ctNo.ToString();
                                     string temStr = "";
                                     string tempCT = "";
-                                    for (int j = ct34Code.Length; j < ruleLength; j++)
+                                    for (int j = ct34Code.Length; j < ruleInt; j++)
                                     {
                                         temStr += 0;
                                     }
@@ -258,23 +274,24 @@ namespace GenerateCTCode
                                     ctCodeIn.Ctcode = tempCT;
                                     listCode.Add(ctCodeIn);
                                 }
-
+                                if (printQty == 1)
+                                {
+                                    ctCode.Clear();
+                                    ctCode.Append(listCode[0].Ctcode);
+                                }
                             }
-                            ctCode.Append("");
                             break;
                         case "T014":                //年月日進制表示
                             StringBuilder timeString = new StringBuilder();
-                            string yearString = DateTime.Now.Year.ToString();
+                            string yearString = currentTime.Year.ToString();
                             int yearInt = int.Parse(yearString.Substring(yearString.Length - 2)); //獲取兩位年
-                            int monthInt = DateTime.Now.Month;
-                            int dayInt = DateTime.Now.Day;
+                            int monthInt = currentTime.Month;
+                            int dayInt = currentTime.Day;
                             timeString.Append(Base31Code[yearInt]);
                             timeString.Append(Base31Code[monthInt]);
                             timeString.Append(Base31Code[dayInt]);
-                            //                            ctCode.Append(timeString.ToString());
                             if (listCode.Count > 1)
                             {
-
                                 for (int i = 0; i < listCode.Count; i++)
                                 {
                                     listCode[i].Ctcode = listCode[i].Ctcode + timeString.ToString();
@@ -285,58 +302,74 @@ namespace GenerateCTCode
                                 ctCode.Append(timeString.ToString());
                             }
                             break;
-                        case "T015":                //年月日進制表示
-                            StringBuilder inspurTime = new StringBuilder();
-                            string inspurYearString = DateTime.Now.Year.ToString();
-                            int inspurYearInt = int.Parse(inspurYearString.Substring(inspurYearString.Length - 2)); //獲取兩位年
-                            int inspurmonthInt = DateTime.Now.Month;
-                            string dd2 = DateTime.Now.ToString("dd");                       //获得两位日
-                            inspurTime.Append(Base33Code[inspurYearInt]);
-                            inspurTime.Append(Base33Code[inspurmonthInt]);
-                            inspurTime.Append(dd2);
-                            //             ctCode.Append(inspurTime.ToString());
+                        case "T015":                //浪潮年月日進制表示
                             if (listCode.Count > 1)
                             {
-
                                 for (int i = 0; i < listCode.Count; i++)
                                 {
-                                    listCode[i].Ctcode = listCode[i].Ctcode + inspurTime.ToString();
+                                    listCode[i].Ctcode = listCode[i].Ctcode + getInsuprTime();
                                 }
                             }
                             else
                             {
-                                ctCode.Append(inspurTime.ToString());
+                                ctCode.Append(getInsuprTime());
                             }
                             break;
                         case "T016":                //浪潮批次号
-
-                            String condition = ctCode.ToString().Substring(2);
-                            string batchCT = printM.queryInspurCodeNo(condition, ctCodeInfo.Workno,ctCodeInfo.Cuspo);
-                            string batchNo = "1";
-                            if(batchCT != null)
-                            {
-                                batchNo = batchCT.Substring(ctCode.Length, 1);
-                            }else
-                            {
-                                batchCT = printM.queryInspurMaxCode(condition, ctCodeInfo.Cusno);
-                                if(batchCT != null)
+                            string woBatchNo = woBatchService.getBatchNoByWO(ctCodeInfo.Workno);            //查询工单批次号                           
+                            string batchSeqNo = "1";
+                            if (woBatchNo == null|| woBatchNo.Equals(""))
+                            {                                           
+                                string queryCond = getInsuprTime() + "Q";
+                                List<String> batchNos = woBatchService.queryBatchNos(queryCond);
+                                if (batchNos != null && batchNos.Count > 0)
                                 {
-                                    string tempBatchNo = batchNo = batchCT.Substring(ctCode.Length, 1);
-                                    int tempMathNo = InverseBase34Code[tempBatchNo];
-                                    batchNo = Base34Code[tempMathNo + 1];
-                                }
-                            }
-                            if (listCode.Count > 1)
-                            {
+                                    int maxNo = 0;
+                                    foreach (string batch in batchNos)
+                                    {
 
-                                for (int i = 0; i < listCode.Count; i++)
-                                {
-                                    listCode[i].Ctcode = listCode[i].Ctcode + batchNo;
+                                        int tempMathNo = InverseBase34Code[batch.Substring(batch.Length - 1, 1)];
+                                        if (tempMathNo > maxNo)
+                                        {
+                                            maxNo = tempMathNo;
+                                        }
+                                    }
+                                    batchSeqNo = Base34Code[maxNo + 1];
                                 }
+                                if (listCode.Count > 1)
+                                {
+                                    for (int i = 0; i < listCode.Count; i++)
+                                    {
+                                        listCode[i].Ctcode = listCode[i].Ctcode + batchSeqNo;
+                                    }
+                                    woBatchNo = listCode[0].Ctcode;
+                                }
+                                else
+                                {
+                                    ctCode.Append(batchSeqNo);
+                                    woBatchNo = ctCode.ToString();
+                                }
+                                //保存工单批次
+                                WoBatch woBatch = new WoBatch();
+                                woBatch.BatchNo = woBatchNo;
+                                woBatch.Workno = ctCodeInfo.Workno;
+                                woBatchService.saveWoBatch(woBatch);                    //占用工单批次                     
                             }
                             else
                             {
-                                ctCode.Append(batchNo);
+                                if (listCode.Count > 1)
+                                {
+                                    for (int i = 0; i < listCode.Count; i++)
+                                    {
+                                        listCode[i].Ctcode = "";
+                                        listCode[i].Ctcode =  woBatchNo;
+                                    }
+                                }
+                                else
+                                {
+                                    ctCode.Clear();
+                                    ctCode.Append(woBatchNo);
+                                }
                             }
 
                             break;
@@ -352,6 +385,10 @@ namespace GenerateCTCode
                     ctCodeIn.Ctcode = ctCode.ToString();
                     listCode.Add(ctCodeIn);
                 }
+            }
+            if(printQty == 1)
+            {
+                listCode[0].Ctcode = ctCode.ToString();
             }
             return listCode;
 
@@ -389,12 +426,25 @@ namespace GenerateCTCode
         }
 
 
+        public static string getInsuprTime()
+        {
+            StringBuilder inspurTime = new StringBuilder();
+            string inspurYearString = DateTime.Now.Year.ToString();
+            int inspurYearInt = int.Parse(inspurYearString.Substring(inspurYearString.Length - 2)); //獲取兩位年
+            int inspurmonthInt = DateTime.Now.Month;
+            string dd2 = DateTime.Now.ToString("dd");                       //获得两位日
+            inspurTime.Append(Base33Code[inspurYearInt]);
+            inspurTime.Append(Base33Code[inspurmonthInt]);
+            inspurTime.Append(dd2);
+            return inspurTime.ToString();
+        }
+
         /// <summary>
         /// 根据传入参数，获取当前日期的年周别或年度或
         /// </summary>
         /// <param name="length"></param>
         /// <returns></returns>
-        public static string GenerateTimeCode(int length)
+        public static string GenerateTimeCode(int length,DateTime currentTime)
         {
 
             System.Text.StringBuilder timeString = new System.Text.StringBuilder(10);
@@ -404,28 +454,28 @@ namespace GenerateCTCode
             {
                 case 2:
                     //若为2位，只取周别
-                    timeString.Append(getWeek());
+                    timeString.Append(getWeek(currentTime));
                     break;
                 case 3:
                     //若为3位，年周别，分别为1位，2位
-                    string yearString = DateTime.Now.Year.ToString();
+                    string yearString = currentTime.Year.ToString();
                     timeString.Append(yearString.Substring(yearString.Length - 1));
-                    timeString.Append(getWeek());
+                    timeString.Append(getWeek(currentTime));
                     break;
                 case 4:
                     //获得4位，年周别，分别为2位
-                    timeString.Append(DateTime.Now.ToString("yy"));
-                    timeString.Append(getWeek());
+                    timeString.Append(currentTime.ToString("yy"));
+                    timeString.Append(getWeek(currentTime));
                     break;
                 case 6:
                     //获得6位,获得年、月、日
-                    timeString.Append(DateTime.Now.ToString("yyMMdd"));
+                    timeString.Append(currentTime.ToString("yyMMdd"));
                     break;
                 case 7:
                     //获得7位,获得4位年，2位周别,1位日
-                    timeString.Append(DateTime.Now.ToString("yyyy"));
-                    timeString.Append(getWeek());
-                    timeString.Append(IntConvert(DateTime.Now.Day));
+                    timeString.Append(currentTime.ToString("yyyy"));
+                    timeString.Append(getWeek(currentTime));
+                    timeString.Append(IntConvert(currentTime.Day));
                     break;
             }
 
@@ -438,11 +488,11 @@ namespace GenerateCTCode
         /// 获得星期
         /// </summary>
         /// <returns></returns>
-        public static string getWeek()
+        public static string getWeek(DateTime currentTime)
         {
             GregorianCalendar gc = new GregorianCalendar();
             string weekString = "";
-            int week = gc.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+            int week = gc.GetWeekOfYear(currentTime, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
             if (week.ToString().Length < 2)
             {
                 weekString = "0" + week.ToString();

@@ -21,30 +21,38 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_pallet_info (uuid,palletNo,capacity_no,model_no,work_no,rule_no,op_user,create_time,palletQty,batchNo)");
-            strSql.Append("values(@uuid,@palletNo,@capacityNo,@model_no,@woNo,@ruleno,@opuser,@createtime,@palletQty,@batchNo)");
+            strSql.Append("insert into t_pallet_info (uuid,palletNo,work_no,palletQty,batchNo,capacity_no,model_no,rule_no,cus_no,cus_name,cus_po,so_order,op_user,create_time)");
+            strSql.Append("values(@uuid,@palletNo,@workNo,@palletQty,@batchNo,@capacityNo,@modelNo,@ruleno,@cusNo,@cusName,@cusPo,@soOrder,@opuser,@createtime)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@palletNo", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@capacityNo", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@model_no", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@ruleno", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@woNo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@workNo", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@palletQty", MySqlDbType.Int32, 900),
-                new MySqlParameter("@batchNo", MySqlDbType.VarChar, 900)
+                new MySqlParameter("@batchNo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@capacityNo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@modelNo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@ruleno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cusNo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cusName", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cusPo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@soOrder", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = pallet.Uuid;
             parameters[1].Value = pallet.PalletNo;
-            parameters[2].Value = pallet.CapacityNo;
-            parameters[3].Value = pallet.Modelno;
-            parameters[4].Value = pallet.Ruleno;
-            parameters[5].Value = pallet.Opuser;
-            parameters[6].Value = pallet.Createtime;
-            parameters[7].Value = pallet.WoNo;
-            parameters[8].Value = pallet.PalletQty;
-            parameters[9].Value = pallet.BatchNo;
+            parameters[2].Value = pallet.Workno;
+            parameters[3].Value = pallet.PalletQty;
+            parameters[4].Value = pallet.BatchNo;
+            parameters[5].Value = pallet.CapacityNo;
+            parameters[6].Value = pallet.Modelno;
+            parameters[7].Value = pallet.Ruleno;
+            parameters[8].Value = pallet.Cusno;
+            parameters[9].Value = pallet.Cusname;
+            parameters[10].Value = pallet.Cuspo;
+            parameters[11].Value = pallet.SoOrder;
+            parameters[12].Value = pallet.Opuser;
+            parameters[13].Value = pallet.Createtime;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
@@ -116,6 +124,84 @@ namespace DAL
         }
 
 
+
+        public Pallet queryPalletByWorkno(string workNo)
+        {
+            Pallet pallet = null;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT uuid,palletNo,palletQty,batchNo,capacity_no,model_no,rule_no,cus_no,cus_name,cus_po,so_order,vehicle_No,op_user,create_time,update_user,update_time FROM t_pallet_info where work_no=@workNo and del_flag is null limit 1");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@workNo", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = workNo;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                pallet = new Pallet();
+                pallet.Uuid = ds.Tables[0].Rows[0]["uuid"].ToString();
+                pallet.PalletNo = ds.Tables[0].Rows[0]["palletNo"].ToString();
+                pallet.PalletQty = (int)ds.Tables[0].Rows[0]["palletQty"];
+                pallet.BatchNo = ds.Tables[0].Rows[0]["batchNo"].ToString();
+                pallet.CapacityNo = ds.Tables[0].Rows[0]["capacity_no"].ToString();
+                pallet.Modelno = ds.Tables[0].Rows[0]["model_no"].ToString();
+                pallet.Ruleno = ds.Tables[0].Rows[0]["rule_no"].ToString();
+                pallet.Cusno = ds.Tables[0].Rows[0]["cus_no"].ToString();
+                pallet.Cusname = ds.Tables[0].Rows[0]["cus_name"].ToString();
+                pallet.Cuspo = ds.Tables[0].Rows[0]["cus_po"].ToString();
+                pallet.SoOrder = ds.Tables[0].Rows[0]["so_order"].ToString();
+                pallet.VehicleNo = ds.Tables[0].Rows[0]["vehicle_No"].ToString();
+                pallet.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
+                pallet.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
+                pallet.Updateser = ds.Tables[0].Rows[0]["update_user"].ToString();
+                pallet.Updatetime = ds.Tables[0].Rows[0]["update_time"].ToString();
+            }
+            return pallet;
+        }
+
+
+        public string queryBatchNoWorkNo(string palletNo, string workNo)
+        {
+            string maxPalletNo = null;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select MAX(palletNo) from t_pallet_info where palletNo like @palletNo AND work_no=@workNo AND del_flag is null");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@palletNo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@workNo", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = "%" + palletNo + "%";
+            parameters[1].Value = workNo;
+            Object maxCode = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (maxCode != null && maxCode != DBNull.Value)
+            {
+                maxPalletNo = maxCode.ToString();
+            }
+            return maxPalletNo;
+        }
+
+
+
+        public List<string> queryBatchNos(string batchCond)
+        {
+            List<string> batchNos = null;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT DISTINCT batchNo FROM t_pallet_info where batchNo like @batchNo and del_flag is null order by create_time");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@batchNo", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = "%" + batchCond + "%";
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                batchNos = new List<string>();
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    batchNos.Add(dr["batchNo"].ToString());
+                }
+            }
+            return batchNos;
+        }
+
+
         /// <summary>
         /// 根據棧板編號前綴查詢 棧板信息
         /// </summary>
@@ -125,7 +211,7 @@ namespace DAL
         {
             Pallet pallet = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_pallet_info where palletNo like @palletNo AND del_flag is null");
+            strSql.Append("SELECT uuid,palletNo,work_no,capacity_no,model_no,rule_no,op_user,create_time,palletQty,batchNo FROM t_pallet_info where palletNo like @palletNo AND del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@palletNo", MySqlDbType.VarChar, 900),
             };
@@ -136,7 +222,7 @@ namespace DAL
                 pallet = new Pallet();
                 pallet.Uuid = ds.Tables[0].Rows[0]["uuid"].ToString();
                 pallet.PalletNo = ds.Tables[0].Rows[0]["palletNo"].ToString();
-                pallet.WoNo = ds.Tables[0].Rows[0]["work_no"].ToString();
+                pallet.Workno = ds.Tables[0].Rows[0]["work_no"].ToString();
                 pallet.CapacityNo = ds.Tables[0].Rows[0]["capacity_no"].ToString();
                 pallet.Modelno = ds.Tables[0].Rows[0]["model_no"].ToString();
                 pallet.Ruleno = ds.Tables[0].Rows[0]["rule_no"].ToString();

@@ -49,7 +49,7 @@ namespace DAL
         {
             FileRelDel fileRelDel = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_file_reldel where uuid=@uuid");
+            strSql.Append("SELECT uuid,file_no,cus_no,del_matno,op_user,create_time FROM t_file_reldel where uuid=@uuid and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
             };
@@ -99,7 +99,7 @@ namespace DAL
         {
             FileRelDel fileRelDel = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_file_reldel where cus_no=@cusNo and del_matno=@delMatNo and bound_type=@boundType");
+            strSql.Append("SELECT uuid,file_no,cus_no,del_matno,op_user,create_time FROM t_file_reldel where cus_no=@cusNo and del_matno=@delMatNo and bound_type=@boundType and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@cusNo", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@delMatNo", MySqlDbType.VarChar, 900),

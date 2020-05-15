@@ -74,7 +74,7 @@ namespace DAL
             {
                 Model.User user = null;
                 StringBuilder strSql = new StringBuilder();
-                strSql.Append("SELECT * FROM t_user where username=@username");
+                strSql.Append("SELECT uuid,user_id,username,password,userdesc,department,op_user,create_time FROM t_user where username=@username");
                 MySqlParameter[] parameters = {
                 new MySqlParameter("@username", MySqlDbType.VarChar, 900),
             };
@@ -140,7 +140,7 @@ namespace DAL
         {
             User user = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_user where uuid=@uuid");
+            strSql.Append("SELECT uuid,user_id,username,password,userdesc,department,op_user,create_time FROM t_user where uuid=@uuid");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
             };

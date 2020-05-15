@@ -26,6 +26,7 @@ namespace Model
         private string _soOrder;
         private string _opuser;
         private string _createtime;
+        private string _updateUser;
         private string _updatetime;
         private string _delflag;
 
@@ -287,6 +288,19 @@ namespace Model
             set
             {
                 _cusname = value;
+            }
+        }
+
+        public string UpdateUser
+        {
+            get
+            {
+                return _updateUser;
+            }
+
+            set
+            {
+                _updateUser = value;
             }
         }
     }

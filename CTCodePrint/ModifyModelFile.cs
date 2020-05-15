@@ -136,22 +136,28 @@ namespace CTCodePrint
 
 
 
-        private void textBox3_Enter(object sender, EventArgs e)
+
+
+        private void textBox3_KeyDown(object sender, KeyEventArgs e)
         {
-            string fileNo = this.textBox3.Text;
-            if (fileNo == null || fileNo.Trim().Equals(""))
+            if (e.KeyCode == Keys.Enter)
             {
-                this.textBox3.Focus();
-                return;
+                string fileNo = this.textBox3.Text;
+                if (fileNo == null || fileNo.Trim().Equals(""))
+                {
+                    this.textBox3.Focus();
+                    return;
+                }
+                ModelFile modelFile = printQ.queryModelFileByExactFileNo(fileNo);
+                if (modelFile != null)
+                {
+                    this.textBox1.Text = modelFile.Filename;
+                    this.textBox2.Text = modelFile.Filedescription;
+                    this.textBox6.Text = modelFile.Opuser;
+                    this.textBox7.Text = modelFile.Createtime;
+                }
             }
-            ModelFile modelFile = printQ.queryModelFileByExactFileNo(fileNo);
-            if (modelFile != null)
-            {
-                this.textBox1.Text = modelFile.Filename;
-                this.textBox2.Text = modelFile.Filedescription;
-                this.textBox6.Text = modelFile.Opuser;
-                this.textBox7.Text = modelFile.Createtime;
-            }
+
         }
     }
 }

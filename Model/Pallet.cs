@@ -10,13 +10,17 @@ namespace Model
         private string _uuid;
         private string _palletNo;
         private int _palletQty;
-        private string _woNo;
+        private string _workno;
         private string _ruleno;
-        private string _cusNo;
+        private string _cusno;
+        private string _cusname;
+        private string _cuspo;
         private string _cusmatno;
         private List<Carton> _cartonList;
         private string _delmatno;
         private string _modelno;
+        private string _soOrder;
+        private string _vehicleNo;
         private string _opuser;
         private string _createtime;
         private string _updateser;
@@ -77,18 +81,6 @@ namespace Model
             }
         }
 
-        public string Cusmatno
-        {
-            get
-            {
-                return _cusmatno;
-            }
-
-            set
-            {
-                _cusmatno = value;
-            }
-        }
 
         public string Delmatno
         {
@@ -207,18 +199,6 @@ namespace Model
             }
         }
 
-        public string WoNo
-        {
-            get
-            {
-                return _woNo;
-            }
-
-            set
-            {
-                _woNo = value;
-            }
-        }
 
         public string BatchNo
         {
@@ -233,16 +213,94 @@ namespace Model
             }
         }
 
-        public string CusNo
+        public string Cusno
         {
             get
             {
-                return _cusNo;
+                return _cusno;
             }
 
             set
             {
-                _cusNo = value;
+                _cusno = value;
+            }
+        }
+
+        public string Cusname
+        {
+            get
+            {
+                return _cusname;
+            }
+
+            set
+            {
+                _cusname = value;
+            }
+        }
+
+        public string Cuspo
+        {
+            get
+            {
+                return _cuspo;
+            }
+
+            set
+            {
+                _cuspo = value;
+            }
+        }
+
+        public string Workno
+        {
+            get
+            {
+                return _workno;
+            }
+
+            set
+            {
+                _workno = value;
+            }
+        }
+
+        public string Cusmatno
+        {
+            get
+            {
+                return _cusmatno;
+            }
+
+            set
+            {
+                _cusmatno = value;
+            }
+        }
+
+        public string SoOrder
+        {
+            get
+            {
+                return _soOrder;
+            }
+
+            set
+            {
+                _soOrder = value;
+            }
+        }
+
+        public string VehicleNo
+        {
+            get
+            {
+                return _vehicleNo;
+            }
+
+            set
+            {
+                _vehicleNo = value;
             }
         }
     }

@@ -74,15 +74,23 @@ namespace BLL
             return palletDao.queryMaxPalletNo(prefPalletNo);
         }
 
+
         /// <summary>
-        /// 根據Pallet編號前綴 查詢棧板標籤
+        /// 根据工单查询栈板信息
         /// </summary>
-        /// <param name="prefixPallet"></param>
+        /// <param name="workNo"></param>
         /// <returns></returns>
-        public Pallet queryPalletByPrefix(string prefixPallet)
+        public Pallet queryPalletByWorkno(string workNo)
         {
-            return palletDao.queryPalletByPrefix(prefixPallet);
+            return palletDao.queryPalletByWorkno(workNo);
         }
+
+
+        public List<string> queryBatchNos(string batchCond)
+        {
+            return palletDao.queryBatchNos(batchCond);
+        }
+
 
     }
 }

@@ -21,7 +21,7 @@ namespace DAL
         {
             ModelFile modelFile = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_model_file where file_no=@fileNo AND del_flag is null ");
+            strSql.Append("SELECT uuid,file_no,fileName,fileDescription,fileAddress,op_user,create_time FROM t_model_file where file_no=@fileNo AND del_flag is null ");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@fileNo", MySqlDbType.VarChar, 900),
             };
@@ -47,7 +47,7 @@ namespace DAL
 
             List<ModelFile> modelFileList = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_model_file WHERE file_no like @fileNo AND del_flag is null ");
+            strSql.Append("SELECT uuid,file_no,fileName,fileDescription,fileAddress,op_user,create_time FROM t_model_file WHERE file_no like @fileNo AND del_flag is null ");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@fileNo", MySqlDbType.VarChar, 900),
             };

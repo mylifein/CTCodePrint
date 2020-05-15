@@ -8,18 +8,14 @@ using System.Text;
 
 namespace GenerateCTCode
 {
-    public class GeneratePallet
+    public class GenerateQuality
     {
-
-        private readonly static PalletService palletService = new PalletService();
-        private readonly static CodeRuleService codeRuleService = new CodeRuleService();
-        private readonly static ProdLineService prodLineService = new ProdLineService();
-
-
-        public static Pallet generatePalletNo(Pallet pallet)
+        private readonly QualityInfoService qualityInfoService = new QualityInfoService();
+        private readonly CodeRuleService codeRuleService = new CodeRuleService();
+        public String gennerateQualityNo(QualityInfo qualityInfo)
         {
-            StringBuilder palletNo = new StringBuilder();
-            CodeRule codeRule = codeRuleService.queryRuleById(pallet.Ruleno);
+            StringBuilder qualityNo = new StringBuilder();
+            CodeRule codeRule = codeRuleService.queryRuleById(qualityInfo.RuleNo);
             if (codeRule != null)
             {
                 foreach (RuleItem ruleItem in codeRule.RuleItem)
@@ -28,22 +24,13 @@ namespace GenerateCTCode
                     switch (ruleItem.Ruletype)
                     {
                         case "T001":
-                            string poOrWorkNo = "";
-                            if (pallet.Cuspo != null && pallet.Cuspo != "")
-                            {
-                                poOrWorkNo = pallet.Cuspo;
-                            }
-                            else
-                            {
-                                poOrWorkNo = pallet.Workno;
-                            }
-                            palletNo.Append(poOrWorkNo.Substring(0, ruleInt));
+
                             break;
                         case "T002":
-                            palletNo.Append(GenerateTimeCode(ruleInt));
+                            qualityNo.Append(GenerateTimeCode(ruleInt));
                             break;
                         case "T003":
-                            palletNo.Append(pallet.Cusmatno.Trim().Substring(0, ruleInt));
+                
                             break;
                         case "T004":
                             break;
@@ -52,49 +39,46 @@ namespace GenerateCTCode
                         case "T006":        //流水碼34進制
                             break;
                         case "T007":
-                            palletNo.Append(ruleItem.Rulevalue);
+                            qualityNo.Append(ruleItem.Rulevalue);
                             break;
                         case "T008":
-                            string subOperation = extractString(pallet.SoOrder, ruleInt);
-                            palletNo.Append(subOperation);
                             break;
                         case "T009":
                             //机种号3-7位
-                            palletNo.Append(pallet.Delmatno.Substring(2, 5));
                             break;
                         case "T010":
                             break;
                         case "T011":
                             //流水码十六进制
-                            string maxPallet = palletService.queryMaxPalletNo(palletNo.ToString());
-                            string prefixPallet = palletNo.ToString();
-                            if (maxPallet == null || maxPallet == "")
+                            string maxQualityNo = qualityInfoService.queryMaxQualityNo(qualityNo.ToString());
+                            string prefixQualityNo = qualityNo.ToString();
+                            if (maxQualityNo == null || maxQualityNo == "")
                             {
                                 string seqCode = "1";
                                 for (int numLength = seqCode.Length; numLength < Convert.ToInt32(ruleItem.Rulelength); numLength++)
                                 {
                                     seqCode = "0" + seqCode;
                                 }
-                                palletNo.Append(seqCode);
+                                qualityNo.Append(seqCode);
                             }
                             else
                             {
                                 //獲取流水號
-                                string subCode = maxPallet.Substring(prefixPallet.Length, Convert.ToInt32(ruleItem.Rulelength));
-                                int palletSeq = convert16CodeTo10(subCode);
-                                string pallet16Code = Convert16Code(palletSeq + 1);
+                                string subCode = maxQualityNo.Substring(prefixQualityNo.Length, Convert.ToInt32(ruleItem.Rulelength));
+                                int qualitySeq = convert16CodeTo10(subCode);
+                                string quality16Code = Convert16Code(qualitySeq + 1);
                                 string seqNo = "";
-                                for (int i = pallet16Code.Length; i < Convert.ToInt32(ruleItem.Rulelength); i++)
+                                for (int i = quality16Code.Length; i < Convert.ToInt32(ruleItem.Rulelength); i++)
                                 {
                                     seqNo += 0;
                                 }
-                                pallet16Code = seqNo + pallet16Code;
-                                palletNo.Append(pallet16Code);
+                                quality16Code = seqNo + quality16Code;
+                                qualityNo.Append(quality16Code);
 
                             }
                             break;
-                        case "T012":
-                            String prefix = palletNo.ToString();
+                        case "T012":                //43码
+                            String prefix = qualityNo.ToString();
                             int modNum = 0;
                             foreach (char result in prefix.ToCharArray())
                             {
@@ -104,96 +88,42 @@ namespace GenerateCTCode
                             }
                             int modReuslt = modNum % 43;
                             string modString = base43Code[modReuslt];
-                            palletNo.Append(modString);
+                            qualityNo.Append(modString);
                             break;
                         case "T013":                //十進制流水碼
-                            string maxPallet10 = palletService.queryMaxPalletNo(palletNo.ToString());
-                            string prefixPallet10 = palletNo.ToString();
-                            if (maxPallet10 == null || maxPallet10 == "")
+                            string maxQuality10 = qualityInfoService.queryMaxQualityNo(qualityNo.ToString());
+                            string prefixQuality10 = qualityNo.ToString();
+                            if (maxQuality10 == null || maxQuality10 == "")
                             {
                                 string seqCode = "1";
                                 for (int numLength = seqCode.Length; numLength < Convert.ToInt32(ruleItem.Rulelength); numLength++)
                                 {
                                     seqCode = "0" + seqCode;
                                 }
-                                palletNo.Append(seqCode);
+                                qualityNo.Append(seqCode);
                             }
                             else
                             {
                                 //獲取流水號
-                                string subCode10 = maxPallet10.Substring(prefixPallet10.Length, Convert.ToInt32(ruleItem.Rulelength));
-                                int palletSeq10 = int.Parse(subCode10);
-                                string pallet10Code = (palletSeq10 + 1).ToString();
+                                string subCode10 = maxQuality10.Substring(prefixQuality10.Length, Convert.ToInt32(ruleItem.Rulelength));
+                                int qualitySeq10 = int.Parse(subCode10);
+                                string quality10Code = (qualitySeq10 + 1).ToString();
                                 string seqNo = "";
-                                for (int i = pallet10Code.Length; i < Convert.ToInt32(ruleItem.Rulelength); i++)
+                                for (int i = quality10Code.Length; i < Convert.ToInt32(ruleItem.Rulelength); i++)
                                 {
                                     seqNo += 0;
                                 }
-                                pallet10Code = seqNo + pallet10Code;
-                                palletNo.Append(pallet10Code);
-
+                                quality10Code = seqNo + quality10Code;
+                                qualityNo.Append(quality10Code);
                             }
 
                             break;
                         case "T015":                //年月日進制表示
-                            palletNo.Append(getInsuprTime());
+                            qualityNo.Append(getInsuprTime());
                             break;
                         case "T016":                        //浪潮批次号                        
-                            Pallet batchPallet = palletService.queryPalletByWorkno(pallet.Workno);
-                            string batchSeqNo = "1";
-                            if (batchPallet != null)
-                            {
-                                pallet.BatchNo = batchPallet.BatchNo;
-                                palletNo.Clear();
-                                palletNo.Append(batchPallet.BatchNo);
-                            }
-                            else
-                            {
-                                string queryCond = getInsuprTime() + "Q";
-                                List<String> batchNos = palletService.queryBatchNos(queryCond);
-                                if (batchNos != null && batchNos.Count > 0)
-                                {
-                                    int maxNo = 0;
-                                    foreach (string batchNo in batchNos)
-                                    {
-
-                                        int tempMathNo = InverseBase34Code[batchNo.Substring(batchNo.Length - 1, 1)];
-                                        if (tempMathNo > maxNo)
-                                        {
-                                            maxNo = tempMathNo;
-                                        }
-                                    }
-                                    batchSeqNo = Base34Code[maxNo + 1];
-                                }
-                                palletNo.Append(batchSeqNo);
-                                pallet.BatchNo = palletNo.ToString();
-                            }
                             break;
                         case "T017":                //批次号                        
-                            //string selfBatchNo = cartonService.queryBatchNoWorkNo(cartonNo.ToString(), carton.Workno);
-                            //string batchCustom = "1";
-                            //if (selfBatchNo != null)
-                            //{
-                            //    batchCustom = selfBatchNo.Substring(cartonNo.Length, ruleItem.Rulelength);
-                            //}
-                            //else
-                            //{
-                            //    selfBatchNo = cartonService.queryInspurMaxBoxNo(cartonNo.ToString(), carton.Cusno);
-                            //    if (selfBatchNo != null)
-                            //    {
-                            //        string tempBatchNo = selfBatchNo.Substring(cartonNo.Length, ruleItem.Rulelength);
-                            //        int tempMathNo = int.Parse(tempBatchNo);
-                            //        batchCustom = (tempMathNo + 1).ToString();
-                            //    }
-                            //    string tempZero = "";
-                            //    for (int i = batchCustom.Length; i < ruleItem.Rulelength; i++)
-                            //    {
-                            //        tempZero = 0 + tempZero;
-                            //    }
-                            //    batchCustom = tempZero + batchCustom;
-                            //}
-                            //cartonNo.Append(batchCustom);
-                            //carton.BatchNo = cartonNo.ToString();
                             break;
                         case "T018":                //年月日進制表示
                             StringBuilder h3cTime = new StringBuilder();
@@ -204,20 +134,21 @@ namespace GenerateCTCode
                             h3cTime.Append(h3cYearInt);
                             h3cTime.Append(Base33Code[h3cInt]);
                             h3cTime.Append(h3cDD);
-                            //             ctCode.Append(inspurTime.ToString());
-                            palletNo.Append(h3cTime.ToString());
+                            qualityNo.Append(h3cTime.ToString());
 
                             break;
                         case "T019":                //工单十进制流水
+                            break;
                         case "T020":
 
                             break;
                     }
                 }
             }
-            pallet.PalletNo = palletNo.ToString();
-            return pallet;
+            return qualityNo.ToString();
         }
+
+
 
         /// <summary>
         /// TODO 定义16進制字符数组
@@ -453,5 +384,6 @@ namespace GenerateCTCode
             {   20  ,"L"}, {   21  ,"M"}, {   22  ,"N"}, {   23  ,"P"}, {   24  ,"Q"}, {   25  ,"R"}, {   26  ,"S"}, {   27  ,"T"}, {   28  ,"U"}, {   29  ,"V"},
             {   30  ,"W"}, {   31  ,"X"}, { 32,"Y"},{33,"Z" }
         };
+
     }
 }

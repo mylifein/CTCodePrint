@@ -57,7 +57,7 @@ namespace DAL
         {
             RoleRelMenu roleRelMenu = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_role_relmemu where uuid=@uuid");
+            strSql.Append("SELECT uuid,role_no,menu_name,menu_desc,op_user,create_time FROM t_role_relmemu where uuid=@uuid AND del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
             };
@@ -72,7 +72,6 @@ namespace DAL
                 roleRelMenu.MenuDesc = ds.Tables[0].Rows[0]["menu_desc"].ToString();
                 roleRelMenu.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
                 roleRelMenu.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
-                roleRelMenu.Updatetime = ds.Tables[0].Rows[0]["update_time"].ToString();
             }
             return roleRelMenu;
         }
@@ -87,7 +86,7 @@ namespace DAL
 
             List<RoleRelMenu> roleRelMenuList = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_role_relmemu where role_no=@roleNo where del_flag is null");
+            strSql.Append("SELECT uuid,role_no,menu_name,menu_desc,op_user,create_time,update_user,update_time FROM t_role_relmemu where role_no=@roleNo where del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@roleNo", MySqlDbType.VarChar, 900),
             };
@@ -105,6 +104,7 @@ namespace DAL
                     roleRelMenu.MenuDesc = dr["menu_desc"].ToString();
                     roleRelMenu.Opuser = dr["op_user"].ToString();
                     roleRelMenu.Createtime = dr["create_time"].ToString();
+                    roleRelMenu.UpdateUser = dr["update_user"].ToString();
                     roleRelMenu.Updatetime = dr["update_time"].ToString();
                     roleRelMenuList.Add(roleRelMenu);
                 }

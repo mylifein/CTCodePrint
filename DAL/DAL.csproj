@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="QualityInfoDao.cs" />
     <Compile Include="CapacityDao.cs" />
     <Compile Include="CartonDao.cs" />
     <Compile Include="CodeRuleDao.cs" />
@@ -58,7 +59,6 @@
     <Compile Include="DepartDao.cs" />
     <Compile Include="FieldTypeDao.cs" />
     <Compile Include="FileRelDelDao.cs" />
-    <Compile Include="MacTypeDao.cs" />
     <Compile Include="MandatoryFieldDao.cs" />
     <Compile Include="ManRelFieldTypeDao.cs" />
     <Compile Include="ModelInfoDao.cs" />
@@ -71,9 +71,9 @@
     <Compile Include="RoleDao.cs" />
     <Compile Include="RoleRelMenuDao.cs" />
     <Compile Include="RoleRelUserDao.cs" />
-    <Compile Include="SelectControl.cs" />
     <Compile Include="SubMatInfoDao.cs" />
     <Compile Include="UserDao.cs" />
+    <Compile Include="WoBatchDao.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DBUtility\DBUtility.csproj">

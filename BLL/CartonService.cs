@@ -123,6 +123,15 @@ namespace BLL
             return carton;
         }
 
+        /// <summary>
+        /// 计算已装箱数
+        /// </summary>
+        /// <param name="workno"></param>
+        /// <returns></returns>
+        public int getCartonsByWO(string workno)
+        {
+            return cartonDao.getCartonsByWO(workno);
+        }
 
         /// <summary>
         /// 更新裝箱單狀態, 1是已綁定棧板，2是入庫 3是出庫 
@@ -148,10 +157,10 @@ namespace BLL
             return cartonDao.queryFileNo(cusNo, delMatno, boundType);
         }
 
-        public string queryInspurBoxNo(string cartonNo, string workno, string cuspo)
-        {
-            return cartonDao.queryInspurCartonNo(cartonNo,workno,cuspo);
-        }
+
+
+
+
 
         /// <summary>
         /// 根据工单计算批次
@@ -176,19 +185,28 @@ namespace BLL
         }
 
 
-        public DataSet getCartonsInfo(string condition, string conditionV)
+        /// <summary>
+        /// 根据工单号  查询一条装箱单信息.
+        /// </summary>
+        /// <param name="workNo"></param>
+        /// <returns></returns>
+        public Carton queryCartonByWorkno(string workNo)
         {
-            DataSet ds = null;
+            return cartonDao.queryCartonByWorkno(workNo);
+        }
+
+
+
+        public List<Carton> getCartonsInfo(string condition, string conditionV)
+        {
             if (condition == "1")
             {
-                ds = cartonDao.querygetCartonsInfoByWorkNo(conditionV);
+                return cartonDao.querygetCartonsInfoByWorkNo(conditionV);
             }
             else
             {
-                ds = cartonDao.querygetCartonsInfoByCartonNo(conditionV);
+                return cartonDao.querygetCartonsInfoByCartonNo(conditionV);
             }
-
-            return ds;
         }
     }
 }

@@ -95,6 +95,12 @@
     <Compile Include="BoundCapacity.Designer.cs">
       <DependentUpon>BoundCapacity.cs</DependentUpon>
     </Compile>
+    <Compile Include="QualityCheckPrint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="QualityCheckPrint.Designer.cs">
+      <DependentUpon>QualityCheckPrint.cs</DependentUpon>
+    </Compile>
     <Compile Include="CartonDirectPrint.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -253,6 +259,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BoundCapacity.resx">
       <DependentUpon>BoundCapacity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QualityCheckPrint.resx">
+      <DependentUpon>QualityCheckPrint.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CartonDirectPrint.resx">
       <DependentUpon>CartonDirectPrint.cs</DependentUpon>

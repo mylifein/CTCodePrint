@@ -28,7 +28,7 @@ namespace BLL
         {
             List<WorkOrderInfo> workOrderInfos = oracleQ.getWorkNoInofo(workno);
             List<WoRevision> reWoRevisions = null;
-            if (workOrderInfos.Count > 0)
+            if (workOrderInfos != null && workOrderInfos.Count > 0)
             {
                 string itemCode = workOrderInfos[0].ItemCode;
                 reWoRevisions = oracleQ.getRevisionByDel(itemCode);
@@ -59,6 +59,17 @@ namespace BLL
         public List<CusInfo> getCusInfo()
         {
             return oracleQ.getCusInfo();
+        }
+
+
+        /// <summary>
+        /// 根據工單查詢 已核發的工單信息
+        /// </summary>
+        /// <param name="woNo"></param>
+        /// <returns></returns>
+        public WoInfo queryWoInfoByWo(string woNo)
+        {
+            return oracleQ.queryWoInfoByWo(woNo);
         }
     }
 }

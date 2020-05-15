@@ -46,7 +46,7 @@ namespace DAL
         {
             SubMatInfo subMatInfo = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_submat_info where uuid=@uuid");
+            strSql.Append("SELECT uuid,del_matno,sub_matno,op_user,create_time FROM t_submat_info where uuid=@uuid");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
             };
@@ -71,7 +71,7 @@ namespace DAL
 
             List<SubMatInfo> subMatInfoList = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_submat_info WHERE del_matno=@delmatno AND del_flag is null ");
+            strSql.Append("SELECT uuid,del_matno,sub_matno,op_user,create_time FROM t_submat_info WHERE del_matno=@delmatno AND del_flag is null ");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@delmatno", MySqlDbType.VarChar, 900),
             };

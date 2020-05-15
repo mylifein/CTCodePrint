@@ -55,7 +55,7 @@ namespace DAL
         {
             List<CodeRule> codeRuleList = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_rule_info WHERE rule_no like @ruleNo AND del_flag is null ");
+            strSql.Append("SELECT uuid,rule_no,rule_desc,op_user,create_time,update_user,update_time FROM t_rule_info WHERE rule_no like @ruleNo AND del_flag is null ");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@ruleNo", MySqlDbType.VarChar, 900)
             };
@@ -91,7 +91,7 @@ namespace DAL
         {
             CodeRule codeRule = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_rule_info where rule_no=@ruleNo");
+            strSql.Append("SELECT uuid,rule_no,rule_desc,op_user,create_time,update_user,update_time FROM t_rule_info where rule_no=@ruleNo AND del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@ruleNo", MySqlDbType.VarChar, 900),
             };
@@ -112,7 +112,7 @@ namespace DAL
             {
                 List<RuleItem> ruleItems = null;
                 StringBuilder strSql1 = new StringBuilder();
-                strSql1.Append("SELECT * FROM t_code_rule WHERE rule_no = @ruleNo AND del_flag is null ORDER BY seq_no ASC");
+                strSql1.Append("SELECT uuid,rule_no,seq_no,rule_type,rule_value,rule_length,op_user,create_time,update_user,update_time FROM t_code_rule WHERE rule_no = @ruleNo AND del_flag is null ORDER BY seq_no ASC");
                 MySqlParameter[] parameters1 = {
                 new MySqlParameter("@ruleNo", MySqlDbType.VarChar, 900),
                 };
@@ -148,7 +148,7 @@ namespace DAL
         {
             List<RuleType> ruleTypes = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_rule_type where del_flag is null ORDER BY type_no ASC ");
+            strSql.Append("SELECT uuid,type_no, type_desc,op_user,create_time,update_user,update_time FROM t_rule_type where del_flag is null ORDER BY type_no ASC ");
             MySqlParameter[] parameters = {
 
             };
@@ -179,7 +179,7 @@ namespace DAL
         {
             string ruleNo = "";
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_rule_info where uuid =@uuid");
+            strSql.Append("SELECT rule_no FROM t_rule_info where uuid =@uuid");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900)
             };

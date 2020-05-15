@@ -17,7 +17,7 @@ namespace BLL
         /// </summary>
         /// <param name="mandatoryInfo"></param>
         /// <returns></returns>
-        public MandatoryInfo saveRoleInfo(MandatoryInfo mandatoryInfo)
+        public MandatoryInfo saveMandatoryInfo(MandatoryInfo mandatoryInfo)
         {
             MandatoryInfo reMandatoryInfo = null;
             mandatoryInfo.Uuid = Auxiliary.Get_UUID();

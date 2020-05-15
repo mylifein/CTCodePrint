@@ -20,8 +20,8 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_carton_info (uuid,cartonNo,cartonQty,prodline_id,carton_status,capacity_no,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,completed_qty,model_no,op_user,create_time,so_order,packType,box_No,special_Field,union_Field,prodLine_val,date_code,batchNo)");
-            strSql.Append("values(@uuid,@cartonNo,@cartonQty,@prodlineId,@cartonStatus,@capacityNo,@ruleno,@workno,@cusno,@cusName,@cuspo,@poqty,@cusmatno,@delmatno,@offino,@verno,@woquantity,@completedQty,@model_no,@opuser,@createtime,@soOrder,@packType,@boxNo,@specialField,@unionField,@prodLineVal,@dateCode,@batchNo)");
+            strSql.Append("insert into t_carton_info (uuid,cartonNo,cartonQty,prodline_id,carton_status,capacity_no,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,op_user,create_time,so_order,packType,box_No,special_Field,union_Field,prodLine_val,date_code,batchNo)");
+            strSql.Append("values(@uuid,@cartonNo,@cartonQty,@prodlineId,@cartonStatus,@capacityNo,@ruleno,@workno,@cusno,@cusName,@cuspo,@poqty,@cusmatno,@delmatno,@offino,@verno,@woquantity,@model_no,@opuser,@createtime,@soOrder,@packType,@boxNo,@specialField,@unionField,@prodLineVal,@dateCode,@batchNo)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@cartonNo", MySqlDbType.VarChar, 900),
@@ -38,7 +38,6 @@ namespace DAL
                 new MySqlParameter("@offino", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@verno", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@woquantity", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@completedQty", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@model_no", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
@@ -68,20 +67,19 @@ namespace DAL
             parameters[12].Value = carton.Offino;
             parameters[13].Value = carton.Verno;
             parameters[14].Value = carton.Woquantity;
-            parameters[15].Value = carton.Completedqty;
-            parameters[16].Value = carton.Modelno;
-            parameters[17].Value = carton.Opuser;
-            parameters[18].Value = carton.Createtime;
-            parameters[19].Value = carton.SoOrder;
-            parameters[20].Value = carton.ProdLine.ProdlineId;
-            parameters[21].Value = carton.Cusname;
-            parameters[22].Value = carton.PackType;
-            parameters[23].Value = carton.BoxNo;
-            parameters[24].Value = carton.SpecialField;
-            parameters[25].Value = carton.UnionField;
-            parameters[26].Value = carton.ProdLineVal;
-            parameters[27].Value = carton.Datecode;
-            parameters[28].Value = carton.BatchNo;
+            parameters[15].Value = carton.Modelno;
+            parameters[16].Value = carton.Opuser;
+            parameters[17].Value = carton.Createtime;
+            parameters[18].Value = carton.SoOrder;
+            parameters[19].Value = carton.ProdLine.ProdlineId;
+            parameters[20].Value = carton.Cusname;
+            parameters[21].Value = carton.PackType;
+            parameters[22].Value = carton.BoxNo;
+            parameters[23].Value = carton.SpecialField;
+            parameters[24].Value = carton.UnionField;
+            parameters[25].Value = carton.ProdLineVal;
+            parameters[26].Value = carton.Datecode;
+            parameters[27].Value = carton.BatchNo;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
@@ -111,29 +109,109 @@ namespace DAL
             return maxCtCode;
         }
 
-        public DataSet querygetCartonsInfoByWorkNo(string workNo)
+        public List<Carton> querygetCartonsInfoByWorkNo(string workNo)
         {
+            List<Carton> cartons = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_carton_info where work_no =@workno");
+            strSql.Append("SELECT uuid,cartonNo,cartonQty,carton_status,capacity_no,packType,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,so_order,box_No,special_Field,union_Field,prodLine_val,date_code,batchNo,op_user,create_time,update_user,update_time FROM t_carton_info where work_no =@workno and del_flag is null order by create_time");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@workno", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = workNo;
             DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
-            return ds;
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                cartons = new List<Carton>();
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    Carton carton = new Carton(); ;
+                    carton.Uuid = dr["uuid"].ToString();
+                    carton.CartonNo = dr["cartonNo"].ToString();
+                    carton.CartonQty = (int)dr["cartonQty"];
+                    carton.CartonStatus = dr["carton_status"].ToString();
+                    carton.CapacityNo = dr["capacity_no"].ToString();
+                    carton.PackType = dr["packType"].ToString();
+                    carton.Ruleno = dr["rule_no"].ToString();
+                    carton.Workno = dr["work_no"].ToString();
+                    carton.Cusno = dr["cus_no"].ToString();
+                    carton.Cusname = dr["cus_name"].ToString();
+                    carton.Cuspo = dr["cus_po"].ToString();
+                    carton.Orderqty = dr["po_qty"].ToString();
+                    carton.Cusmatno = dr["cus_matno"].ToString();
+                    carton.Delmatno = dr["del_matno"].ToString();
+                    carton.Offino = dr["offi_no"].ToString();
+                    carton.Verno = dr["ver_no"].ToString();
+                    carton.Woquantity = dr["wo_quantity"].ToString();
+                    carton.Modelno = dr["model_no"].ToString();
+                    carton.SoOrder = dr["so_order"].ToString();
+                    carton.BoxNo = dr["box_No"].ToString();
+                    carton.SpecialField = dr["special_Field"].ToString();
+                    carton.UnionField = dr["union_Field"].ToString();
+                    carton.ProdLineVal = dr["prodLine_val"].ToString();
+                    carton.Datecode = dr["date_code"].ToString();
+                    carton.BatchNo = dr["batchNo"].ToString();
+                    carton.Opuser = dr["op_user"].ToString();
+                    carton.Createtime = dr["create_time"].ToString();
+                    carton.Updateser = dr["update_user"].ToString();
+                    carton.Updatetime = dr["update_time"].ToString();
+                    cartons.Add(carton);
+
+                }
+            }
+            return cartons;
         }
 
 
-        public DataSet querygetCartonsInfoByCartonNo(string cartonNo)
+        public List<Carton> querygetCartonsInfoByCartonNo(string cartonNo)
         {
+            List<Carton> cartons = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_carton_info where cartonNo =@cartonNo");
+            strSql.Append("SELECT uuid,cartonNo,cartonQty,carton_status,capacity_no,packType,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,so_order,box_No,special_Field,union_Field,prodLine_val,date_code,batchNo,op_user,create_time,update_user,update_time  FROM t_carton_info where cartonNo =@cartonNo");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@cartonNo", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = cartonNo;
             DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
-            return ds;
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                cartons = new List<Carton>();
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    Carton carton = new Carton(); ;
+                    carton.Uuid = dr["uuid"].ToString();
+                    carton.CartonNo = dr["cartonNo"].ToString();
+                    carton.CartonQty = (int)dr["cartonQty"];
+                    carton.CartonStatus = dr["carton_status"].ToString();
+                    carton.CapacityNo = dr["capacity_no"].ToString();
+                    carton.PackType = dr["packType"].ToString();
+                    carton.Ruleno = dr["rule_no"].ToString();
+                    carton.Workno = dr["work_no"].ToString();
+                    carton.Cusno = dr["cus_no"].ToString();
+                    carton.Cusname = dr["cus_name"].ToString();
+                    carton.Cuspo = dr["cus_po"].ToString();
+                    carton.Orderqty = dr["po_qty"].ToString();
+                    carton.Cusmatno = dr["cus_matno"].ToString();
+                    carton.Delmatno = dr["del_matno"].ToString();
+                    carton.Offino = dr["offi_no"].ToString();
+                    carton.Verno = dr["ver_no"].ToString();
+                    carton.Woquantity = dr["wo_quantity"].ToString();
+                    carton.Modelno = dr["model_no"].ToString();
+                    carton.SoOrder = dr["so_order"].ToString();
+                    carton.BoxNo = dr["box_No"].ToString();
+                    carton.SpecialField = dr["special_Field"].ToString();
+                    carton.UnionField = dr["union_Field"].ToString();
+                    carton.ProdLineVal = dr["prodLine_val"].ToString();
+                    carton.Datecode = dr["date_code"].ToString();
+                    carton.BatchNo = dr["batchNo"].ToString();
+                    carton.Opuser = dr["op_user"].ToString();
+                    carton.Createtime = dr["create_time"].ToString();
+                    carton.Updateser = dr["update_user"].ToString();
+                    carton.Updatetime = dr["update_time"].ToString();
+                    cartons.Add(carton);
+
+                }
+            }
+            return cartons;
         }
 
         /// <summary>
@@ -245,6 +323,28 @@ namespace DAL
         }
 
         /// <summary>
+        /// 计算已装箱数
+        /// </summary>
+        /// <param name="workno"></param>
+        /// <returns></returns>
+        public int getCartonsByWO(string workno)
+        {
+            int countNo = 0;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from t_carton_info where work_no=@workno and del_flag is null");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@workno", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = workno;
+            Object countDB = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (countDB != null && countDB != DBNull.Value)
+            {
+                countNo = int.Parse(countDB.ToString());
+            }
+            return countNo;
+        }
+
+        /// <summary>
         /// 根據箱號查詢裝箱單信息
         /// </summary>
         /// <param name="cartonNo"></param>
@@ -253,7 +353,7 @@ namespace DAL
         {
             Carton carton = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_carton_info where cartonNo=@cartonNo and del_flag is null");
+            strSql.Append("SELECT uuid,cartonNo,cartonQty,carton_status,capacity_no,packType,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,so_order,box_No,special_Field,union_Field,prodLine_val,date_code,batchNo,op_user,create_time,update_user,update_time FROM t_carton_info where cartonNo=@cartonNo and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@cartonNo", MySqlDbType.VarChar, 900),
             };
@@ -265,7 +365,6 @@ namespace DAL
                 carton.Uuid = ds.Tables[0].Rows[0]["uuid"].ToString();
                 carton.CartonNo = ds.Tables[0].Rows[0]["cartonNo"].ToString();
                 carton.CartonQty = (int)ds.Tables[0].Rows[0]["cartonQty"];
-                //carton.ProdLine.ProdlineId = ds.Tables[0].Rows[0]["prodline_id"].ToString();                 //查詢線別
                 carton.CartonStatus = ds.Tables[0].Rows[0]["carton_status"].ToString();
                 carton.CapacityNo = ds.Tables[0].Rows[0]["capacity_no"].ToString();
                 carton.PackType = ds.Tables[0].Rows[0]["packType"].ToString();
@@ -280,10 +379,9 @@ namespace DAL
                 carton.Offino = ds.Tables[0].Rows[0]["offi_no"].ToString();
                 carton.Verno = ds.Tables[0].Rows[0]["ver_no"].ToString();
                 carton.Woquantity = ds.Tables[0].Rows[0]["wo_quantity"].ToString();
-                carton.Completedqty = ds.Tables[0].Rows[0]["completed_qty"].ToString();
                 carton.Modelno = ds.Tables[0].Rows[0]["model_no"].ToString();
                 carton.SoOrder = ds.Tables[0].Rows[0]["so_order"].ToString();
-                carton.BoxNo = (int)ds.Tables[0].Rows[0]["box_No"];
+                carton.BoxNo = ds.Tables[0].Rows[0]["box_No"].ToString();
                 carton.SpecialField = ds.Tables[0].Rows[0]["special_Field"].ToString();
                 carton.UnionField = ds.Tables[0].Rows[0]["union_Field"].ToString();
                 carton.ProdLineVal = ds.Tables[0].Rows[0]["prodLine_val"].ToString();
@@ -307,7 +405,7 @@ namespace DAL
         {
             List<CtRelCarton> ctRelCartons = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_ct_carton where cartonNo=@cartonNo and del_flag is null order by create_time");
+            strSql.Append("SELECT uuid,ct_code,cartonNo,op_user,create_time,update_user,update_time FROM t_ct_carton where cartonNo=@cartonNo and del_flag is null order by create_time");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@cartonNo", MySqlDbType.VarChar, 900),
             };
@@ -391,33 +489,8 @@ namespace DAL
             return fileNo;
         }
 
-        /// <summary>
-        /// 根據裝箱單查詢最大裝箱單號
-        /// </summary>
-        /// <param name="cartonNo"></param>
-        /// <param name="workNo"></param>
-        /// <param name="cusPo"></param>
-        /// <returns></returns>
-        public string queryInspurCartonNo(string cartonNo, string workNo, String cusPo)
-        {
-            string maxCtCode = null;
-            StringBuilder strSql = new StringBuilder();
-            strSql.Append("select MAX(cartonNo) from t_carton_info where cartonNo like @cartonNo AND work_no=@workNo AND cus_po=@cusPo AND del_flag is null");
-            MySqlParameter[] parameters = {
-                new MySqlParameter("@cartonNo", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@workNo", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@cusPo", MySqlDbType.VarChar, 900)
-            };
-            parameters[0].Value = "%" + cartonNo + "%";
-            parameters[1].Value = workNo;
-            parameters[2].Value = cusPo;
-            Object maxCode = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
-            if (maxCode != null && maxCode != DBNull.Value)
-            {
-                maxCtCode = maxCode.ToString();
-            }
-            return maxCtCode;
-        }
+
+
 
 
         public string queryBatchNoWorkNo(string cartonNo, string workNo)
@@ -437,6 +510,57 @@ namespace DAL
                 maxCtCode = maxCode.ToString();
             }
             return maxCtCode;
+        }
+
+        /// <summary>
+        /// 查询该工单是否存在，计算批次
+        /// </summary>
+        /// <param name="workNo"></param>
+        /// <returns></returns>
+        public Carton queryCartonByWorkno(string workNo)
+        {
+            Carton carton = null;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT uuid,cartonNo,cartonQty,carton_status,capacity_no,packType,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,completed_qty,model_no,so_order,box_No,special_Field,union_Field,prodLine_val,date_code,batchNo,op_user,create_time,update_user,update_time FROM t_carton_info where work_no=@workNo and del_flag is null limit 1");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@workNo", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = workNo;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                carton = new Carton();
+                carton.Uuid = ds.Tables[0].Rows[0]["uuid"].ToString();
+                carton.CartonNo = ds.Tables[0].Rows[0]["cartonNo"].ToString();
+                carton.CartonQty = (int)ds.Tables[0].Rows[0]["cartonQty"];
+                carton.CartonStatus = ds.Tables[0].Rows[0]["carton_status"].ToString();
+                carton.CapacityNo = ds.Tables[0].Rows[0]["capacity_no"].ToString();
+                carton.PackType = ds.Tables[0].Rows[0]["packType"].ToString();
+                carton.Ruleno = ds.Tables[0].Rows[0]["rule_no"].ToString();
+                carton.Workno = ds.Tables[0].Rows[0]["work_no"].ToString();
+                carton.Cusno = ds.Tables[0].Rows[0]["cus_no"].ToString();
+                carton.Cusname = ds.Tables[0].Rows[0]["cus_name"].ToString();
+                carton.Cuspo = ds.Tables[0].Rows[0]["cus_po"].ToString();
+                carton.Orderqty = ds.Tables[0].Rows[0]["po_qty"].ToString();
+                carton.Cusmatno = ds.Tables[0].Rows[0]["cus_matno"].ToString();
+                carton.Delmatno = ds.Tables[0].Rows[0]["del_matno"].ToString();
+                carton.Offino = ds.Tables[0].Rows[0]["offi_no"].ToString();
+                carton.Verno = ds.Tables[0].Rows[0]["ver_no"].ToString();
+                carton.Woquantity = ds.Tables[0].Rows[0]["wo_quantity"].ToString();
+                carton.Modelno = ds.Tables[0].Rows[0]["model_no"].ToString();
+                carton.SoOrder = ds.Tables[0].Rows[0]["so_order"].ToString();
+                carton.BoxNo = ds.Tables[0].Rows[0]["box_No"].ToString();
+                carton.SpecialField = ds.Tables[0].Rows[0]["special_Field"].ToString();
+                carton.UnionField = ds.Tables[0].Rows[0]["union_Field"].ToString();
+                carton.ProdLineVal = ds.Tables[0].Rows[0]["prodLine_val"].ToString();
+                carton.Datecode = ds.Tables[0].Rows[0]["date_code"].ToString();
+                carton.BatchNo = ds.Tables[0].Rows[0]["batchNo"].ToString();
+                carton.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
+                carton.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
+                carton.Updateser = ds.Tables[0].Rows[0]["update_user"].ToString();
+                carton.Updatetime = ds.Tables[0].Rows[0]["update_time"].ToString();
+            }
+            return carton;
         }
 
         public string queryInspurMaxBox(string cartonNo, String cusNo)
@@ -461,7 +585,7 @@ namespace DAL
         /// <summary>
         /// 根據工單 計算當前箱數
         /// </summary>
-        /// <param name="roleRelMenu"></param>
+        /// <param name="workNo"></param>
         /// <returns></returns>
 
         public int queryCurrentBoxQty(String workNo)

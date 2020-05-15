@@ -79,7 +79,7 @@ namespace DAL
 
             CusRule cusRule = null; 
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select * from t_cus_codrule where cus_no=@cusNo and del_matno=@delmatno and bound_type=@BoundType and del_flag is null");
+            strSql.Append("select uuid,cus_no,del_matno,rule_no,bound_type,op_user,create_time,update_user,update_time from t_cus_codrule where cus_no=@cusNo and del_matno=@delmatno and bound_type=@BoundType and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@cusNo", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@delmatno", MySqlDbType.VarChar, 900),
@@ -102,7 +102,6 @@ namespace DAL
                 cusRule.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
                 cusRule.Updateuser = ds.Tables[0].Rows[0]["update_user"].ToString();
                 cusRule.Updatetime = ds.Tables[0].Rows[0]["update_time"].ToString();
-                cusRule.Delflag = ds.Tables[0].Rows[0]["del_flag"].ToString();
             }
             return cusRule;
         }

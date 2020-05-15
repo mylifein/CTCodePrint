@@ -58,7 +58,7 @@ namespace DAL
         {
             FieldType fieldType = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_field_type where uuid=@uuid");
+            strSql.Append("SELECT uuid,field_no,field_name,field_value,field_desc,op_user,create_time FROM t_field_type where uuid=@uuid AND del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
             };
@@ -88,7 +88,7 @@ namespace DAL
 
             List<FieldType> fieldTypeList = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_field_type WHERE field_no LIKE @field_no AND del_flag is null ");
+            strSql.Append("SELECT uuid,field_no,field_name,field_value,field_desc,op_user,create_time FROM t_field_type WHERE field_no LIKE @field_no AND del_flag is null order by create_time");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@field_no", MySqlDbType.VarChar, 900),
             };

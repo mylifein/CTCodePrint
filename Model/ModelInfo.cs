@@ -16,6 +16,7 @@ namespace Model
         private string _manno;
         private string _opuser;
         private string _createtime;
+        private string _updateuser;
         private string _updatetime;
         private string _delflag;
 
@@ -146,6 +147,19 @@ namespace Model
             set
             {
                 _delflag = value;
+            }
+        }
+
+        public string Updateuser
+        {
+            get
+            {
+                return _updateuser;
+            }
+
+            set
+            {
+                _updateuser = value;
             }
         }
     }

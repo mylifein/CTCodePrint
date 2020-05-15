@@ -14,6 +14,7 @@ namespace GenerateCTCode
         private readonly static CartonService cartonService = new CartonService();
         private readonly static CodeRuleService codeRuleService = new CodeRuleService();
         private readonly static ProdLineService prodLineService = new ProdLineService();
+        private readonly static WoBatchService woBatchService = new WoBatchService();
 
 
         public static Carton generateCartonNo(Carton carton)
@@ -145,39 +146,44 @@ namespace GenerateCTCode
 
                             break;
                         case "T015":                //年月日進制表示
-                            StringBuilder inspurTime = new StringBuilder();
-                            string inspurYearString = DateTime.Now.Year.ToString();
-                            int inspurYearInt = int.Parse(inspurYearString.Substring(inspurYearString.Length - 2)); //獲取兩位年
-                            int inspurmonthInt = DateTime.Now.Month;
-                            string dd2 = DateTime.Now.ToString("dd");                       //获得两位日
-                            inspurTime.Append(Base33Code[inspurYearInt]);
-                            inspurTime.Append(Base33Code[inspurmonthInt]);
-                            inspurTime.Append(dd2);
-                            //             ctCode.Append(inspurTime.ToString());
-                            cartonNo.Append(inspurTime.ToString());
-      
+                            cartonNo.Append(getInsuprTime());      
                             break;
-                        case "T016":                //浪潮批次号                        
-                            string batchCT = cartonService.queryInspurBoxNo(cartonNo.ToString(), carton.Workno, carton.Cuspo);
-                            string batchNo = "1";
-                            if (batchCT != null)
+                        case "T016":                        //浪潮批次号                        
+                            string woBatchNo = woBatchService.getBatchNoByWO(carton.Workno);            //查询工单批次号 
+                            string batchSeqNo = "1";
+                            if(woBatchNo != null && !woBatchNo.Equals(""))
                             {
-                                batchNo = batchCT.Substring(cartonNo.Length, 1);
+                                carton.BatchNo = woBatchNo;
+                                cartonNo.Clear();
+                                cartonNo.Append(woBatchNo);
                             }
                             else
                             {
-                                batchCT = cartonService.queryInspurMaxBoxNo(cartonNo.ToString(), carton.Cusno);
-                                if (batchCT != null)
+                                string queryCond = getInsuprTime() + "Q";
+                                List<String> batchNos = woBatchService.queryBatchNos(queryCond); 
+                                if(batchNos != null && batchNos.Count > 0)
                                 {
-                                    string tempBatchNo = batchNo = batchCT.Substring(cartonNo.Length, 1);
-                                    int tempMathNo = InverseBase34Code[tempBatchNo];
-                                    batchNo = Base34Code[tempMathNo + 1];
-                                }
-                            }
-                            cartonNo.Append(batchNo);
-                            carton.BatchNo = cartonNo.ToString();
-                            break;
+                                    int maxNo = 0;
+                                    foreach (string batchNo in batchNos)
+                                    {
 
+                                        int tempMathNo = InverseBase34Code[batchNo.Substring(batchNo.Length - 1, 1)];
+                                        if(tempMathNo > maxNo)
+                                        {
+                                            maxNo = tempMathNo;
+                                        }
+                                    }
+                                    batchSeqNo = Base34Code[maxNo + 1];
+                                }
+                                cartonNo.Append(batchSeqNo);
+                                carton.BatchNo = cartonNo.ToString();
+                                //保存工单批次
+                                WoBatch woBatch = new WoBatch();
+                                woBatch.BatchNo = carton.BatchNo;
+                                woBatch.Workno = carton.Workno;
+                                woBatchService.saveWoBatch(woBatch);                    //占用工单批次  
+                            }
+                            break;
                         case "T017":                //批次号                        
                             string selfBatchNo = cartonService.queryBatchNoWorkNo(cartonNo.ToString(), carton.Workno);
                             string batchCustom = "1";
@@ -213,7 +219,6 @@ namespace GenerateCTCode
                             h3cTime.Append(h3cYearInt);
                             h3cTime.Append(Base33Code[h3cInt]);
                             h3cTime.Append(h3cDD);
-                            //             ctCode.Append(inspurTime.ToString());
                             cartonNo.Append(h3cTime.ToString());
 
                             break;
@@ -244,7 +249,6 @@ namespace GenerateCTCode
                                 cartonNo.Append(carton10Code);
 
                             }
-
                             break;
                         case "T020":
                             string extractResult = extractString(carton.Woquantity, ruleInt);
@@ -358,6 +362,19 @@ namespace GenerateCTCode
             {   30  ,"U"}, {   31  ,"V"}, { 32,"W"},{33,"X" },{   34  ,"Y"}, { 35,"Z"},{36,"-" },{   37  ,"."}, { 38,"sp"},{39,"$" },{   40  ,"/"}, { 41,"+"},{42,"%" }
         };
 
+
+        public static string getInsuprTime()
+        {
+            StringBuilder inspurTime = new StringBuilder();
+            string inspurYearString = DateTime.Now.Year.ToString();
+            int inspurYearInt = int.Parse(inspurYearString.Substring(inspurYearString.Length - 2)); //獲取兩位年
+            int inspurmonthInt = DateTime.Now.Month;
+            string dd2 = DateTime.Now.ToString("dd");                       //获得两位日
+            inspurTime.Append(Base33Code[inspurYearInt]);
+            inspurTime.Append(Base33Code[inspurmonthInt]);
+            inspurTime.Append(dd2);
+            return inspurTime.ToString();
+        }
 
         public static string GenerateTimeCode(int length)
         {

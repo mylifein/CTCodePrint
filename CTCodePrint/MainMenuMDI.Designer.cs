@@ -67,6 +67,8 @@
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.栈板标签补印ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.品质首件质检标签ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -94,7 +96,9 @@
             this.cartonToolStripMenuItem,
             this.singCartonToolStripMenuItem,
             this.reprintCartonToolStripMenuItem,
-            this.PalletToolStripMenuItem});
+            this.PalletToolStripMenuItem,
+            this.栈板标签补印ToolStripMenuItem,
+            this.品质首件质检标签ToolStripMenuItem});
             this.fileMenu.ImageTransparentColor = System.Drawing.SystemColors.ActiveBorder;
             this.fileMenu.Name = "fileMenu";
             this.fileMenu.Size = new System.Drawing.Size(69, 24);
@@ -366,6 +370,19 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // 栈板标签补印ToolStripMenuItem
+            // 
+            this.栈板标签补印ToolStripMenuItem.Name = "栈板标签补印ToolStripMenuItem";
+            this.栈板标签补印ToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
+            this.栈板标签补印ToolStripMenuItem.Text = "栈板标签补印";
+            // 
+            // 品质首件质检标签ToolStripMenuItem
+            // 
+            this.品质首件质检标签ToolStripMenuItem.Name = "品质首件质检标签ToolStripMenuItem";
+            this.品质首件质检标签ToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
+            this.品质首件质检标签ToolStripMenuItem.Text = "品质首件质检标签";
+            this.品质首件质检标签ToolStripMenuItem.Click += new System.EventHandler(this.品质首件质检标签ToolStripMenuItem_Click);
+            // 
             // MainMenuMDI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -429,6 +446,8 @@
         private System.Windows.Forms.ToolStripMenuItem ruleBoundToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem maintainMatToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 角色权限分配ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 栈板标签补印ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 品质首件质检标签ToolStripMenuItem;
     }
 }
 

@@ -307,11 +307,38 @@ namespace CTCodePrint
                     }
                     if (mandTYpe.FieldName.ToUpper().Equals("BoxNo".ToUpper()))
                     {
-
-                        int currentNumber = cartonService.queryCurrentBoxQty(carton.Workno);
-                        carton.BoxNo = currentNumber == 0 ? 1 : currentNumber;
+                        if (mandTYpe.FieldValue.ToUpper().Equals("WorkQty".ToUpper()))                                     //当特殊字段为 四位工单流水 +  P + 4位工单数量
+                        {
+                            int currentNumber = cartonService.queryCurrentBoxQty(carton.Workno);
+                            currentNumber = currentNumber == 0 ? 1 : (currentNumber + 1);
+                            string tempStr = "";
+                            for (int i = currentNumber.ToString().Length; i < 4; i++)
+                            {
+                                tempStr = tempStr + "0";
+                            }
+                            string prefix = tempStr + currentNumber.ToString();
+                            string tempStr2 = "";
+                            for (int i = carton.Woquantity.Length; i < 4; i++)
+                            {
+                                tempStr2 = tempStr2 + "0";
+                            }
+                            string suffix = tempStr2 + carton.Woquantity;
+                            carton.BoxNo = prefix + "P/" + suffix;
+                        }
+                        else
+                        {
+                            int currentNumber = cartonService.queryCurrentBoxQty(carton.Workno);
+                            currentNumber = currentNumber == 0 ? 1 : (currentNumber + 1);
+                            string tempStr = "";
+                            for (int i = currentNumber.ToString().Length; i < 3; i++)
+                            {
+                                tempStr = tempStr + "0";
+                            }
+                            carton.BoxNo = tempStr + currentNumber.ToString();
+                        }
                     }
                 }
+                carton = GenerateCarton.generateCartonNo(carton);
                 bool judgePrint = true;
                 for (int i = 0; i < 2; i++)
                 {
@@ -410,7 +437,6 @@ namespace CTCodePrint
                     carton.Verno = firstScan.Verno;
                     carton.Woquantity = firstScan.Woquantity;
                     carton.SoOrder = firstScan.SoOrder;
-                    carton.Completedqty = firstScan.Completedqty;
 
                     //編碼規則查詢
 

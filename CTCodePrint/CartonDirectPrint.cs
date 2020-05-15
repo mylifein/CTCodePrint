@@ -41,7 +41,10 @@ namespace CTCodePrint
 
         private void button1_Click(object sender, EventArgs e)
         {
-            printCarton();
+            for (int i = 0; i < this.numericUpDown2.Value; i++)
+            {
+                printCarton();
+            }
         }
 
         private void CreateRules_Load(object sender, EventArgs e)
@@ -76,101 +79,107 @@ namespace CTCodePrint
             this.comboBox6.DisplayMember = "Name";
             this.comboBox6.ValueMember = "Value";
             this.comboBox6.DataSource = itemTable2;
+            this.numericUpDown3.Value = 2;              //设置默认打印张数：2
+            this.numericUpDown2.Value = 1;
         }
 
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
-
-            if (this.textBox1.Text == null || this.textBox1.Text.Trim() == "")
+            if (e.KeyCode == Keys.Enter)
             {
-                this.textBox1.Focus();
-                return;
-            }
-            string workno = this.textBox1.Text.Trim();
-            List<WorkOrderInfo> workOrderInfos = queryB.getWorkInfoByNo(workno.ToUpper());
-            if (workOrderInfos != null && workOrderInfos.Count > 0)
-            {
-
-                carton = new Carton();
-                this.comboBox3.DataSource = workOrderInfos;
-                this.comboBox3.DisplayMember = "CustPO";                                    //PO                    
-                this.comboBox3.ValueMember = "OrderQty";                                    //QTY
-                this.textBox4.Text = workOrderInfos[0].StartQty;
-                this.textBox6.Text = workOrderInfos[0].CustName;                            
-                this.textBox7.Text = workOrderInfos[0].CustId;                              
-                this.textBox8.Text = workOrderInfos[0].ItemCode;                          
-                this.textBox13.Text = workOrderInfos[0].OrderQty;                           
-                if (workOrderInfos[0].CusItemNum != null && workOrderInfos[0].CusItemNum.Trim() != "")
+                if (this.textBox1.Text == null || this.textBox1.Text.Trim() == "")
                 {
-                    this.textBox9.Text = workOrderInfos[0].CusItemNum;
-                    carton.Cusmatno = workOrderInfos[0].CusItemNum;
+                    this.textBox1.Focus();
+                    return;
                 }
-                else
+                string workno = this.textBox1.Text.Trim();
+                List<WorkOrderInfo> workOrderInfos = queryB.getWorkInfoByNo(workno.ToUpper());
+                if (workOrderInfos != null && workOrderInfos.Count > 0)
                 {
-                    List<CusMatInfo> cusMatInfos = queryB.getCusMatInfo(workno);
-                    if (cusMatInfos.Count > 0)
+
+                    carton = new Carton();
+                    this.comboBox3.DataSource = workOrderInfos;
+                    this.comboBox3.DisplayMember = "CustPO";                                    //PO                    
+                    this.comboBox3.ValueMember = "OrderQty";                                    //QTY
+                    this.textBox4.Text = workOrderInfos[0].StartQty;
+                    this.textBox6.Text = workOrderInfos[0].CustName;
+                    this.textBox7.Text = workOrderInfos[0].CustId;
+                    this.textBox8.Text = workOrderInfos[0].ItemCode;
+                    this.textBox13.Text = workOrderInfos[0].OrderQty;
+                    if (workOrderInfos[0].CusItemNum != null && workOrderInfos[0].CusItemNum.Trim() != "")
                     {
-                        this.textBox9.Text = cusMatInfos[0].CusItemCode;
-                        carton.Cusmatno = cusMatInfos[0].CusItemCode;
-                        this.textBox11.Text = cusMatInfos[0].CusItemDesc;
-                        carton.CusmatDesc = cusMatInfos[0].CusItemDesc;
+                        this.textBox9.Text = workOrderInfos[0].CusItemNum;
+                        carton.Cusmatno = workOrderInfos[0].CusItemNum;
+                    }
+                    else
+                    {
+                        List<CusMatInfo> cusMatInfos = queryB.getCusMatInfo(workno);
+                        if (cusMatInfos != null && cusMatInfos.Count > 0)
+                        {
+                            this.textBox9.Text = cusMatInfos[0].CusItemCode;
+                            carton.Cusmatno = cusMatInfos[0].CusItemCode;
+                            this.textBox11.Text = cusMatInfos[0].CusItemDesc;
+                            carton.CusmatDesc = cusMatInfos[0].CusItemDesc;
+
+                        }
+                    }
+                    Capacity capacity = capacityService.queryByRelation(workOrderInfos[0].CustId, workOrderInfos[0].ItemCode, "1");
+                    //下载打印模板 並初始化Carton 基本信息
+                    this.comboBox4.DisplayMember = "Revision";
+                    this.comboBox4.ValueMember = "Revision";
+                    this.comboBox4.DataSource = queryB.getRevisionInfo(workno);
+
+                    this.comboBox5.DataSource = workOrderInfos;
+                    this.comboBox5.DisplayMember = "SoOrder";                        //SO                 
+                    this.comboBox5.ValueMember = "SoOrder";
+
+                    carton.Workno = workno.ToUpper();
+                    carton.Delmatno = workOrderInfos[0].ItemCode;
+                    carton.Cusno = workOrderInfos[0].CustId;
+                    carton.PackType = "1";                  //包裝類型：0 整機， 1單出
+                    carton.Cusname = workOrderInfos[0].CustName;
+                    carton.Orderqty = workOrderInfos[0].OrderQty;
+                    carton.Woquantity = workOrderInfos[0].StartQty;
+                    carton.SoOrder = workOrderInfos[0].SoOrder;
+                    carton.Cuspo = workOrderInfos[0].CustPO;
+                    if (capacity != null)
+                    {
+                        this.countBoxQty(capacity.Capacityqty);
+                        carton.CapacityNo = capacity.Capacityno;
+                        this.textBox12.Text = capacity.Capacitydesc;
+                        this.textBox14.Text = capacity.Capacityqty.ToString();    
+                                                               
+                    }
+                    CusRule cusRule = cusRuleService.queryCusRuleByCond(carton.Cusno, carton.Delmatno, "1");                //1代表裝箱單編碼規則;
+                    if (cusRule != null && cusRule.Ruleno != "")
+                    {
+                        CodeRule codeRule = codeRuleService.queryRuleById(cusRule.Ruleno);
+                        this.textBox2.Text = codeRule.RuleDesc;
+                        carton.Ruleno = codeRule.Ruleno;
+                    }
+                    ProdLine prodLine = new ProdLine();
+                    carton.ProdLine = prodLine;
+                    carton.ProdLine.ProdlineId = this.comboBox2.SelectedValue.ToString();
+                    carton.Modelno = cartonService.queryFileNo(carton.Cusno, carton.Delmatno, "1");                //TYPE= 1 為裝箱單模板
+                    carton.CartonStatus = "0";
+                    carton = GenerateCarton.generateCartonNo(carton);
+                    //顯示箱號：
+                    this.textBox10.Text = carton.CartonNo;
+                    this.textBox5.Text = cartonService.getCartonQtyByWO(carton.Workno);
+                    this.textBox3.Text = carton.BatchNo;
+      
+                    //下載模板並預覽
+                    ModelFile modelFile = modelInfoService.queryModelFileByNo(carton.Modelno);
+                    if (modelFile != null)
+                    {
+                        filePath = Auxiliary.downloadModelFile(modelFile);
+                        string pictureFile = barPrint.PreviewPrintBC(filePath);
+                        this.pictureBox1.Load(pictureFile);
 
                     }
-                }
-                Capacity capacity = capacityService.queryByRelation(workOrderInfos[0].CustId, workOrderInfos[0].ItemCode,"1");
-                //下载打印模板 並初始化Carton 基本信息
-                this.comboBox4.DisplayMember = "Revision";
-                this.comboBox4.ValueMember = "Revision";
-                this.comboBox4.DataSource = queryB.getRevisionInfo(workno);
-
-                this.comboBox5.DataSource = workOrderInfos;
-                this.comboBox5.DisplayMember = "SoOrder";                        //SO                 
-                this.comboBox5.ValueMember = "SoOrder";
-
-                carton.Workno = workno.ToUpper();
-                carton.Delmatno = workOrderInfos[0].ItemCode;
-                carton.Cusno = workOrderInfos[0].CustId;
-                carton.PackType = "1";                  //包裝類型：0 整機， 1單出
-                carton.Cusname = workOrderInfos[0].CustName;
-                carton.Orderqty = workOrderInfos[0].OrderQty;
-                carton.Woquantity = workOrderInfos[0].StartQty;
-                carton.SoOrder = workOrderInfos[0].SoOrder;
-                carton.Completedqty = workOrderInfos[0].CompletedQty;            //CUST_PO_NUMBER
-                carton.Cuspo = workOrderInfos[0].CustPO;
-                carton.Verno = "A10";
-                carton.CapacityNo = capacity.Capacityno;
-                if (capacity != null)
-                {
-                    this.countBoxQty(capacity);
-                }
-                CusRule cusRule = cusRuleService.queryCusRuleByCond(carton.Cusno, carton.Delmatno, "1");                //1代表裝箱單編碼規則;
-                if (cusRule != null && cusRule.Ruleno != "")
-                {
-                    CodeRule codeRule = codeRuleService.queryRuleById(cusRule.Ruleno);
-                    this.textBox2.Text = codeRule.RuleDesc;
-                    carton.Ruleno = codeRule.Ruleno;
-                }
-                ProdLine prodLine = new ProdLine();
-                carton.ProdLine = prodLine;
-                carton.ProdLine.ProdlineId = this.comboBox2.SelectedValue.ToString();
-                carton.Modelno = cartonService.queryFileNo(carton.Cusno, carton.Delmatno, "1");                //TYPE= 1 為裝箱單模板
-                carton.CartonStatus = "0";
-                carton = GenerateCarton.generateCartonNo(carton);
-                //顯示箱號：
-                this.textBox10.Text = carton.CartonNo;
-                this.textBox5.Text = cartonService.getCartonQtyByWO(carton.Workno);
-                this.textBox3.Text = carton.BatchNo;
-                //下載模板並預覽
-                ModelFile modelFile = modelInfoService.queryModelFileByNo(carton.Modelno);
-                if (modelFile != null)
-                {
-                    filePath = Auxiliary.downloadModelFile(modelFile);
-                    string pictureFile = barPrint.PreviewPrintBC(filePath);
-                    this.pictureBox1.Load(pictureFile);
 
                 }
-
             }
 
         }
@@ -196,17 +205,22 @@ namespace CTCodePrint
         ///  计算装箱容量 上限
         /// </summary>
         /// <param name="capacity"></param>
-        private void countBoxQty(Capacity capacity)
+        private void countBoxQty(int capacity)
         {
             if (capacity != null)
             {
-                int packedQty = int.Parse(cartonService.getCartonQtyByWO(carton.Workno));   //已装箱数量
+                int packedQty = int.Parse(cartonService.getCartonQtyByWO(carton.Workno));                   //已装箱数量
                 int workQty = int.Parse(this.textBox4.Text);
                 int surplus = workQty - packedQty;
-                if (surplus > capacity.Capacityqty)
+                //计算剩余可装箱数
+                int countBoxs = (int)Math.Ceiling((double)surplus / capacity);
+                this.numericUpDown2.Maximum = countBoxs;
+                this.textBox15.Text = cartonService.getCartonsByWO(carton.Workno).ToString();               //计算已装箱数
+                this.textBox16.Text = countBoxs.ToString();
+                if (surplus > capacity)
                 {
-                    this.numericUpDown1.Maximum = capacity.Capacityqty;
-                    this.numericUpDown1.Value = capacity.Capacityqty;
+                    this.numericUpDown1.Maximum = capacity;
+                    this.numericUpDown1.Value = capacity;
                 }
                 else
                 {
@@ -240,9 +254,11 @@ namespace CTCodePrint
             carton.ProdLine.ProdlineId = this.comboBox2.SelectedValue.ToString();                  //打印時 獲得線別編號
             carton.ProdLineVal = this.comboBox2.Text;
             carton.CartonQty = (int)this.numericUpDown1.Value;                        //裝箱單數量
-            carton.Datecode = DateTime.Now.ToString(comboBox6.Text);
+            carton.Datecode = dateTimePicker1.Value.ToString(comboBox6.Text);
+            this.countBoxQty(carton.CartonQty);
             carton = GenerateCarton.generateCartonNo(carton);
             this.textBox10.Text = carton.CartonNo;
+            
             foreach (MandUnionFieldType mandTYpe in mandUnionFieldTypeList)
             {
                 if (mandTYpe.FieldName.ToUpper().Equals("SpecialField".ToUpper()))
@@ -273,14 +289,40 @@ namespace CTCodePrint
                 }
                 if (mandTYpe.FieldName.ToUpper().Equals("BoxNo".ToUpper()))
                 {
-
-                    int currentNumber = cartonService.queryCurrentBoxQty(carton.Workno);
-                    carton.BoxNo = currentNumber == 0 ? 1 : currentNumber;
+                    if (mandTYpe.FieldValue.ToUpper().Equals("WorkQty".ToUpper()))                                     //当特殊字段为 四位工单流水 +  P + 4位工单数量
+                    {
+                        int currentNumber = cartonService.queryCurrentBoxQty(carton.Workno);
+                        currentNumber = currentNumber == 0 ? 1 : (currentNumber + 1);
+                        string tempStr = "";
+                        for (int i = currentNumber.ToString().Length; i < 4; i++)
+                        {
+                            tempStr = tempStr + "0";
+                        }
+                        string prefix = tempStr + currentNumber.ToString();
+                        string tempStr2 = "";
+                        for (int i = carton.Woquantity.Length; i < 4; i++)
+                        {
+                            tempStr2 = tempStr2 + "0";
+                        }
+                        string suffix = tempStr2 + carton.Woquantity;
+                        carton.BoxNo = prefix + "P/" + suffix;
+                    }
+                    else
+                    {
+                        int currentNumber = cartonService.queryCurrentBoxQty(carton.Workno);
+                        currentNumber = currentNumber == 0 ? 1 : (currentNumber + 1);
+                        string tempStr = "";
+                        for (int i = currentNumber.ToString().Length; i < 3; i++)
+                        {
+                            tempStr = tempStr + "0";
+                        }
+                        carton.BoxNo = tempStr + currentNumber.ToString();
+                    }
                 }
             }
 
             bool judgePrint = true;
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < this.numericUpDown3.Value; i++)
             {
                 judgePrint = barPrint.printCatonByModel(filePath, carton, mandUnionFieldTypeList);
             }

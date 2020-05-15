@@ -55,45 +55,68 @@ namespace CTCodePrint
         {
             string queryValue = this.textBox1.Text;
             string queryCondi = this.comboBox1.SelectedValue == null ? "1" : this.comboBox1.SelectedValue.ToString();
-            DataSet ds = cartonService.getCartonsInfo(queryCondi, queryValue);
-            if (ds != null && ds.Tables.Count > 0)
+            List<Carton> cartons = cartonService.getCartonsInfo(queryCondi, queryValue);
+            if (cartons != null)
             {
-                this.dataGridView1.DataSource = ds.Tables[0];
+                this.dataGridView1.DataSource = cartons;
 
 
                 //DGV 改變列名,列寬
                 this.dataGridView1.Columns[0].Visible = false;
                 this.dataGridView1.Columns[0].Width = 0;
-                this.dataGridView1.Columns[1].HeaderText = "裝箱單號";
-                this.dataGridView1.Columns[1].Width = 172;
-                this.dataGridView1.Columns[2].HeaderText = "規則號";
-                this.dataGridView1.Columns[2].Width = 172;
-                this.dataGridView1.Columns[3].HeaderText = "工單號";
-                this.dataGridView1.Columns[3].Width = 105;
-                this.dataGridView1.Columns[4].HeaderText = "客戶號";
-                this.dataGridView1.Columns[4].Width = 105;
-                this.dataGridView1.Columns[5].HeaderText = "客戶PO";
-                this.dataGridView1.Columns[5].Width = 112;
-                this.dataGridView1.Columns[6].HeaderText = "客戶料號";
+                this.dataGridView1.Columns[1].HeaderText = "箱号";
+                this.dataGridView1.Columns[1].Width = 150;
+                this.dataGridView1.Columns[2].HeaderText = "装箱数量";
+                this.dataGridView1.Columns[2].Width = 112;
+                this.dataGridView1.Columns[3].Visible = false;
+                this.dataGridView1.Columns[4].Visible = false;
+                this.dataGridView1.Columns[5].Visible = false;
+                this.dataGridView1.Columns[6].HeaderText = "工单号";
                 this.dataGridView1.Columns[6].Width = 112;
-                this.dataGridView1.Columns[7].HeaderText = "出貨料號";
-                this.dataGridView1.Columns[7].Width = 112;
-                this.dataGridView1.Columns[8].HeaderText = "正式編號";
+                this.dataGridView1.Columns[7].Visible = false;
+                this.dataGridView1.Columns[8].HeaderText = "客户PO";
                 this.dataGridView1.Columns[8].Width = 112;
-                this.dataGridView1.Columns[9].HeaderText = "版本號";
-                this.dataGridView1.Columns[9].Width = 112;
-                this.dataGridView1.Columns[10].HeaderText = "工單數量";
+                this.dataGridView1.Columns[9].Visible = false;
+                this.dataGridView1.Columns[10].HeaderText = "客户料号";
                 this.dataGridView1.Columns[10].Width = 112;
-                this.dataGridView1.Columns[11].Visible = false;
-                this.dataGridView1.Columns[11].Width = 0;
-                this.dataGridView1.Columns[12].HeaderText = "模板號";
-                this.dataGridView1.Columns[12].Width = 112;
-                this.dataGridView1.Columns[13].HeaderText = "創建時間";
-                this.dataGridView1.Columns[13].Width = 112;
-                this.dataGridView1.Columns[14].Visible = false;
-                this.dataGridView1.Columns[14].Width = 0;
+                this.dataGridView1.Columns[11].HeaderText = "出货料号";
+                this.dataGridView1.Columns[11].Width = 112;
+                this.dataGridView1.Columns[12].Visible = false;
+                this.dataGridView1.Columns[13].Visible = false;
+                this.dataGridView1.Columns[14].HeaderText = "工单数量";
+                this.dataGridView1.Columns[14].Width = 112;
                 this.dataGridView1.Columns[15].Visible = false;
-                this.dataGridView1.Columns[15].Width = 0;
+                this.dataGridView1.Columns[16].Visible = false;
+                this.dataGridView1.Columns[17].Visible = false;
+                this.dataGridView1.Columns[18].Visible = false;
+                this.dataGridView1.Columns[19].Visible = false;
+                this.dataGridView1.Columns[20].Visible = false;
+                this.dataGridView1.Columns[21].Visible = false;
+                this.dataGridView1.Columns[22].Visible = false;
+                this.dataGridView1.Columns[23].Visible = false;
+                this.dataGridView1.Columns[24].Visible = false;
+                this.dataGridView1.Columns[25].Visible = false;
+                this.dataGridView1.Columns[26].Visible = false;
+                this.dataGridView1.Columns[27].Visible = false;
+                this.dataGridView1.Columns[28].Visible = false;
+                this.dataGridView1.Columns[29].Visible = false;
+                this.dataGridView1.Columns[30].Visible = false;
+                this.dataGridView1.Columns[31].Visible = false;
+                this.dataGridView1.Columns[32].Visible = false;
+                this.dataGridView1.Columns[33].HeaderText = "客户名称";
+                this.dataGridView1.Columns[33].Width = 112;
+                this.dataGridView1.Columns[34].Visible = false;
+                this.dataGridView1.Columns[35].Visible = false;
+                this.dataGridView1.Columns[36].Visible = false;
+                this.dataGridView1.Columns[37].HeaderText = "批次号";
+                this.dataGridView1.Columns[37].Width = 112;
+                this.dataGridView1.Columns[38].HeaderText = "工单箱数";
+                this.dataGridView1.Columns[38].Width = 112;
+                this.dataGridView1.Columns[39].Visible = false;
+                this.dataGridView1.Columns[40].Visible = false;
+                this.dataGridView1.Columns[41].Visible = false;
+                this.dataGridView1.Columns[42].Visible = false;
+                this.dataGridView1.Columns[43].Visible = false;
             }
         }
 
@@ -106,9 +129,9 @@ namespace CTCodePrint
                 return;
             }
             int index = this.dataGridView1.CurrentRow.Index;
-            string modelNo = this.dataGridView1.Rows[index].Cells["model_no"].Value.ToString();
-            string cusNo = this.dataGridView1.Rows[index].Cells["cus_no"].Value.ToString();
-            string delMatno = this.dataGridView1.Rows[index].Cells["del_matno"].Value.ToString();
+            string modelNo = this.dataGridView1.Rows[index].Cells["Modelno"].Value.ToString();
+            string cusNo = this.dataGridView1.Rows[index].Cells["Cusno"].Value.ToString();
+            string delMatno = this.dataGridView1.Rows[index].Cells["Delmatno"].Value.ToString();
             ModelFile modelFile = modelInfoService.queryModelFileByNo(modelNo);
             if (modelFile == null)
             {
@@ -129,7 +152,7 @@ namespace CTCodePrint
                 MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            string cartonNo = this.dataGridView1.Rows[index].Cells["cartonNo"].Value.ToString();
+            string cartonNo = this.dataGridView1.Rows[index].Cells["CartonNo"].Value.ToString();
             Carton carton = cartonService.queryCartonDetailsByNo(cartonNo);
             if(carton.CtCodeList != null)
             {

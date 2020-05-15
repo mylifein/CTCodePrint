@@ -47,7 +47,7 @@ namespace DAL
         {
             ManRelFieldType manRelFieldType = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_mand_relfieldtype where uuid=@uuid");
+            strSql.Append("SELECT uuid,man_no,field_no,op_user,create_time,update_user,update_time FROM t_mand_relfieldtype where uuid=@uuid and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
             };
@@ -61,6 +61,7 @@ namespace DAL
                 manRelFieldType.FieldNo = ds.Tables[0].Rows[0]["field_no"].ToString();
                 manRelFieldType.OpUser = ds.Tables[0].Rows[0]["op_user"].ToString();
                 manRelFieldType.CreateTime = ds.Tables[0].Rows[0]["create_time"].ToString();
+                manRelFieldType.Updateuser = ds.Tables[0].Rows[0]["update_user"].ToString();
                 manRelFieldType.UpdateTime = ds.Tables[0].Rows[0]["update_time"].ToString();
             }
             return manRelFieldType;

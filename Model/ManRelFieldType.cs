@@ -12,6 +12,7 @@ namespace Model
         private string _fieldNo;
         private string _opUser;
         private string _createTime;
+        private string _updateuser;
         private string _updateTime;
         private string _delFlag;
 
@@ -103,6 +104,19 @@ namespace Model
             set
             {
                 _delFlag = value;
+            }
+        }
+
+        public string Updateuser
+        {
+            get
+            {
+                return _updateuser;
+            }
+
+            set
+            {
+                _updateuser = value;
             }
         }
     }

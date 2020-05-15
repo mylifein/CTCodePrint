@@ -5,15 +5,15 @@ using System.Text;
 
 namespace Model
 {
-    public class RoleRelMenu
+    public class WoBatch
     {
         private string _uuid;
-        private string _roleno;
-        private string _menuName;
-        private string _menuDesc;
+        private string _workno;
+        private string _batchNo;
+        private string _batchType;
         private string _opuser;
         private string _createtime;
-        private string _updateUser;
+        private string _updateser;
         private string _updatetime;
         private string _delflag;
 
@@ -30,20 +30,31 @@ namespace Model
             }
         }
 
-        public string Roleno
+        public string BatchNo
         {
             get
             {
-                return _roleno;
+                return _batchNo;
             }
 
             set
             {
-                _roleno = value;
+                _batchNo = value;
             }
         }
 
+        public string BatchType
+        {
+            get
+            {
+                return _batchType;
+            }
 
+            set
+            {
+                _batchType = value;
+            }
+        }
 
         public string Opuser
         {
@@ -68,6 +79,19 @@ namespace Model
             set
             {
                 _createtime = value;
+            }
+        }
+
+        public string Updateser
+        {
+            get
+            {
+                return _updateser;
+            }
+
+            set
+            {
+                _updateser = value;
             }
         }
 
@@ -97,42 +121,16 @@ namespace Model
             }
         }
 
-        public string MenuName
+        public string Workno
         {
             get
             {
-                return _menuName;
+                return _workno;
             }
 
             set
             {
-                _menuName = value;
-            }
-        }
-
-        public string MenuDesc
-        {
-            get
-            {
-                return _menuDesc;
-            }
-
-            set
-            {
-                _menuDesc = value;
-            }
-        }
-
-        public string UpdateUser
-        {
-            get
-            {
-                return _updateUser;
-            }
-
-            set
-            {
-                _updateUser = value;
+                _workno = value;
             }
         }
     }

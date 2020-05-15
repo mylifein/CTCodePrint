@@ -23,6 +23,7 @@ namespace CTCodePrint
         }
         private Carton firstCarton;
         private Pallet pallet;
+        private Capacity capacity;
 
         private List<Carton> cartonList = new List<Carton>();
         private readonly CartonService cartonService = new CartonService();
@@ -30,10 +31,12 @@ namespace CTCodePrint
         private readonly MandRelDelService mandRelDelService = new MandRelDelService();                  //查詢模板的参数字段
         private readonly ManRelFieldTypeService manRelFieldTypeService = new ManRelFieldTypeService();  //根據字段規則 查詢字段規則值
         private readonly ModelInfoService modelInfoService = new ModelInfoService();                    //查詢模板內容並下載
-        private readonly PrintModelQ printQ = new PrintModelQ();
-        private readonly SelectQuery selectQ = new SelectQuery();
+        private readonly FileRelDelService fileRelDelService = new FileRelDelService();                 //查詢模板的文件編號
+        private readonly CodeRuleService codeRuleService = new CodeRuleService();                       //查询编码规则
+        private readonly CusRuleService cusRuleService = new CusRuleService();
         private readonly PalletService palletService = new PalletService();
-            
+        private readonly CapacityService capacityService = new CapacityService();
+
 
         private string filePath = null;
 
@@ -95,15 +98,7 @@ namespace CTCodePrint
 
         }
 
-        private void label2_Click(object sender, EventArgs e)
-        {
 
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -120,83 +115,119 @@ namespace CTCodePrint
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
-
-            if (this.textBox1.Text == null || this.textBox1.Text.Trim() == "")
+            if (e.KeyCode == Keys.Enter)
             {
-                //MessageBox.Show("規則描述不能為空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.textBox1.Focus();
-                return;
-            }
-            Carton carton = cartonService.queryCartonByCartonNo(this.textBox1.Text.Trim());
-            if (carton != null)
-            {
-                if (!carton.CartonStatus.Equals("0"))
+                if (this.textBox1.Text == null || this.textBox1.Text.Trim() == "")
                 {
-                    MessageBox.Show("該裝箱單碼已綁定，請檢查！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.textBox1.Text = "";
                     this.textBox1.Focus();
                     return;
                 }
-                if (this.dataGridView1.Rows.Count == 0)
+                Carton carton = cartonService.queryCartonByCartonNo(this.textBox1.Text.Trim());
+                if (carton != null)
                 {
-                    pallet = new Pallet();
-                    firstCarton = carton;
-                    this.textBox2.Text = carton.Workno;
-                    int index = this.dataGridView1.Rows.Add();
-                    initRow(index, carton);
-                    //初始化信息
-                    this.textBox3.Text = this.dataGridView1.Rows.Count.ToString();
-                    this.textBox4.Text = firstCarton.Woquantity;
-                    //根據工單號查詢已裝箱數量；
-                    this.textBox6.Text = firstCarton.Cusname;
-                    this.textBox7.Text = firstCarton.Cusno;
-                    this.textBox8.Text = firstCarton.Delmatno;
-                    this.textBox9.Text = firstCarton.Cusmatno;
-
-                    //下载打印模板 並初始化Carton 基本信息
-
-                    pallet.WoNo = firstCarton.Workno;
-                    pallet.Delmatno = firstCarton.Delmatno;         //浪潮默認規則 編號R007         棧板規則使用默認編碼規則
-                    pallet.Cusmatno = firstCarton.Cusmatno;             
-                    pallet.Modelno = "F005";                //浪潮默認使用的打印模板
-                    pallet = GeneratePallet.generatePalletNo(pallet);
-
-
-                    //顯示棧板號：
-                    this.textBox10.Text = pallet.PalletNo;
-                    this.textBox5.Text = carton.CartonQty.ToString();
-                    //下載模板並預覽
-                    ModelFile modelFile = modelInfoService.queryModelFileByNo(pallet.Modelno);
-                    if (modelFile != null)
+                    if (!carton.CartonStatus.Equals("0"))
                     {
-                        filePath = Auxiliary.downloadModelFile(modelFile);
-                        string pictureFile = barPrint.PreviewPrintBC(filePath);
-                        this.pictureBox1.Load(pictureFile);
-
+                        MessageBox.Show("該裝箱單碼已綁定，請檢查！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.textBox1.Text = "";
+                        this.textBox1.Focus();
+                        return;
                     }
-
-                }
-                else
-                {
-                    if (carton.Workno.Trim().Equals(this.firstCarton.Workno.Trim()))
+                    if (this.dataGridView1.Rows.Count == 0)
                     {
-                        if (!checkRepeat(carton.CartonNo))
+                        pallet = new Pallet();
+                        firstCarton = carton;
+                        this.textBox2.Text = carton.Workno;
+                        int index = this.dataGridView1.Rows.Add();
+                        initRow(index, carton);
+                        //初始化信息
+                        this.textBox3.Text = this.dataGridView1.Rows.Count.ToString();
+                        this.textBox4.Text = firstCarton.Woquantity;
+                        //根據工單號查詢已裝箱數量；
+                        this.textBox6.Text = firstCarton.Cusname;
+                        this.textBox7.Text = firstCarton.Cusno;
+                        this.textBox8.Text = firstCarton.Delmatno;
+                        this.textBox9.Text = firstCarton.Cusmatno;
+                        this.textBox15.Text = firstCarton.Cuspo;
+
+                        //下载打印模板 並初始化Carton 基本信息
+
+                        pallet.Workno = firstCarton.Workno;
+                        pallet.Delmatno = firstCarton.Delmatno;                             //浪潮默認規則 編號R007         棧板規則使用默認編碼規則
+                        pallet.Cusmatno = firstCarton.Cusmatno;
+                        pallet.Cuspo = firstCarton.Cuspo;
+                        
+                        FileRelDel fileRelDel = fileRelDelService.queryFileRelDelCusNo(firstCarton.Cusno, firstCarton.Delmatno, "2");
+                        if (fileRelDel != null)
                         {
-                            int index = this.dataGridView1.Rows.Add();
-                            initRow(index, carton);
-                            this.textBox3.Text = this.dataGridView1.Rows.Count.ToString();
-                            this.textBox5.Text = countQty(cartonList).ToString();
+                            pallet.Modelno = fileRelDel.FileNo;
+                        }
+                        pallet.Cusno = firstCarton.Cusno;
+                        CusRule cusRule = cusRuleService.queryCusRuleByCond(firstCarton.Cusno, firstCarton.Delmatno, "2");                //1代表裝箱單編碼規則;
+                        if (cusRule != null && cusRule.Ruleno != "")
+                        {
+                            CodeRule codeRule = codeRuleService.queryRuleById(cusRule.Ruleno);
+                            this.textBox13.Text = codeRule.RuleDesc;
+                            pallet.Ruleno = codeRule.Ruleno;
+                        }
+                        pallet = GeneratePallet.generatePalletNo(pallet);
+
+
+                        //顯示棧板號：
+                        this.textBox10.Text = pallet.PalletNo;
+                        this.textBox11.Text = pallet.BatchNo;
+                        this.textBox5.Text = carton.CartonQty.ToString();
+                        //下載模板並預覽
+                        ModelFile modelFile = modelInfoService.queryModelFileByNo(pallet.Modelno);
+                        if (modelFile != null)
+                        {
+                            filePath = Auxiliary.downloadModelFile(modelFile);
+                            string pictureFile = barPrint.PreviewPrintBC(filePath);
+                            this.pictureBox1.Load(pictureFile);
+                        }
+
+                        capacity = capacityService.queryByRelation(firstCarton.Cusno, firstCarton.Delmatno,"2");
+                        if (capacity != null)
+                        {
+                            pallet.CapacityNo = capacity.Capacityno;
+                            this.textBox12.Text = capacity.Capacitydesc;
+                            this.textBox14.Text = capacity.Capacityqty.ToString();
                         }
 
                     }
+                    else
+                    {
+                        if (carton.Workno.Trim().Equals(this.firstCarton.Workno.Trim()))
+                        {
+                            if (!checkRepeat(carton.CartonNo))
+                            {
+                                int index = this.dataGridView1.Rows.Add();
+                                initRow(index, carton);
+                                this.textBox3.Text = this.dataGridView1.Rows.Count.ToString();
+                                this.textBox5.Text = countQty(cartonList).ToString();
+                            }
+
+                        }
+                    }
+                    if (capacity != null)
+                    {
+                        //扫码数量等于容量时打印标签
+                        if (this.dataGridView1.Rows.Count == capacity.Capacityqty)
+                        {
+                            printCarton();
+                        }
+                    }
+                    else
+                    {
+                        if (this.dataGridView1.Rows.Count == 50)
+                        {
+                            printCarton();
+                        }
+                    }
                 }
-                if(this.dataGridView1.Rows.Count == 2)
+                else
                 {
-                    printCarton();
+                    this.textBox1.Text = "";
                 }
-            }else
-            {
-                this.textBox1.Text = "";
             }
 
 
@@ -224,7 +255,7 @@ namespace CTCodePrint
 
         public bool checkRepeat(string cartonNo)
         {
-            foreach(Carton compareValue in cartonList)
+            foreach (Carton compareValue in cartonList)
             {
                 if (compareValue.CartonNo.Equals(cartonNo))
                 {
@@ -232,7 +263,7 @@ namespace CTCodePrint
                 }
             }
             return false;
-                    
+
         }
 
 
@@ -241,10 +272,26 @@ namespace CTCodePrint
 
         private void clearAll()
         {
+            cartonList = new List<Carton>();
+            firstCarton = null;
+            pallet = null;
+            capacity = null;
             this.dataGridView1.Rows.Clear();                //清除視圖
-            this.textBox2.Text = "";                        //清除文本內容
+            this.textBox1.Text = "";
+            this.textBox2.Text = "";
+            this.textBox3.Text = "";
             this.textBox4.Text = "";
-            
+            this.textBox5.Text = "";
+            this.textBox6.Text = "";
+            this.textBox7.Text = "";
+            this.textBox8.Text = "";
+            this.textBox9.Text = "";
+            this.textBox10.Text = "";                        
+            this.textBox11.Text = "";
+            this.textBox12.Text = "";
+            this.textBox13.Text = "";
+            this.textBox14.Text = "";
+            this.textBox15.Text = "";
 
         }
 
@@ -256,7 +303,7 @@ namespace CTCodePrint
             //打印装箱单号
             if (this.dataGridView1.Rows.Count > 0)
             {
-                MandRelDel mandRelDel = mandRelDelService.queryManNoByDel(pallet.CusNo, pallet.Delmatno, "2");
+                MandRelDel mandRelDel = mandRelDelService.queryManNoByDel(pallet.Cusno, pallet.Delmatno, "2");
                 if (mandRelDel == null)
                 {
                     MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -271,10 +318,9 @@ namespace CTCodePrint
                     this.textBox2.Focus();
                     return;
                 }
-                //carton.CartonQty = Convert.ToInt32(this.textBox3.Text.Trim());                         //裝箱單數量
- 
                 pallet.CartonList = cartonList;
                 pallet.PalletQty = countQty(cartonList);
+                pallet = GeneratePallet.generatePalletNo(pallet);
                 bool judgePrint = barPrint.printPalletByModel(filePath, pallet, mandUnionFieldTypeList);
                 if (judgePrint)
                 {
@@ -283,6 +329,7 @@ namespace CTCodePrint
                         MessageBox.Show("保存裝箱單失敗！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return;
                     }
+                    clearAll();
 
                 }
                 else
@@ -301,7 +348,7 @@ namespace CTCodePrint
         public int countQty(List<Carton> cartonList)
         {
             int countResult = 0;
-            foreach(Carton carton in cartonList)
+            foreach (Carton carton in cartonList)
             {
                 countResult = countResult + carton.CartonQty;
             }

@@ -49,7 +49,7 @@ namespace DAL
         {
             MandRelDel reMandRelDel = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_mand_reldel where cus_no=@cusNo and del_matno=@delMatno and bound_type=@boundType and del_flag is null");
+            strSql.Append("SELECT uuid,man_no,cus_no,del_matno,bound_type,op_user,create_time,update_user,update_time FROM t_mand_reldel where cus_no=@cusNo and del_matno=@delMatno and bound_type=@boundType and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@cusNo", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@delMatno", MySqlDbType.VarChar, 900),
@@ -79,7 +79,7 @@ namespace DAL
         {
             MandRelDel mandRelDel = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM t_mand_reldel where uuid=@uuid and del_flag is null");
+            strSql.Append("SELECT uuid,man_no,cus_no,del_matno,bound_type,op_user,create_time,update_user,update_time FROM t_mand_reldel where uuid=@uuid and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
             };

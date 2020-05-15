@@ -29,7 +29,7 @@ namespace DAL
 
             };
             parameters[0].Value = workno;
-            DataSet ds = OracleSQLHelper.ExecuteDataset(OracleSQLHelper.ConnectionString,CommandType.Text,strSql.ToString(),parameters);
+            DataSet ds = OracleSQLHelper.ExecuteDataset(OracleSQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
                 workOrders = new List<WorkOrderInfo>();
@@ -87,7 +87,7 @@ namespace DAL
             return woRevisions;
         }
 
-        public List<CusMatInfo> getCusMatByDel(string cusNo,string delNo)
+        public List<CusMatInfo> getCusMatByDel(string cusNo, string delNo)
         {
             List<CusMatInfo> cusMatInfos = null;
             StringBuilder strSql = new StringBuilder();
@@ -148,6 +148,39 @@ namespace DAL
                 }
             }
             return cusInfoList;
+        }
+
+        /// <summary>
+        /// 查詢ERP 已核發訂單
+        /// </summary>
+        /// <param name="woNo"></param>
+        /// <returns></returns>
+        public WoInfo queryWoInfoByWo(string woNo)
+        {
+            WoInfo woInfo = null;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT a.WIP_ENTITY_NAME,d.SEGMENT1,B.START_QUANTITY,wo.DEPARTMENT_ID,wo.DEPARTMENT_CODE,b.CLASS_CODE,b.COMPLETION_SUBINVENTORY,d.ATTRIBUTE7,d.DESCRIPTION NDESCRIPTION FROM wip.wip_entities a,WIP_OPERATIONS_V wo,wip.wip_discrete_jobs b,inv.mtl_system_items_b d WHERE a.WIP_ENTITY_ID = b.WIP_ENTITY_ID AND a.WIP_ENTITY_ID = wo.WIP_ENTITY_ID AND a.ORGANIZATION_ID = wo.ORGANIZATION_ID AND a.PRIMARY_ITEM_ID = d.INVENTORY_ITEM_ID AND a.ORGANIZATION_ID = d.ORGANIZATION_ID AND trim(a.Wip_Entity_Name) =:woNo AND B.STATUS_TYPE IN (3, 4)");
+            OracleParameter[] parameters =
+            {
+                new OracleParameter(":woNo",OracleDbType.Varchar2,900)
+            };
+            parameters[0].Value = woNo;
+            DataSet ds = OracleSQLHelper.ExecuteDataset(OracleSQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                woInfo = new WoInfo();
+
+                woInfo.WoNo = ds.Tables[0].Rows[0]["WIP_ENTITY_NAME"].ToString();
+                woInfo.DelMatno = ds.Tables[0].Rows[0]["SEGMENT1"].ToString();
+                woInfo.WoQty = ds.Tables[0].Rows[0]["START_QUANTITY"].ToString();
+                woInfo.DeptId = ds.Tables[0].Rows[0]["DEPARTMENT_ID"].ToString();
+                woInfo.DeptCode = ds.Tables[0].Rows[0]["DEPARTMENT_CODE"].ToString();
+                woInfo.ClassCode = ds.Tables[0].Rows[0]["CLASS_CODE"].ToString();
+                woInfo.CompletionSub = ds.Tables[0].Rows[0]["COMPLETION_SUBINVENTORY"].ToString();
+                woInfo.ModelNo = ds.Tables[0].Rows[0]["ATTRIBUTE7"].ToString();
+                woInfo.DelMatnoDesc = ds.Tables[0].Rows[0]["NDESCRIPTION"].ToString();
+            }
+            return woInfo;
         }
 
 
