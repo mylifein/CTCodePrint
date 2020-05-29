@@ -159,7 +159,7 @@ namespace DAL
         {
             WoInfo woInfo = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT a.WIP_ENTITY_NAME,d.SEGMENT1,B.START_QUANTITY,wo.DEPARTMENT_ID,wo.DEPARTMENT_CODE,b.CLASS_CODE,b.COMPLETION_SUBINVENTORY,d.ATTRIBUTE7,d.DESCRIPTION NDESCRIPTION FROM wip.wip_entities a,WIP_OPERATIONS_V wo,wip.wip_discrete_jobs b,inv.mtl_system_items_b d WHERE a.WIP_ENTITY_ID = b.WIP_ENTITY_ID AND a.WIP_ENTITY_ID = wo.WIP_ENTITY_ID AND a.ORGANIZATION_ID = wo.ORGANIZATION_ID AND a.PRIMARY_ITEM_ID = d.INVENTORY_ITEM_ID AND a.ORGANIZATION_ID = d.ORGANIZATION_ID AND trim(a.Wip_Entity_Name) =:woNo AND B.STATUS_TYPE IN (3, 4)");
+            strSql.Append("SELECT a.WIP_ENTITY_NAME,d.SEGMENT1,B.START_QUANTITY,wo.DEPARTMENT_ID,wo.DEPARTMENT_CODE,b.CLASS_CODE,b.COMPLETION_SUBINVENTORY,d.ATTRIBUTE7,d.DESCRIPTION NDESCRIPTION FROM wip.wip_entities a,WIP_OPERATIONS_V wo,wip.wip_discrete_jobs b,inv.mtl_system_items_b d WHERE a.WIP_ENTITY_ID = b.WIP_ENTITY_ID AND a.WIP_ENTITY_ID = wo.WIP_ENTITY_ID AND a.ORGANIZATION_ID = wo.ORGANIZATION_ID AND a.PRIMARY_ITEM_ID = d.INVENTORY_ITEM_ID AND a.ORGANIZATION_ID = d.ORGANIZATION_ID AND trim(a.Wip_Entity_Name) =:woNo");       // AND B.STATUS_TYPE IN (3, 4)
             OracleParameter[] parameters =
             {
                 new OracleParameter(":woNo",OracleDbType.Varchar2,900)

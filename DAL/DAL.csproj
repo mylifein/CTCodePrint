@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WoInfoDao.cs" />
     <Compile Include="QualityInfoDao.cs" />
     <Compile Include="CapacityDao.cs" />
     <Compile Include="CartonDao.cs" />

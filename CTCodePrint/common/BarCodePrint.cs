@@ -403,6 +403,79 @@ namespace CTCodePrint.common
         }
 
 
+
+        public bool printQualityByModel(string templateFileName, QualityInfo qualityInfo, List<MandUnionFieldType> mandUnionFieldTypeList)
+        {
+            if (lbl == null)
+            {
+                lbl = new ApplicationClass();
+            }
+            //未加載模板文件或者模板發生變更時，重新加載新的模板
+            if (lbl.Documents.Count == 0 || templateFileName.IndexOf(lbl.ActiveDocument.Name) == -1)
+            {
+                lbl.Documents.Open(templateFileName, false);// 调用设计好的label文件
+
+            }
+            Document doc = lbl.ActiveDocument;
+            try
+            {
+
+                for (int i = 1; i <= doc.Variables.FormVariables.Count; i++)
+                {
+                    string variableName = doc.Variables.FormVariables.Item(i).Name.ToString();
+                    foreach (MandUnionFieldType mandUnionFieldType in mandUnionFieldTypeList)
+                    {
+                        if (mandUnionFieldType.FieldName.ToUpper() == variableName.ToUpper())
+                        {
+                            bool judge = false;
+                            PropertyInfo[] propertyInfoARR = qualityInfo.GetType().GetProperties();
+                            foreach (PropertyInfo propertyInfo in propertyInfoARR)
+                            {
+                                if (propertyInfo.Name.ToUpper() == mandUnionFieldType.FieldName.ToUpper())
+                                {
+                                    string entityValue = qualityInfo.GetType().GetProperty(propertyInfo.Name).GetValue(qualityInfo, null).ToString();
+                                    doc.Variables.FormVariables.Item(i).Value = entityValue;
+                                    judge = true;
+                                    break;
+                                }
+
+
+                            }
+                            if (!judge)
+                            {
+                                doc.Variables.FormVariables.Item(i).Value = mandUnionFieldType.FieldValue;
+                            }
+                        }
+                    }
+                }
+
+                int Num = 1;                      //打印数量
+                doc.Printer.SwitchTo(DefaultPrinter());
+                //doc.Printer.SwitchTo(printerName);  //設置打印機
+                doc.PrintLabel(1, 1, 1, Num, 1, "");
+                doc.FormFeed();
+                //doc.PrintDocument(Num);           //打印               
+
+            }
+            catch (Exception ex)
+            {
+                return false;                          //返回,後面代碼不執行
+            }
+            finally
+            {
+                //內存釋放和回收
+                lbl.Documents.CloseAll();
+                lbl.Quit();
+                lbl = null;
+                doc = null;
+                GC.Collect(0);
+
+            }
+            return true;
+
+        }
+
+
         /// <summary>
         /// 打印棧板標籤
         /// </summary>

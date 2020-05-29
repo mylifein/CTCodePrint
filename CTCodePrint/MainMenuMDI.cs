@@ -318,5 +318,12 @@ namespace CTCodePrint
             qualityCheckPrint.MdiParent = this;
             qualityCheckPrint.Show();
         }
+
+        private void 工单首件检验ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            QualityCheck qualityCheck = new QualityCheck();
+            qualityCheck.MdiParent = this;
+            qualityCheck.Show();
+        }
     }
 }

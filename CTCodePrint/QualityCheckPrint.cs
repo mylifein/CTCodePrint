@@ -24,18 +24,56 @@ namespace CTCodePrint
 
         private readonly BarCodePrint barPrint = BarCodePrint.getInstance();
         private readonly ModelInfoService modelInfoService = new ModelInfoService();                    //查詢模板內容並下載
-        private readonly DepartmentService departmentService = new DepartmentService();
-        private readonly ProdLineService prodLineService = new ProdLineService();
-        private readonly OracleQueryB queryB = new OracleQueryB();                      //Oracle 查询
-
+        private readonly OracleQueryB queryB = new OracleQueryB();                                      //Oracle 查询
+        private readonly ManRelFieldTypeService manRelFieldTypeService = new ManRelFieldTypeService();  //根據字段規則 查詢字段規則值
+        private readonly QualityInfoService qualityInfoService = new QualityInfoService();              //质量信息查询
+        private readonly WoInfoService woInfoService = new WoInfoService();
+        private WoInfo woInfo = null;
         private string filePath = null;
-
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (woInfo == null)
+            {
+                MessageBox.Show("请输入有效工单号！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.textBox1.Focus();
+                return;
+            }
+            if (this.textBox3.Text == null || this.textBox3.Text.Trim() == "")
+            {
+                MessageBox.Show("请维护送样检测人工号！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.textBox3.Focus();
+                return;
+            }
+            if (qualityInfoService.checkQualNo(woInfo.WoNo))
+            {
+                //可以打印标签， 先检查是否需要保存工单.
+                if (!woInfoService.exists(woInfo.WoNo))
+                {
+                    bool saveResult = woInfoService.saveWoInfo(woInfo);
+                    if (!saveResult)
+                    {
+                        MessageBox.Show("保存工单信息失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+                }
+                QualityInfo qualityInfo = new QualityInfo();
+                qualityInfo.WoNo = woInfo.WoNo;
+                qualityInfo.DeliverMan = this.textBox3.Text.Trim();
+                qualityInfo.QualiatyNo = GenerateQuality.gennerateQualityNo("R040");
+                QualityInfo printQualInfo = qualityInfoService.saveQualityInfo(qualityInfo);
+                printQualInfo.DelMatno = woInfo.DelMatno;
+                printQualInfo.ModelNo = woInfo.ModelNo;
+                printQualInfo.Datecode = printQualInfo.Createtime;
+                printQualityLabel(printQualInfo);
+            }
+            else
+            {
+                MessageBox.Show("该工单首件质检标签已完成/进行中，不能再产生质检标签！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.textBox1.Focus();
+            }
 
-               printCarton();
-            
+
         }
 
 
@@ -49,7 +87,7 @@ namespace CTCodePrint
                     return;
                 }
                 string workno = this.textBox1.Text.Trim();
-                WoInfo woInfo = queryB.queryWoInfoByWo(workno.ToUpper());
+                woInfo = queryB.queryWoInfoByWo(workno.ToUpper());
                 if (woInfo != null)
                 {
 
@@ -80,7 +118,17 @@ namespace CTCodePrint
 
         private void clearAll()
         {
+            this.textBox1.Text = "";
             this.textBox4.Text = "";
+            this.textBox8.Text = "";
+            this.textBox5.Text = "";
+            this.textBox7.Text = "";
+            this.textBox2.Text = "";
+            this.textBox6.Text = "";
+            this.textBox11.Text = "";
+            this.textBox12.Text = "";
+            this.textBox3.Text = "";
+            woInfo = null;
         }
 
 
@@ -88,23 +136,17 @@ namespace CTCodePrint
         /// <summary>
         /// TODO 打印裝箱單
         /// </summary>
-        private void printCarton()
+        private void printQualityLabel(QualityInfo qualityInfo)
         {
 
-            
-
-
+            List<MandUnionFieldType> mandUnionFieldTypeList = manRelFieldTypeService.queryMandUnionFieldTypeList("MF0055");
             bool judgePrint = true;
+            judgePrint = barPrint.printQualityByModel(filePath, qualityInfo, mandUnionFieldTypeList);
 
-            //judgePrint = barPrint.printCatonByModel(filePath, carton, mandUnionFieldTypeList);
-            
             if (judgePrint)
             {
-                if (true)
-                {
-                    MessageBox.Show("保存裝箱單失敗！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
+                //清空质检标打印签信息
+                clearAll();
             }
             else
             {

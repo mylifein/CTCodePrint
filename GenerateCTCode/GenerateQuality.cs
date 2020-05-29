@@ -10,12 +10,12 @@ namespace GenerateCTCode
 {
     public class GenerateQuality
     {
-        private readonly QualityInfoService qualityInfoService = new QualityInfoService();
-        private readonly CodeRuleService codeRuleService = new CodeRuleService();
-        public String gennerateQualityNo(QualityInfo qualityInfo)
+        private readonly static QualityInfoService qualityInfoService = new QualityInfoService();
+        private readonly static CodeRuleService codeRuleService = new CodeRuleService();
+        public static String gennerateQualityNo(string ruleNo)
         {
             StringBuilder qualityNo = new StringBuilder();
-            CodeRule codeRule = codeRuleService.queryRuleById(qualityInfo.RuleNo);
+            CodeRule codeRule = codeRuleService.queryRuleById(ruleNo);
             if (codeRule != null)
             {
                 foreach (RuleItem ruleItem in codeRule.RuleItem)

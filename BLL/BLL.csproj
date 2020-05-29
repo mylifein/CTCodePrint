@@ -70,6 +70,7 @@
     <Compile Include="SubMatInfoService.cs" />
     <Compile Include="UserService.cs" />
     <Compile Include="WoBatchService.cs" />
+    <Compile Include="WoInfoService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DAL\DAL.csproj">
