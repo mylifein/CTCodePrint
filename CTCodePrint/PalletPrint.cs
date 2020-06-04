@@ -155,6 +155,8 @@ namespace CTCodePrint
                         pallet.Delmatno = firstCarton.Delmatno;                             //浪潮默認規則 編號R007         棧板規則使用默認編碼規則
                         pallet.Cusmatno = firstCarton.Cusmatno;
                         pallet.Cuspo = firstCarton.Cuspo;
+                        pallet.Cusname = firstCarton.Cusname;
+                        pallet.SoOrder = firstCarton.SoOrder;
                         
                         FileRelDel fileRelDel = fileRelDelService.queryFileRelDelCusNo(firstCarton.Cusno, firstCarton.Delmatno, "2");
                         if (fileRelDel != null)

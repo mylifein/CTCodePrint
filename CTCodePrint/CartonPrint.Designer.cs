@@ -66,8 +66,11 @@
             this.label16 = new System.Windows.Forms.Label();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -442,11 +445,36 @@
             this.label17.TabIndex = 63;
             this.label17.Text = "日期格式：";
             // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(523, 218);
+            this.label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(82, 15);
+            this.label24.TabIndex = 85;
+            this.label24.Text = "打印数量：";
+            // 
+            // numericUpDown3
+            // 
+            this.numericUpDown3.Location = new System.Drawing.Point(619, 208);
+            this.numericUpDown3.Margin = new System.Windows.Forms.Padding(4);
+            this.numericUpDown3.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDown3.Name = "numericUpDown3";
+            this.numericUpDown3.Size = new System.Drawing.Size(217, 25);
+            this.numericUpDown3.TabIndex = 84;
+            // 
             // CartonPrint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1466, 880);
+            this.Controls.Add(this.label24);
+            this.Controls.Add(this.numericUpDown3);
             this.Controls.Add(this.comboBox3);
             this.Controls.Add(this.label17);
             this.Controls.Add(this.label16);
@@ -491,6 +519,7 @@
             this.Load += new System.EventHandler(this.CreateRules_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -536,5 +565,7 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.NumericUpDown numericUpDown3;
     }
 }

@@ -51,6 +51,12 @@ namespace CTCodePrint
                 this.textBox3.Focus();
                 return;
             }
+            if (userService.isExist(this.textBox2.Text.Trim()))
+            {
+                MessageBox.Show("该用户名已存在！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.textBox2.Focus();
+                return;
+            }
             User user = new User();
             user.Username = this.textBox2.Text.Trim();
             user.Password = this.textBox3.Text.Trim();

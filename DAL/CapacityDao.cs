@@ -152,7 +152,7 @@ namespace DAL
         {
             bool repeatJudge = false;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select count(1) from t_cap_relcus where cus_no=@cusNo and del_matno=@delMatno and capacity_type=@capacityType and capacity_no=@capacityNo and del_flag is null");
+            strSql.Append("select count(1) from t_cap_relcus where cus_no=@cusNo and del_matno=@delMatno and capacity_type=@capacityType and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@cusNo", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@delMatno", MySqlDbType.VarChar, 900),

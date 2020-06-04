@@ -43,6 +43,20 @@ namespace BLL
             }
             return reUser;
         }
+
+
+        public bool isExist(string username)
+        {
+            if(userDAL.queryUser(username)!= null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
     }
 
 }

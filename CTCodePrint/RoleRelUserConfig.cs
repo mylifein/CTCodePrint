@@ -64,9 +64,6 @@ namespace CTCodePrint
         {
             if (this.textBox2.Text == null || this.textBox2.Text.Trim() == "")
             {
-                MessageBox.Show("用戶名不能為空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.clearAll();
-                this.textBox2.Focus();
                 return;
             }
             Model.User userEntity = userService.queryByUsername(this.textBox2.Text.Trim());

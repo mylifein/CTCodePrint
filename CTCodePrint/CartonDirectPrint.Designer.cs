@@ -82,6 +82,7 @@
             this.label25 = new System.Windows.Forms.Label();
             this.textBox16 = new System.Windows.Forms.TextBox();
             this.label26 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -621,11 +622,24 @@
             this.label26.TabIndex = 86;
             this.label26.Text = "可装箱数量：";
             // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.SystemColors.Info;
+            this.button2.Location = new System.Drawing.Point(1165, 204);
+            this.button2.Margin = new System.Windows.Forms.Padding(4);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(116, 41);
+            this.button2.TabIndex = 88;
+            this.button2.Text = "首张打印测试";
+            this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // CartonDirectPrint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1325, 880);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox16);
             this.Controls.Add(this.label26);
             this.Controls.Add(this.textBox15);
@@ -748,5 +762,6 @@
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.TextBox textBox16;
         private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Button button2;
     }
 }

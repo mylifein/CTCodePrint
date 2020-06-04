@@ -149,6 +149,12 @@
     <Compile Include="QualityCheck.Designer.cs">
       <DependentUpon>QualityCheck.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReprintPallet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReprintPallet.Designer.cs">
+      <DependentUpon>ReprintPallet.cs</DependentUpon>
+    </Compile>
     <Compile Include="ReprintCarton.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -292,6 +298,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="QualityCheck.resx">
       <DependentUpon>QualityCheck.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReprintPallet.resx">
+      <DependentUpon>ReprintPallet.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ReprintCarton.resx">
       <DependentUpon>ReprintCarton.cs</DependentUpon>

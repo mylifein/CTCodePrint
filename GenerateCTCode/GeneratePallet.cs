@@ -14,6 +14,7 @@ namespace GenerateCTCode
         private readonly static PalletService palletService = new PalletService();
         private readonly static CodeRuleService codeRuleService = new CodeRuleService();
         private readonly static ProdLineService prodLineService = new ProdLineService();
+        private readonly static WoBatchService woBatchService = new WoBatchService();
 
 
         public static Pallet generatePalletNo(Pallet pallet)
@@ -138,19 +139,21 @@ namespace GenerateCTCode
                         case "T015":                //年月日進制表示
                             palletNo.Append(getInsuprTime());
                             break;
-                        case "T016":                        //浪潮批次号                        
-                            Pallet batchPallet = palletService.queryPalletByWorkno(pallet.Workno);
+                        case "T016":                        //浪潮批次号        
+
+
+                            string woBatchNo = woBatchService.getBatchNoByWO(pallet.Workno);            //查询工单批次号 
                             string batchSeqNo = "1";
-                            if (batchPallet != null)
+                            if (woBatchNo != null && !woBatchNo.Equals(""))
                             {
-                                pallet.BatchNo = batchPallet.BatchNo;
+                                pallet.BatchNo = woBatchNo;
                                 palletNo.Clear();
-                                palletNo.Append(batchPallet.BatchNo);
+                                palletNo.Append(woBatchNo);
                             }
                             else
                             {
                                 string queryCond = getInsuprTime() + "Q";
-                                List<String> batchNos = palletService.queryBatchNos(queryCond);
+                                List<String> batchNos = woBatchService.queryBatchNos(queryCond);
                                 if (batchNos != null && batchNos.Count > 0)
                                 {
                                     int maxNo = 0;
@@ -167,8 +170,13 @@ namespace GenerateCTCode
                                 }
                                 palletNo.Append(batchSeqNo);
                                 pallet.BatchNo = palletNo.ToString();
+                                //保存工单批次
+                                WoBatch woBatch = new WoBatch();
+                                woBatch.BatchNo = pallet.BatchNo;
+                                woBatch.Workno = pallet.Workno;
+                                woBatchService.saveWoBatch(woBatch);                    //占用工单批次  
                             }
-                            break;
+                            break;                                           
                         case "T017":                //批次号                        
                             //string selfBatchNo = cartonService.queryBatchNoWorkNo(cartonNo.ToString(), carton.Workno);
                             //string batchCustom = "1";

@@ -92,5 +92,30 @@ namespace BLL
         }
 
 
+        public List<Pallet> queryPalletsByWorkNo(string workNo)
+        {
+            return palletDao.queryPalletsByWorkNo(workNo);
+        }
+
+
+        public List<Pallet> getPalletsByCond(string condition, string conditionV)
+        {
+            if (condition == "1")
+            {
+                return palletDao.queryPalletsByWorkNo(conditionV);
+            }
+            else
+            {
+                return palletDao.queryPalletsByPalletkNo(conditionV);
+            }
+        }
+
+
+
+        public Pallet queryPalletByPalletNo(string palletNo)
+        {
+            return palletDao.queryPalletByPalletNo(palletNo);
+        }
+
     }
 }

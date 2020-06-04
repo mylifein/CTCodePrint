@@ -54,7 +54,7 @@
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 15);
-            this.label1.TabIndex = 0;
+            this.label1.TabIndex = 6;
             this.label1.Text = "用戶ID";
             // 
             // textBox1
@@ -72,7 +72,7 @@
             this.textBox2.Margin = new System.Windows.Forms.Padding(4);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(225, 25);
-            this.textBox2.TabIndex = 3;
+            this.textBox2.TabIndex = 0;
             // 
             // label2
             // 

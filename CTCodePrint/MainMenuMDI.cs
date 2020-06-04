@@ -325,5 +325,12 @@ namespace CTCodePrint
             qualityCheck.MdiParent = this;
             qualityCheck.Show();
         }
+
+        private void ReprintPalletMenuItem_Click(object sender, EventArgs e)
+        {
+            ReprintPallet reprintPallet = new ReprintPallet();
+            reprintPallet.MdiParent = this;
+            reprintPallet.Show();
+        }
     }
 }

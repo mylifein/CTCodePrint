@@ -37,8 +37,9 @@
             this.singCartonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reprintCartonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PalletToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.栈板标签补印ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ReprintPalletMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.品质首件质检标签ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.工单首件检验ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ruleMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.codeRuleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ruleQueryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,7 +70,6 @@
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.工单首件检验ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -98,7 +98,7 @@
             this.singCartonToolStripMenuItem,
             this.reprintCartonToolStripMenuItem,
             this.PalletToolStripMenuItem,
-            this.栈板标签补印ToolStripMenuItem,
+            this.ReprintPalletMenuItem,
             this.品质首件质检标签ToolStripMenuItem,
             this.工单首件检验ToolStripMenuItem});
             this.fileMenu.ImageTransparentColor = System.Drawing.SystemColors.ActiveBorder;
@@ -148,11 +148,12 @@
             this.PalletToolStripMenuItem.Text = "栈板标签打印";
             this.PalletToolStripMenuItem.Click += new System.EventHandler(this.棧板標籤打印ToolStripMenuItem_Click);
             // 
-            // 栈板标签补印ToolStripMenuItem
+            // ReprintPalletMenuItem
             // 
-            this.栈板标签补印ToolStripMenuItem.Name = "栈板标签补印ToolStripMenuItem";
-            this.栈板标签补印ToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
-            this.栈板标签补印ToolStripMenuItem.Text = "栈板标签补印";
+            this.ReprintPalletMenuItem.Name = "ReprintPalletMenuItem";
+            this.ReprintPalletMenuItem.Size = new System.Drawing.Size(239, 26);
+            this.ReprintPalletMenuItem.Text = "栈板标签补印";
+            this.ReprintPalletMenuItem.Click += new System.EventHandler(this.ReprintPalletMenuItem_Click);
             // 
             // 品质首件质检标签ToolStripMenuItem
             // 
@@ -160,6 +161,13 @@
             this.品质首件质检标签ToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
             this.品质首件质检标签ToolStripMenuItem.Text = "品质首件质检标签";
             this.品质首件质检标签ToolStripMenuItem.Click += new System.EventHandler(this.品质首件质检标签ToolStripMenuItem_Click);
+            // 
+            // 工单首件检验ToolStripMenuItem
+            // 
+            this.工单首件检验ToolStripMenuItem.Name = "工单首件检验ToolStripMenuItem";
+            this.工单首件检验ToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
+            this.工单首件检验ToolStripMenuItem.Text = "工单首件检验";
+            this.工单首件检验ToolStripMenuItem.Click += new System.EventHandler(this.工单首件检验ToolStripMenuItem_Click);
             // 
             // ruleMenu
             // 
@@ -385,13 +393,6 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // 工单首件检验ToolStripMenuItem
-            // 
-            this.工单首件检验ToolStripMenuItem.Name = "工单首件检验ToolStripMenuItem";
-            this.工单首件检验ToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
-            this.工单首件检验ToolStripMenuItem.Text = "工单首件检验";
-            this.工单首件检验ToolStripMenuItem.Click += new System.EventHandler(this.工单首件检验ToolStripMenuItem_Click);
-            // 
             // MainMenuMDI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -455,7 +456,7 @@
         private System.Windows.Forms.ToolStripMenuItem ruleBoundToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem maintainMatToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 角色权限分配ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 栈板标签补印ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ReprintPalletMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 品质首件质检标签ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 工单首件检验ToolStripMenuItem;
     }

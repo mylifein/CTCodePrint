@@ -43,7 +43,7 @@ namespace CTCodePrint
         {
             for (int i = 0; i < this.numericUpDown2.Value; i++)
             {
-                printCarton();
+                printCarton(true);
             }
         }
 
@@ -235,7 +235,7 @@ namespace CTCodePrint
         /// <summary>
         /// TODO 打印裝箱單
         /// </summary>
-        private void printCarton()
+        private void printCarton(bool isSave)
         {
             this.textBox5.Text = cartonService.getCartonQtyByWO(carton.Workno);
             MandRelDel mandRelDel = mandRelDelService.queryManNoByDel(carton.Cusno, carton.Delmatno, "1");
@@ -328,10 +328,13 @@ namespace CTCodePrint
             }
             if (judgePrint)
             {
-                if (!cartonService.saveCarton(carton))
+                if (isSave)
                 {
-                    MessageBox.Show("保存裝箱單失敗！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
+                    if (!cartonService.saveCarton(carton))
+                    {
+                        MessageBox.Show("保存裝箱單失敗！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
                 }
             }
             else
@@ -358,6 +361,11 @@ namespace CTCodePrint
             }
             carton = GenerateCarton.generateCartonNo(carton);
             this.textBox10.Text = carton.CartonNo;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            printCarton(false);
         }
     }
 }

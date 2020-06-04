@@ -60,6 +60,8 @@ namespace CTCodePrint
 
         private void CreateRules_Load(object sender, EventArgs e)
         {
+
+            this.numericUpDown3.Value = 2;              //设置默认打印张数：2
             DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
             column.Name = "ctCode";
             column.DataPropertyName = "ct_code";//对应数据源的字段
@@ -338,9 +340,10 @@ namespace CTCodePrint
                         }
                     }
                 }
+
                 carton = GenerateCarton.generateCartonNo(carton);
                 bool judgePrint = true;
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < this.numericUpDown3.Value; i++)
                 {
                     judgePrint = barPrint.printCatonByModel(filePath, carton, mandUnionFieldTypeList);
                 }
@@ -453,6 +456,7 @@ namespace CTCodePrint
                     {
                         this.textBox11.Text = capacity.Capacityqty.ToString();
                         this.textBox12.Text = capacity.Capacitydesc;
+                        carton.CapacityNo = capacity.Capacityno;
                     }
                     ProdLine prodLine = new ProdLine();
                     carton.ProdLine = prodLine;
