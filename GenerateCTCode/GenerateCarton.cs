@@ -254,6 +254,9 @@ namespace GenerateCTCode
                             string extractResult = extractString(carton.Woquantity, ruleInt);
                             cartonNo.Append(extractResult);
                             break;
+                        case "T021":                         
+                            cartonNo.Append(carton.Ct1);
+                            break;
                     }
                 }
             }

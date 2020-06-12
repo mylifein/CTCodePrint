@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -148,8 +149,8 @@ namespace CTCodePrint
                         this.countBoxQty(capacity.Capacityqty);
                         carton.CapacityNo = capacity.Capacityno;
                         this.textBox12.Text = capacity.Capacitydesc;
-                        this.textBox14.Text = capacity.Capacityqty.ToString();    
-                                                               
+                        this.textBox14.Text = capacity.Capacityqty.ToString();
+
                     }
                     CusRule cusRule = cusRuleService.queryCusRuleByCond(carton.Cusno, carton.Delmatno, "1");                //1代表裝箱單編碼規則;
                     if (cusRule != null && cusRule.Ruleno != "")
@@ -168,12 +169,11 @@ namespace CTCodePrint
                     this.textBox10.Text = carton.CartonNo;
                     this.textBox5.Text = cartonService.getCartonQtyByWO(carton.Workno);
                     this.textBox3.Text = carton.BatchNo;
-      
-                    //下載模板並預覽
-                    ModelFile modelFile = modelInfoService.queryModelFileByNo(carton.Modelno);
-                    if (modelFile != null)
+
+                    //下載模板並預覽   1.查询模板是否存在， 若存在不下载  2.若不存在下载模板
+                    filePath = modelInfoService.previewModelFile(carton.Modelno);
+                    if (filePath != null)
                     {
-                        filePath = Auxiliary.downloadModelFile(modelFile);
                         string pictureFile = barPrint.PreviewPrintBC(filePath);
                         this.pictureBox1.Load(pictureFile);
 
@@ -258,7 +258,7 @@ namespace CTCodePrint
             this.countBoxQty(carton.CartonQty);
             carton = GenerateCarton.generateCartonNo(carton);
             this.textBox10.Text = carton.CartonNo;
-            
+
             foreach (MandUnionFieldType mandTYpe in mandUnionFieldTypeList)
             {
                 if (mandTYpe.FieldName.ToUpper().Equals("SpecialField".ToUpper()))
@@ -291,7 +291,7 @@ namespace CTCodePrint
                 {
                     if (mandTYpe.FieldValue.ToUpper().Equals("WorkQty".ToUpper()))                                     //当特殊字段为 四位工单流水 +  P + 4位工单数量
                     {
-                        int currentNumber = cartonService.queryCurrentBoxQty(carton.Workno);
+                        int currentNumber = cartonService.currentBoxQtyByCuspo(carton.Cuspo, carton.Delmatno);
                         currentNumber = currentNumber == 0 ? 1 : (currentNumber + 1);
                         string tempStr = "";
                         for (int i = currentNumber.ToString().Length; i < 4; i++)
@@ -304,7 +304,7 @@ namespace CTCodePrint
                         {
                             tempStr2 = tempStr2 + "0";
                         }
-                        string suffix = tempStr2 + carton.Woquantity;
+                        string suffix = tempStr2 + carton.Orderqty;
                         carton.BoxNo = prefix + "P/" + suffix;
                     }
                     else
@@ -322,10 +322,7 @@ namespace CTCodePrint
             }
 
             bool judgePrint = true;
-            for (int i = 0; i < this.numericUpDown3.Value; i++)
-            {
-                judgePrint = barPrint.printCatonByModel(filePath, carton, mandUnionFieldTypeList);
-            }
+            judgePrint = barPrint.bactchPrintCartonByModel(filePath, cartonListToArray(carton, mandUnionFieldTypeList, (int)this.numericUpDown3.Value));
             if (judgePrint)
             {
                 if (isSave)
@@ -366,6 +363,39 @@ namespace CTCodePrint
         private void button2_Click(object sender, EventArgs e)
         {
             printCarton(false);
+        }
+
+
+        private List<Dictionary<string, string>> cartonListToArray(Carton carton, List<MandUnionFieldType> mandUnionFieldTypeList, int printNum)
+        {
+            List<Dictionary<string, string>> cartonList = new List<Dictionary<string, string>>();
+            PropertyInfo[] propertyInfoARR = carton.GetType().GetProperties();
+            Dictionary<string, string> property = new Dictionary<string, string>();
+            foreach (PropertyInfo propertyInfo in propertyInfoARR)
+            {
+                Object propertyVal = carton.GetType().GetProperty(propertyInfo.Name).GetValue(carton, null);
+                if(propertyVal != null)
+                {
+                    property.Add(propertyInfo.Name.ToUpper(),propertyVal.ToString());
+                }
+            }
+            for (int i = 0; i < printNum; i++)
+            {
+                Dictionary<string, string> cartonDict = new Dictionary<string, string>();          
+                foreach (MandUnionFieldType mandUnionFieldType in mandUnionFieldTypeList)
+                {
+                    string fieldName = mandUnionFieldType.FieldName.ToUpper();
+                    if (property.ContainsKey(fieldName))
+                    {
+                        cartonDict.Add(fieldName, property[fieldName]);
+                    }
+                    else{
+                        cartonDict.Add(fieldName, mandUnionFieldType.FieldValue);
+                    }
+                }
+                cartonList.Add(cartonDict);
+            }
+            return cartonList;
         }
     }
 }

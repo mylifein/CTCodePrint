@@ -132,13 +132,12 @@ namespace CTCodePrint
             string modelNo = this.dataGridView1.Rows[index].Cells["Modelno"].Value.ToString();
             string cusNo = this.dataGridView1.Rows[index].Cells["Cusno"].Value.ToString();
             string delMatno = this.dataGridView1.Rows[index].Cells["Delmatno"].Value.ToString();
-            ModelFile modelFile = modelInfoService.queryModelFileByNo(modelNo);
-            if (modelFile == null)
+            string filePath = modelInfoService.previewModelFile(modelNo);
+            if (filePath == null)
             {
                 MessageBox.Show("未找到該客戶出貨料號對應的打印模板信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            string filePath = Auxiliary.downloadModelFile(modelFile);
             //查詢打印模板的打印字段
             MandRelDel mandRelDel = mandRelDelService.queryManNoByDel(cusNo, delMatno, "1");
             if (mandRelDel == null)

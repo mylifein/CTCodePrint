@@ -27,7 +27,7 @@ namespace CTCodePrint
 
         private void BoundModel_Load(object sender, EventArgs e)
         {
-            this.comboBox1.DataSource = modelInfoService.queryModelFileList("");
+            this.comboBox1.DataSource = modelInfoService.queryModelFileList();
             this.comboBox1.ValueMember = "Fileno";
             this.comboBox1.DisplayMember = "Filedescription";
 

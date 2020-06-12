@@ -366,12 +366,15 @@ namespace CTCodePrint
 
         private void generateCTList()
         {
+            
             int printQty = (int)this.numericUpDown1.Value;
             if (printQty <= 0)
             {
                 MessageBox.Show("此工單已經生成所需數量的CT碼！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            ctCodeInfo.Cuspo = this.comboBox1.Text == null ? "" : this.comboBox1.Text.ToString().Trim();            //Cuspo
+            ctCodeInfo.SoOrder = this.comboBox5.Text == null ? "" : this.comboBox5.Text.ToString().Trim();          //so_order
             ctList = generateC.generateCTNumber(ctCodeInfo, printQty, dateTimePicker1.Value);
             if (ctList.Count > 0)
             {
@@ -407,14 +410,12 @@ namespace CTCodePrint
             FileRelDel fileRelDel = fileRelDelService.queryFileRelDelCusNo(this.textBox11.Text, delMatno, "0");
             if (fileRelDel != null)
             {
-                //下載模板並預覽
-                ModelFile modelFile = modelInfoService.queryModelFileByNo(fileRelDel.FileNo);
-                if (modelFile != null)
+                //下載模板並預覽   1.查询模板是否存在， 若存在不下载  2.若不存在下载模板
+                filePath = modelInfoService.previewModelFile(fileRelDel.FileNo);
+                if (filePath != null)
                 {
-                    filePath = Auxiliary.downloadModelFile(modelFile);
                     string pictureFile = barPrint.PreviewPrintBC(filePath);
                     this.pictureBox1.Load(pictureFile);
-
                 }
             }
             this.generateCTList();

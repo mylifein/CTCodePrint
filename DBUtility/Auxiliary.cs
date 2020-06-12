@@ -14,6 +14,8 @@ namespace DBUtility
     {
         public static string loginName;
 
+
+
         public static string RoleNo;
         public static string Get_SQLConnStr()
         {
@@ -79,6 +81,27 @@ namespace DBUtility
             bw.Dispose();
             fs.Dispose();
             return templateFile;
+        }
+
+
+        public static string previewModelFile(ModelFile modelFile)
+        {
+            string templateFile = System.IO.Directory.GetCurrentDirectory() + "\\" + modelFile.Filename;
+            if (File.Exists(templateFile))
+            {
+                return templateFile;
+            }
+            else
+            {
+                FileStream fs = new FileStream(templateFile, FileMode.CreateNew);
+                BinaryWriter bw = new BinaryWriter(fs);
+                bw.Write(modelFile.Fileaddress, 0, modelFile.Fileaddress.Length); //用文件流生成一个文件
+                bw.Close();
+                fs.Close();
+                bw.Dispose();
+                fs.Dispose();
+                return templateFile;
+            }
         }
 
     }

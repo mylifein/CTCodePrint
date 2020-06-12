@@ -403,6 +403,48 @@ namespace CTCodePrint.common
         }
 
 
+        internal bool bactchPrintCartonByModel(string templateFileName, List<Dictionary<string, string>> cartons)
+        {
+            if (lbl == null)
+            {
+                lbl = new ApplicationClass();
+            }
+            //未加載模板文件或者模板發生變更時，重新加載新的模板
+            if (lbl.Documents.Count == 0 || templateFileName.IndexOf(lbl.ActiveDocument.Name) == -1)
+            {
+                lbl.Documents.Open(templateFileName, false);// 调用设计好的label文件
+            }
+            Document doc = lbl.ActiveDocument;
+            try
+            {
+                foreach (Dictionary<string, string> carton in cartons)
+                {
+                    for (int i = 1; i <= doc.Variables.FormVariables.Count; i++)
+                    {
+                        string variableName = doc.Variables.FormVariables.Item(i).Name.ToString().ToUpper();
+                        doc.Variables.FormVariables.Item(i).Value = carton[variableName];
+                    }
+                    int Num = 1;
+                    doc.Printer.SwitchTo(DefaultPrinter());
+                    doc.PrintLabel(1, 1, 1, Num, 1, "");
+                }
+                doc.FormFeed();
+            }
+            catch (Exception ex)
+            {
+                return false;                          //返回,後面代碼不執行
+            }
+            finally
+            {
+                //內存釋放和回收
+                lbl.Documents.CloseAll();
+                lbl.Quit();
+                lbl = null;
+                doc = null;
+                GC.Collect(0);
+            }
+            return true;
+        }
 
         public bool printQualityByModel(string templateFileName, QualityInfo qualityInfo, List<MandUnionFieldType> mandUnionFieldTypeList)
         {

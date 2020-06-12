@@ -185,6 +185,12 @@ namespace BLL
         }
 
 
+        public int currentBoxQtyByCuspo(String cusPo,String delMatno)
+        {
+            return cartonDao.currentBoxQtyByCuspo(cusPo,delMatno);
+        }
+
+
         /// <summary>
         /// 根据工单号  查询一条装箱单信息.
         /// </summary>

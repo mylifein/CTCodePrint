@@ -604,7 +604,20 @@ namespace DAL
         }
 
 
-        
+        public int currentBoxQtyByCuspo(String cusPo,String delMatno)
+        {
 
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from t_carton_info where cus_po=@cusPo and del_matno=@delMatno and del_flag is null");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@cusPo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@delMatno", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = cusPo;
+            parameters[1].Value = delMatno;
+            int boxNo = int.Parse(SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters).ToString().Trim());
+
+            return boxNo;
+        }
     }
 }

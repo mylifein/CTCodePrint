@@ -171,18 +171,16 @@ namespace CTCodePrint
                             this.textBox13.Text = codeRule.RuleDesc;
                             pallet.Ruleno = codeRule.Ruleno;
                         }
-                        pallet = GeneratePallet.generatePalletNo(pallet);
+                        //pallet = GeneratePallet.generatePalletNo(pallet);
+                        ////顯示棧板號：
+                        //this.textBox10.Text = pallet.PalletNo;
+                        //this.textBox11.Text = pallet.BatchNo;
 
-
-                        //顯示棧板號：
-                        this.textBox10.Text = pallet.PalletNo;
-                        this.textBox11.Text = pallet.BatchNo;
                         this.textBox5.Text = carton.CartonQty.ToString();
-                        //下載模板並預覽
-                        ModelFile modelFile = modelInfoService.queryModelFileByNo(pallet.Modelno);
-                        if (modelFile != null)
+                        //下載模板並預覽   1.查询模板是否存在， 若存在不下载  2.若不存在下载模板
+                        filePath = modelInfoService.previewModelFile(carton.Modelno);
+                        if (filePath != null)
                         {
-                            filePath = Auxiliary.downloadModelFile(modelFile);
                             string pictureFile = barPrint.PreviewPrintBC(filePath);
                             this.pictureBox1.Load(pictureFile);
                         }
