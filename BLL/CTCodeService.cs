@@ -42,8 +42,7 @@ namespace BLL
             foreach (CTCode ctCode in ctCodeList)
             {
                 if (!this.saveCTCodeInfo(ctCode, conn, mysqlTrans))
-                {
-                  
+                {                 
                     conn.Close();
                     return false;
                 }
@@ -52,6 +51,25 @@ namespace BLL
             conn.Close();
             return true;
         }
+
+
+        public string getGeneratedCTCount(string workno)
+        {
+            return cTCodeDao.getCTCount(workno);
+        }
+
+
+        public string getGeneratedCTCountByPO(string workno, string po)
+        {
+            return cTCodeDao.getCTCountByPO(workno, po);
+        }
+
+
+        public string getCTQtyByWoAndCusPo(string workno, string cusPo)
+        {
+            return cTCodeDao.getCTQtyByWoAndCusPo(workno,cusPo);
+        }
+
 
     }
 }

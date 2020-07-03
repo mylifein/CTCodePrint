@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -61,6 +62,7 @@ namespace CTCodePrint
                 qualityInfo.WoNo = woInfo.WoNo;
                 qualityInfo.DeliverMan = this.textBox3.Text.Trim();
                 qualityInfo.QualiatyNo = GenerateQuality.gennerateQualityNo("R040");
+                qualityInfo.CheckNum = qualityInfoService.queryCheckNum(woInfo.WoNo) + 1;
                 QualityInfo printQualInfo = qualityInfoService.saveQualityInfo(qualityInfo);
                 printQualInfo.DelMatno = woInfo.DelMatno;
                 printQualInfo.ModelNo = woInfo.ModelNo;
@@ -100,15 +102,13 @@ namespace CTCodePrint
                     this.textBox11.Text = woInfo.CompletionSub;
                     this.textBox12.Text = woInfo.DelMatnoDesc;
 
-                    //下載模板並預覽
-                    ModelFile modelFile = modelInfoService.queryModelFileByNo("F042");
-                    if (modelFile != null)
+                    filePath = modelInfoService.previewModelFile("F042");
+                    if (filePath == null)
                     {
-                        filePath = Auxiliary.downloadModelFile(modelFile);
-                        string pictureFile = barPrint.PreviewPrintBC(filePath);
-                        this.pictureBox1.Load(pictureFile);
-
+                        MessageBox.Show("未找到對應的打印模板信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
                     }
+
                 }
             }
 
@@ -138,11 +138,8 @@ namespace CTCodePrint
         /// </summary>
         private void printQualityLabel(QualityInfo qualityInfo)
         {
-
             List<MandUnionFieldType> mandUnionFieldTypeList = manRelFieldTypeService.queryMandUnionFieldTypeList("MF0055");
-            bool judgePrint = true;
-            judgePrint = barPrint.printQualityByModel(filePath, qualityInfo, mandUnionFieldTypeList);
-
+           bool judgePrint = barPrint.bactchPrintPalletByModel(filePath, contentToDic(qualityInfo, mandUnionFieldTypeList));
             if (judgePrint)
             {
                 //清空质检标打印签信息
@@ -154,6 +151,38 @@ namespace CTCodePrint
                 return;
             }
 
+        }
+
+
+        private Dictionary<string, string> contentToDic(QualityInfo qualityInfo, List<MandUnionFieldType> mandUnionFieldTypeList)
+        {
+
+            PropertyInfo[] propertyInfoARR = qualityInfo.GetType().GetProperties();
+            Dictionary<string, string> property = new Dictionary<string, string>();
+            foreach (PropertyInfo propertyInfo in propertyInfoARR)
+            {
+                Object propertyVal = qualityInfo.GetType().GetProperty(propertyInfo.Name).GetValue(qualityInfo, null);
+                if (propertyVal != null)
+                {
+                    property.Add(propertyInfo.Name.ToUpper(), propertyVal.ToString());
+                }
+            }
+
+            Dictionary<string, string> contentDict = new Dictionary<string, string>();
+            foreach (MandUnionFieldType mandUnionFieldType in mandUnionFieldTypeList)
+            {
+                string fieldName = mandUnionFieldType.FieldName.ToUpper();
+                if (property.ContainsKey(fieldName))
+                {
+                    contentDict.Add(fieldName, property[fieldName]);
+                }
+                else
+                {
+                    contentDict.Add(fieldName, mandUnionFieldType.FieldValue);
+                }
+            }
+
+            return contentDict;
         }
 
 

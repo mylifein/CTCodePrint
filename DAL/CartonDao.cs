@@ -71,7 +71,7 @@ namespace DAL
             parameters[16].Value = carton.Opuser;
             parameters[17].Value = carton.Createtime;
             parameters[18].Value = carton.SoOrder;
-            parameters[19].Value = carton.ProdLine.ProdlineId;
+            parameters[19].Value = carton.ProdId;
             parameters[20].Value = carton.Cusname;
             parameters[21].Value = carton.PackType;
             parameters[22].Value = carton.BoxNo;
@@ -91,6 +91,148 @@ namespace DAL
             }
             return saveMark;
         }
+
+        /// <summary>
+        /// 查询同工单，同PO 已装箱数量
+        /// </summary>
+        /// <param name="workno"></param>
+        /// <param name="cusPo"></param>
+        /// <returns></returns>
+        public string getCartonQtyByWoAndCusPo(string workno, string cusPo)
+        {
+            string countNo = "";
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select SUM(cartonQty) from t_carton_info where work_no=@workno and cus_po=@cusPo and del_flag is null");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@workno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cusPo", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = workno;
+            parameters[1].Value = cusPo;
+            Object countDB = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (countDB != null && countDB != DBNull.Value)
+            {
+                countNo = countDB.ToString();
+            }
+            else
+            {
+                countNo = "0";
+            }
+            return countNo;
+        }
+
+        public bool saveCartonByTrans(Carton carton, MySqlConnection conn, MySqlTransaction mysqlTrans)
+        {
+            bool saveMark = true;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into t_carton_info (uuid,cartonNo,cartonQty,prodline_id,carton_status,capacity_no,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,op_user,create_time,so_order,packType,box_No,special_Field,union_Field,prodLine_val,date_code,batchNo)");
+            strSql.Append("values(@uuid,@cartonNo,@cartonQty,@prodlineId,@cartonStatus,@capacityNo,@ruleno,@workno,@cusno,@cusName,@cuspo,@poqty,@cusmatno,@delmatno,@offino,@verno,@woquantity,@model_no,@opuser,@createtime,@soOrder,@packType,@boxNo,@specialField,@unionField,@prodLineVal,@dateCode,@batchNo)");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cartonNo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cartonQty", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cartonStatus", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@capacityNo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@ruleno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@workno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cusno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cuspo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@poqty", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cusmatno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@delmatno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@offino", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@verno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@woquantity", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@model_no", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@soOrder", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@prodlineId", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cusName", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@packType", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@boxNo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@specialField", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@unionField", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@prodLineVal", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@dateCode", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@batchNo", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = carton.Uuid;
+            parameters[1].Value = carton.CartonNo;
+            parameters[2].Value = carton.CartonQty;
+            parameters[3].Value = carton.CartonStatus;
+            parameters[4].Value = carton.CapacityNo;
+            parameters[5].Value = carton.Ruleno;
+            parameters[6].Value = carton.Workno;
+            parameters[7].Value = carton.Cusno;
+            parameters[8].Value = carton.Cuspo;
+            parameters[9].Value = carton.Orderqty;
+            parameters[10].Value = carton.Cusmatno;
+            parameters[11].Value = carton.Delmatno;
+            parameters[12].Value = carton.Offino;
+            parameters[13].Value = carton.Verno;
+            parameters[14].Value = carton.Woquantity;
+            parameters[15].Value = carton.Modelno;
+            parameters[16].Value = carton.Opuser;
+            parameters[17].Value = carton.Createtime;
+            parameters[18].Value = carton.SoOrder;
+            parameters[19].Value = carton.ProdId;
+            parameters[20].Value = carton.Cusname;
+            parameters[21].Value = carton.PackType;
+            parameters[22].Value = carton.BoxNo;
+            parameters[23].Value = carton.SpecialField;
+            parameters[24].Value = carton.UnionField;
+            parameters[25].Value = carton.ProdLineVal;
+            parameters[26].Value = carton.Datecode;
+            parameters[27].Value = carton.BatchNo;
+            int rows = SQLHelper.ExecuteNonQueryTrans(conn, mysqlTrans, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                saveMark = true;
+            }
+            else
+            {
+                saveMark = false;
+            }
+            return saveMark;
+        }
+
+
+
+
+        public bool saveCartonRelationByTrans(CtRelCarton ctRelCarton, MySqlConnection conn, MySqlTransaction mysqlTrans)
+        {
+            bool saveMark = true;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into t_ct_carton (uuid,ct_code,cartonNo,op_user,create_time)");
+            strSql.Append("values(@uuid,@ctCode,@cartonNo,@opuser,@createtime)");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@ctCode", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cartonNo", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@soOrder", MySqlDbType.VarChar, 900),
+            };
+            parameters[0].Value = ctRelCarton.Uuid;
+            parameters[1].Value = ctRelCarton.Ctcode;
+            parameters[2].Value = ctRelCarton.CartonNo;
+            parameters[3].Value = ctRelCarton.Opuser;
+            parameters[4].Value = ctRelCarton.Createtime;
+            int rows = SQLHelper.ExecuteNonQueryTrans(conn, mysqlTrans, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                saveMark = true;
+            }
+            else
+            {
+                saveMark = false;
+            }
+            return saveMark;
+        }
+
+
+
 
         public string getMaxCartonNoByWO(string workNo)
         {
@@ -113,7 +255,7 @@ namespace DAL
         {
             List<Carton> cartons = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT uuid,cartonNo,cartonQty,carton_status,capacity_no,packType,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,so_order,box_No,special_Field,union_Field,prodLine_val,date_code,batchNo,op_user,create_time,update_user,update_time FROM t_carton_info where work_no =@workno and del_flag is null order by create_time");
+            strSql.Append("SELECT uuid,cartonNo,cartonQty,carton_status,capacity_no,packType,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,so_order,box_No,special_Field,union_Field,prodLine_val,date_code,batchNo,op_user,create_time,update_user,update_time FROM t_carton_info where work_no =@workno and del_flag is null order by cartonNo");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@workno", MySqlDbType.VarChar, 900)
             };
@@ -315,7 +457,8 @@ namespace DAL
             if (countDB != null && countDB != DBNull.Value)
             {
                 countNo = countDB.ToString();
-            }else
+            }
+            else
             {
                 countNo = "0";
             }
@@ -323,7 +466,7 @@ namespace DAL
         }
 
         /// <summary>
-        /// 计算已装箱数
+        /// 计算工单已装箱数
         /// </summary>
         /// <param name="workno"></param>
         /// <returns></returns>
@@ -336,6 +479,30 @@ namespace DAL
                 new MySqlParameter("@workno", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = workno;
+            Object countDB = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (countDB != null && countDB != DBNull.Value)
+            {
+                countNo = int.Parse(countDB.ToString());
+            }
+            return countNo;
+        }
+
+        /// <summary>
+        /// 计算工单已装箱数
+        /// </summary>
+        /// <param name="workno"></param>
+        /// <returns></returns>
+        public int getCartonsByWoAndCusPo(string workno,string cusPo)
+        {
+            int countNo = 0;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from t_carton_info where work_no=@workno and cus_po=@cusPo and del_flag is null");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@workno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cusPo", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = workno;
+            parameters[1].Value = cusPo;
             Object countDB = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (countDB != null && countDB != DBNull.Value)
             {
@@ -436,7 +603,7 @@ namespace DAL
         /// </summary>
         /// <param name="carton"></param>
         /// <returns></returns>
-        public bool updateCartonStatus(Carton carton,int status)
+        public bool updateCartonStatus(Carton carton, int status)
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
@@ -468,9 +635,9 @@ namespace DAL
         /// </summary>
         /// <param name="prefCartonNo"></param>
         /// <returns></returns>
-        public string queryFileNo(string cusNo,string delMatno,string boundType)
+        public string queryFileNo(string cusNo, string delMatno, string boundType)
         {
-            string fileNo = "";
+            string fileNo = null;
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select file_no from t_file_reldel where cus_no=@cusNo AND del_matno=@delMatno AND bound_type=@boundType AND del_flag is null");
             MySqlParameter[] parameters = {
@@ -590,7 +757,7 @@ namespace DAL
 
         public int queryCurrentBoxQty(String workNo)
         {
-  
+
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select count(1) from t_carton_info where work_no=@workNo and del_flag is null");
             MySqlParameter[] parameters = {
@@ -604,7 +771,7 @@ namespace DAL
         }
 
 
-        public int currentBoxQtyByCuspo(String cusPo,String delMatno)
+        public int currentBoxQtyByCuspo(String cusPo, String delMatno)
         {
 
             StringBuilder strSql = new StringBuilder();

@@ -16,6 +16,18 @@ namespace Model
         private string _updatetime;
         private string _delflag;
 
+
+        public Department()
+        {
+
+        }
+
+        public Department(string deptId,string deptName)
+        {
+            this.DeptId = deptId;
+            this.DeptName = deptName;
+        }
+
         public string Uuid
         {
             get

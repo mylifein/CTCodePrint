@@ -22,8 +22,11 @@ namespace CTCodePrint
         {
             InitializeComponent();
         }
-        private Carton carton;
-        CartonService cartonService = new CartonService();
+        private Capacity capacity;
+        private CodeRule codeRule;
+        private FileRelDel fileRelDel;
+        private List<MandUnionFieldType> mandUnionFieldTypeList;
+        private readonly CartonService cartonService = new CartonService();
         private readonly CTCodeService ctCodeService = new CTCodeService();
         private readonly GenerateCarton generateCarton = new GenerateCarton();
         private readonly BarCodePrint barPrint = BarCodePrint.getInstance();
@@ -34,10 +37,12 @@ namespace CTCodePrint
         private readonly ProdLineService prodLineService = new ProdLineService();
         private readonly OracleQueryB queryB = new OracleQueryB();                      //Oracle 查询
         private readonly CapacityService capacityService = new CapacityService();
-        private readonly CusRuleService cusRuleService = new CusRuleService();
         private readonly CodeRuleService codeRuleService = new CodeRuleService();
+        private readonly UserService userService = new UserService();
+        private readonly FileRelDelService fileRelDelService = new FileRelDelService();     //查詢模板的文件編號
 
         private string filePath = null;
+        private ProdLine userProdLine = null;
 
 
         private void button1_Click(object sender, EventArgs e)
@@ -57,6 +62,26 @@ namespace CTCodePrint
             this.comboBox1.DataSource = listDepartment;
             this.comboBox1.SelectedIndex = 0;
 
+            User user = userService.queryByUsername(Auxiliary.loginName);
+            if (user.ProdLine != null && !("").Equals(user.ProdLine))
+            {
+
+                this.comboBox1.Enabled = false;
+                userProdLine = prodLineService.queryProdLineById(user.ProdLine);
+                if (userProdLine != null)
+                {
+                    var items = this.comboBox1.Items;
+                    for (int i = 0; i < items.Count; i++)
+                    {
+                        Department iteratorDept = items[i] as Department;
+                        if (userProdLine.Department.DeptId.Equals(iteratorDept.DeptId))
+                        {
+                            this.comboBox1.SelectedItem = iteratorDept;
+                            break;
+                        }
+                    }
+                }
+            }
 
             DataTable itemTable2 = new DataTable();   // construct selects value
             DataColumn columnType;
@@ -66,12 +91,12 @@ namespace CTCodePrint
             columnType = new DataColumn("Value");
             itemTable2.Columns.Add(columnType);
             rowType = itemTable2.NewRow();
-            rowType["Name"] = "yyyyMMdd";
-            rowType["Value"] = "yyyyMMdd";
-            itemTable2.Rows.Add(rowType);
-            rowType = itemTable2.NewRow();
             rowType["Name"] = "yyyy-MM-dd";
             rowType["Value"] = "yyyy-MM-dd";
+            itemTable2.Rows.Add(rowType);
+            rowType = itemTable2.NewRow();
+            rowType["Name"] = "yyyyMMdd";
+            rowType["Value"] = "yyyyMMdd";
             itemTable2.Rows.Add(rowType);
             rowType = itemTable2.NewRow();
             rowType["Name"] = "yyyy/MM/dd";
@@ -94,12 +119,10 @@ namespace CTCodePrint
                     this.textBox1.Focus();
                     return;
                 }
-                string workno = this.textBox1.Text.Trim();
-                List<WorkOrderInfo> workOrderInfos = queryB.getWorkInfoByNo(workno.ToUpper());
+                string workno = this.textBox1.Text.Trim().ToUpper();
+                List<WorkOrderInfo> workOrderInfos = queryB.getWorkInfoByNo(workno);
                 if (workOrderInfos != null && workOrderInfos.Count > 0)
                 {
-
-                    carton = new Carton();
                     this.comboBox3.DataSource = workOrderInfos;
                     this.comboBox3.DisplayMember = "CustPO";                                    //PO                    
                     this.comboBox3.ValueMember = "OrderQty";                                    //QTY
@@ -108,10 +131,11 @@ namespace CTCodePrint
                     this.textBox7.Text = workOrderInfos[0].CustId;
                     this.textBox8.Text = workOrderInfos[0].ItemCode;
                     this.textBox13.Text = workOrderInfos[0].OrderQty;
+                    this.textBox17.Text = workOrderInfos[0].SoOrder;
+                    this.textBox5.Text = cartonService.getCartonQtyByWO(workno);
                     if (workOrderInfos[0].CusItemNum != null && workOrderInfos[0].CusItemNum.Trim() != "")
                     {
                         this.textBox9.Text = workOrderInfos[0].CusItemNum;
-                        carton.Cusmatno = workOrderInfos[0].CusItemNum;
                     }
                     else
                     {
@@ -119,65 +143,13 @@ namespace CTCodePrint
                         if (cusMatInfos != null && cusMatInfos.Count > 0)
                         {
                             this.textBox9.Text = cusMatInfos[0].CusItemCode;
-                            carton.Cusmatno = cusMatInfos[0].CusItemCode;
                             this.textBox11.Text = cusMatInfos[0].CusItemDesc;
-                            carton.CusmatDesc = cusMatInfos[0].CusItemDesc;
-
                         }
                     }
-                    Capacity capacity = capacityService.queryByRelation(workOrderInfos[0].CustId, workOrderInfos[0].ItemCode, "1");
-                    //下载打印模板 並初始化Carton 基本信息
                     this.comboBox4.DisplayMember = "Revision";
                     this.comboBox4.ValueMember = "Revision";
                     this.comboBox4.DataSource = queryB.getRevisionInfo(workno);
-
-                    this.comboBox5.DataSource = workOrderInfos;
-                    this.comboBox5.DisplayMember = "SoOrder";                        //SO                 
-                    this.comboBox5.ValueMember = "SoOrder";
-
-                    carton.Workno = workno.ToUpper();
-                    carton.Delmatno = workOrderInfos[0].ItemCode;
-                    carton.Cusno = workOrderInfos[0].CustId;
-                    carton.PackType = "1";                  //包裝類型：0 整機， 1單出
-                    carton.Cusname = workOrderInfos[0].CustName;
-                    carton.Orderqty = workOrderInfos[0].OrderQty;
-                    carton.Woquantity = workOrderInfos[0].StartQty;
-                    carton.SoOrder = workOrderInfos[0].SoOrder;
-                    carton.Cuspo = workOrderInfos[0].CustPO;
-                    if (capacity != null)
-                    {
-                        this.countBoxQty(capacity.Capacityqty);
-                        carton.CapacityNo = capacity.Capacityno;
-                        this.textBox12.Text = capacity.Capacitydesc;
-                        this.textBox14.Text = capacity.Capacityqty.ToString();
-
-                    }
-                    CusRule cusRule = cusRuleService.queryCusRuleByCond(carton.Cusno, carton.Delmatno, "1");                //1代表裝箱單編碼規則;
-                    if (cusRule != null && cusRule.Ruleno != "")
-                    {
-                        CodeRule codeRule = codeRuleService.queryRuleById(cusRule.Ruleno);
-                        this.textBox2.Text = codeRule.RuleDesc;
-                        carton.Ruleno = codeRule.Ruleno;
-                    }
-                    ProdLine prodLine = new ProdLine();
-                    carton.ProdLine = prodLine;
-                    carton.ProdLine.ProdlineId = this.comboBox2.SelectedValue.ToString();
-                    carton.Modelno = cartonService.queryFileNo(carton.Cusno, carton.Delmatno, "1");                //TYPE= 1 為裝箱單模板
-                    carton.CartonStatus = "0";
-                    carton = GenerateCarton.generateCartonNo(carton);
-                    //顯示箱號：
-                    this.textBox10.Text = carton.CartonNo;
-                    this.textBox5.Text = cartonService.getCartonQtyByWO(carton.Workno);
-                    this.textBox3.Text = carton.BatchNo;
-
-                    //下載模板並預覽   1.查询模板是否存在， 若存在不下载  2.若不存在下载模板
-                    filePath = modelInfoService.previewModelFile(carton.Modelno);
-                    if (filePath != null)
-                    {
-                        string pictureFile = barPrint.PreviewPrintBC(filePath);
-                        this.pictureBox1.Load(pictureFile);
-
-                    }
+                    loadResources(workOrderInfos[0].CustId, workOrderInfos[0].ItemCode, "1", workno, workOrderInfos[0].CustPO);         //加载打印资源，并计算可打印数量
 
                 }
             }
@@ -194,7 +166,52 @@ namespace CTCodePrint
             this.comboBox2.DisplayMember = "ProdlineName";
             this.comboBox2.DataSource = prodLineList;
             this.comboBox2.SelectedIndex = 0;
+            if (userProdLine != null)
+            {
+                this.comboBox2.Enabled = false;
+                var items = this.comboBox2.Items;
+                for (int i = 0; i < items.Count; i++)
+                {
+                    ProdLine iteratorProdLine = items[i] as ProdLine;
+                    if (userProdLine.ProdlineId.Equals(iteratorProdLine.ProdlineId))
+                    {
+                        this.comboBox2.SelectedItem = iteratorProdLine;
+                        break;
+                    }
+                }
+            }
         }
+
+
+        public void loadResources(string custId, string delMatno, string boundType, string workno, string cusPo)
+        {
+            capacity = capacityService.queryByRelation(custId, delMatno, boundType);
+            if (capacity != null)
+            {
+                this.countBoxQty(capacity.Capacityqty, workno, cusPo);
+                this.textBox12.Text = capacity.Capacitydesc;
+                this.textBox14.Text = capacity.Capacityqty.ToString();
+            }
+
+            codeRule = codeRuleService.queryRuleByCond(custId, delMatno, boundType);  //1代表Carton碼編碼規則
+            if (codeRule != null)
+            {
+                this.textBox2.Text = codeRule.RuleDesc;
+            }
+            mandUnionFieldTypeList = manRelFieldTypeService.queryFieldListByCond(custId, delMatno, boundType);
+            fileRelDel = fileRelDelService.queryFileRelDelCusNo(custId, delMatno, boundType);
+            //下載模板並預覽   1.查询模板是否存在， 若存在不下载  2.若不存在下载模板
+            if (fileRelDel != null)
+            {
+                filePath = modelInfoService.previewModelFile(fileRelDel.FileNo);
+                //if (filePath != null)
+                //{
+                //    string pictureFile = barPrint.PreviewPrintBC(filePath);
+                //    this.pictureBox1.Load(pictureFile);
+                //}
+            }
+        }
+
 
         private void clearAll()
         {
@@ -205,17 +222,17 @@ namespace CTCodePrint
         ///  计算装箱容量 上限
         /// </summary>
         /// <param name="capacity"></param>
-        private void countBoxQty(int capacity)
+        private void countBoxQty(int capacity, string workNo, string cusPo)
         {
-            if (capacity != null)
+            if (capacity != null && this.textBox13.Text != null && this.textBox13.Text != "")
             {
-                int packedQty = int.Parse(cartonService.getCartonQtyByWO(carton.Workno));                   //已装箱数量
-                int workQty = int.Parse(this.textBox4.Text);
-                int surplus = workQty - packedQty;
+                int packedQty = int.Parse(cartonService.getCartonQtyByWoAndCusPo(workNo, cusPo));                   //查询工单、PO已装箱数量
+                int poQty = int.Parse(this.textBox13.Text);
+                int surplus = poQty - packedQty;                                                                   //获得PO剩余可装箱数量
                 //计算剩余可装箱数
                 int countBoxs = (int)Math.Ceiling((double)surplus / capacity);
                 this.numericUpDown2.Maximum = countBoxs;
-                this.textBox15.Text = cartonService.getCartonsByWO(carton.Workno).ToString();               //计算已装箱数
+                this.textBox15.Text = cartonService.getCartonsByWoAndCusPo(workNo, cusPo).ToString();             //计算工单，PO已装箱数
                 this.textBox16.Text = countBoxs.ToString();
                 if (surplus > capacity)
                 {
@@ -227,7 +244,6 @@ namespace CTCodePrint
                     this.numericUpDown1.Maximum = surplus;
                     this.numericUpDown1.Value = surplus;
                 }
-
             }
         }
 
@@ -237,27 +253,49 @@ namespace CTCodePrint
         /// </summary>
         private void printCarton(bool isSave)
         {
-            this.textBox5.Text = cartonService.getCartonQtyByWO(carton.Workno);
-            MandRelDel mandRelDel = mandRelDelService.queryManNoByDel(carton.Cusno, carton.Delmatno, "1");
-            if (mandRelDel == null)
+            if (codeRule == null)
             {
-                MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("请联系管理员，绑定箱号的编码规则", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.textBox1.Focus();
+                return;
+            }
+            //查询标签模板
+            if (fileRelDel == null)
+            {
+                MessageBox.Show("请联系管理员,绑定标签模板！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.textBox1.Focus();
                 return;
             }
             //查詢字段對應的規則信息
-            List<MandUnionFieldType> mandUnionFieldTypeList = manRelFieldTypeService.queryMandUnionFieldTypeList(mandRelDel.ManNo);
             if (mandUnionFieldTypeList == null)
             {
                 MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            carton.ProdLine.ProdlineId = this.comboBox2.SelectedValue.ToString();                  //打印時 獲得線別編號
+            Carton carton = new Carton();
+            carton.ProdId = this.comboBox2.SelectedValue.ToString();                  //打印時 獲得線別編號
             carton.ProdLineVal = this.comboBox2.Text;
             carton.CartonQty = (int)this.numericUpDown1.Value;                        //裝箱單數量
             carton.Datecode = dateTimePicker1.Value.ToString(comboBox6.Text);
-            this.countBoxQty(carton.CartonQty);
+            carton.Ruleno = codeRule.Ruleno;
+            carton.Workno = this.textBox1.Text.Trim().ToUpper();
+            carton.Delmatno = this.textBox8.Text;
+            carton.Cusmatno = this.textBox9.Text;
+            carton.Cusno = this.textBox7.Text;
+            carton.PackType = "1";                                                   //包裝類型：0 整機， 1單出
+            carton.Cusname = this.textBox6.Text;
+            carton.Orderqty = this.textBox13.Text;
+            carton.Woquantity = this.textBox4.Text;
+            carton.SoOrder = this.textBox17.Text;
+            carton.Cuspo = this.comboBox3.Text == null ? "" : this.comboBox3.Text.ToString().Trim();            //Cuspo
+            carton.ProdId = this.comboBox2.SelectedValue.ToString();
+            carton.Modelno = fileRelDel.FileNo;                                      //TYPE= 1 為裝箱單模板
+            carton.CapacityNo = capacity.Capacityno;
+            carton.CartonStatus = "0";
             carton = GenerateCarton.generateCartonNo(carton);
-            this.textBox10.Text = carton.CartonNo;
+            //顯示箱號：
+            this.textBox10.Text = carton.CartonNo; ;
+            this.textBox3.Text = carton.BatchNo;
 
             foreach (MandUnionFieldType mandTYpe in mandUnionFieldTypeList)
             {
@@ -285,7 +323,7 @@ namespace CTCodePrint
                 }
                 if (mandTYpe.FieldName.ToUpper().Equals("UnionField".ToUpper()))
                 {
-                    carton.UnionField = "BB" + carton.CartonNo + "||P" + carton.Cusmatno + "Q" + carton.CartonQty + "||1P" + carton.Delmatno;
+                    carton.UnionField = "BB" + carton.CartonNo + "||P" + carton.Cusmatno + "||Q" + carton.CartonQty + "||1P" + carton.Delmatno;
                 }
                 if (mandTYpe.FieldName.ToUpper().Equals("BoxNo".ToUpper()))
                 {
@@ -344,22 +382,6 @@ namespace CTCodePrint
 
 
 
-        private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (this.comboBox3.SelectedValue != null && this.comboBox3.SelectedValue.ToString().Trim() != "")
-            {
-                this.textBox13.Text = this.comboBox3.SelectedValue.ToString().Trim();
-                carton.Cuspo = this.comboBox3.Text;
-
-                List<WorkOrderInfo> workOrders = (List<WorkOrderInfo>)this.comboBox3.DataSource;
-                WorkOrderInfo workOrder = workOrders[this.comboBox3.SelectedIndex];
-                this.textBox6.Text = workOrder.CustName;
-                this.textBox7.Text = workOrder.CustId;
-            }
-            carton = GenerateCarton.generateCartonNo(carton);
-            this.textBox10.Text = carton.CartonNo;
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
             printCarton(false);
@@ -374,14 +396,14 @@ namespace CTCodePrint
             foreach (PropertyInfo propertyInfo in propertyInfoARR)
             {
                 Object propertyVal = carton.GetType().GetProperty(propertyInfo.Name).GetValue(carton, null);
-                if(propertyVal != null)
+                if (propertyVal != null)
                 {
-                    property.Add(propertyInfo.Name.ToUpper(),propertyVal.ToString());
+                    property.Add(propertyInfo.Name.ToUpper(), propertyVal.ToString());
                 }
             }
             for (int i = 0; i < printNum; i++)
             {
-                Dictionary<string, string> cartonDict = new Dictionary<string, string>();          
+                Dictionary<string, string> cartonDict = new Dictionary<string, string>();
                 foreach (MandUnionFieldType mandUnionFieldType in mandUnionFieldTypeList)
                 {
                     string fieldName = mandUnionFieldType.FieldName.ToUpper();
@@ -389,13 +411,28 @@ namespace CTCodePrint
                     {
                         cartonDict.Add(fieldName, property[fieldName]);
                     }
-                    else{
+                    else
+                    {
                         cartonDict.Add(fieldName, mandUnionFieldType.FieldValue);
                     }
                 }
                 cartonList.Add(cartonDict);
             }
             return cartonList;
+        }
+
+        private void comboBox3_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (this.comboBox3.SelectedValue != null && this.comboBox3.SelectedValue.ToString().Trim() != "")
+            {
+                List<WorkOrderInfo> workOrders = (List<WorkOrderInfo>)this.comboBox3.DataSource;
+                WorkOrderInfo workOrder = workOrders[this.comboBox3.SelectedIndex];
+                this.textBox6.Text = workOrder.CustName;
+                this.textBox7.Text = workOrder.CustId;
+                this.textBox17.Text = workOrder.SoOrder;
+                this.textBox13.Text = workOrder.OrderQty;
+                loadResources(workOrder.CustId, workOrder.ItemCode, "1", workOrder.WorkNo, workOrder.CustPO);         //加载打印资源，并计算可打印数量
+            }
         }
     }
 }

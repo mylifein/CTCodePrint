@@ -44,6 +44,9 @@ namespace CTCodePrint
             columnType = new DataColumn("Value");
             itemTable2.Columns.Add(columnType);
             rowType = itemTable2.NewRow();
+            rowType["Name"] = "CT";
+            rowType["Value"] = "0";
+            rowType = itemTable2.NewRow();
             rowType["Name"] = "裝箱";
             rowType["Value"] = "1";
             itemTable2.Rows.Add(rowType);

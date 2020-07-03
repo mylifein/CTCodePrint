@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Model;
 using System.Reflection;
 using static System.Drawing.Printing.PrinterSettings;
+using System.IO;
 
 namespace CTCodePrint.common
 {
@@ -211,7 +212,7 @@ namespace CTCodePrint.common
                                         {
                                             string entityValue = ctcode.GetType().GetProperty(propertyInfo.Name).GetValue(ctcode, null).ToString();
                                             doc.Variables.FormVariables.Item(i).Value = entityValue;
-                                           
+
                                             judge = true;
                                             dic1.Add(i, propertyInfo.Name);
                                             isObjectDic.Add(i, true);
@@ -370,7 +371,7 @@ namespace CTCodePrint.common
                             }
                             if (!judge)
                             {
-                                doc.Variables.FormVariables.Item(i).Value = mandUnionFieldType.FieldValue;                            
+                                doc.Variables.FormVariables.Item(i).Value = mandUnionFieldType.FieldValue;
                             }
                         }
                     }
@@ -415,6 +416,7 @@ namespace CTCodePrint.common
                 lbl.Documents.Open(templateFileName, false);// 调用设计好的label文件
             }
             Document doc = lbl.ActiveDocument;
+            doc.Printer.SwitchTo(DefaultPrinter());
             try
             {
                 foreach (Dictionary<string, string> carton in cartons)
@@ -422,10 +424,12 @@ namespace CTCodePrint.common
                     for (int i = 1; i <= doc.Variables.FormVariables.Count; i++)
                     {
                         string variableName = doc.Variables.FormVariables.Item(i).Name.ToString().ToUpper();
-                        doc.Variables.FormVariables.Item(i).Value = carton[variableName];
+                        if (carton.ContainsKey(variableName))
+                        {
+                            doc.Variables.FormVariables.Item(i).Value = carton[variableName];
+                        }
                     }
                     int Num = 1;
-                    doc.Printer.SwitchTo(DefaultPrinter());
                     doc.PrintLabel(1, 1, 1, Num, 1, "");
                 }
                 doc.FormFeed();
@@ -614,7 +618,11 @@ namespace CTCodePrint.common
             Document doc = lbl.ActiveDocument;
             try
             {
-                filePath = "D:\\" + System.DateTime.Now.Year + System.DateTime.Now.Month + System.DateTime.Now.Day + System.DateTime.Now.Hour + System.DateTime.Now.Minute + System.DateTime.Now.Second + ".bmp";
+                if (!Directory.Exists("D:\\printPic\\"))
+                {
+                    Directory.CreateDirectory("D:\\printPic\\");
+                }
+                filePath = "D:\\printPic\\" + System.DateTime.Now.Year + System.DateTime.Now.Month + System.DateTime.Now.Day + System.DateTime.Now.Hour + System.DateTime.Now.Minute + System.DateTime.Now.Second + ".bmp";
                 string st = doc.CopyImageToFile(12, "BMP", 0, 60, filePath);
             }
             catch (Exception ex)
@@ -634,6 +642,56 @@ namespace CTCodePrint.common
 
         }
 
+
+
+        internal bool bactchPrintPalletByModel(string templateFileName, Dictionary<string, string> content)
+        {
+            if (lbl == null)
+            {
+                lbl = new ApplicationClass();
+            }
+            //未加載模板文件或者模板發生變更時，重新加載新的模板
+            if (lbl.Documents.Count == 0 || templateFileName.IndexOf(lbl.ActiveDocument.Name) == -1)
+            {
+                lbl.Documents.Open(templateFileName, false);// 调用设计好的label文件
+            }
+            Document doc = lbl.ActiveDocument;
+            doc.Printer.SwitchTo(DefaultPrinter());
+            try
+            {
+                for (int i = 1; i <= doc.Variables.FormVariables.Count; i++)
+                {
+                    string variableName = doc.Variables.FormVariables.Item(i).Name.ToString().ToUpper();
+                    if (content.ContainsKey(variableName))
+                    {
+                        doc.Variables.FormVariables.Item(i).Value = content[variableName];
+                    }
+                }
+                int Num = 1;
+                doc.PrintLabel(1, 1, 1, Num, 1, "");
+
+                doc.FormFeed();
+            }
+            catch (Exception ex)
+            {
+                return false;                          //返回,後面代碼不執行
+            }
+            finally
+            {
+                //內存釋放和回收
+                lbl.Documents.CloseAll();
+                lbl.Quit();
+                lbl = null;
+                doc = null;
+                GC.Collect(0);
+            }
+            return true;
+        }
+
+
+
+
+     
 
     }
 }

@@ -100,5 +100,73 @@ namespace DAL
             }
             return saveMark;
         }
+
+
+        public string getCTCount(string workno)
+        {
+            string countNo = "";
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from t_code_info where work_no =@workno");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@workno", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = workno;
+            Object countDB = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (countDB != null && countDB != DBNull.Value)
+            {
+                countNo = countDB.ToString();
+            }
+            return countNo;
+        }
+
+
+        /// <summary>
+        /// 根據工單和PO查詢已經產生CT數量
+        /// </summary>
+        /// <param name="workno"></param>
+        /// <param name="po"></param>
+        /// <returns></returns>
+        public string getCTCountByPO(string workno, string po)
+        {
+            string countNo = "";
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from t_code_info where work_no=@workno and cus_po=@po");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@workno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@po", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = workno;
+            parameters[1].Value = po;
+            Object countDB = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (countDB != null && countDB != DBNull.Value)
+            {
+                countNo = countDB.ToString();
+            }
+            return countNo;
+        }
+
+
+        public string getCTQtyByWoAndCusPo(string workno, string cusPo)
+        {
+            string countNo = "";
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select SUM(quantity) from t_code_info where work_no=@workno and cus_po=@cusPo and del_flag is null");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@workno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@cusPo", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = workno;
+            parameters[1].Value = cusPo;
+            Object countDB = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (countDB != null && countDB != DBNull.Value)
+            {
+                countNo = countDB.ToString();
+            }
+            else
+            {
+                countNo = "0";
+            }
+            return countNo;
+        }
     }
 }

@@ -76,7 +76,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(82, 15);
             this.label3.TabIndex = 4;
-            this.label3.Text = "字段描述：";
+            this.label3.Text = "部門描述：";
             // 
             // textBox4
             // 

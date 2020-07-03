@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -126,7 +127,7 @@ namespace CTCodePrint
             }
             string palletNo = this.dataGridView1.Rows[index].Cells["PalletNo"].Value.ToString();
             Pallet pallet = palletService.queryPalletByPalletNo(palletNo);
-            bool judgePrint = barPrint.printPalletByModel(filePath, pallet, mandUnionFieldTypeList);
+            bool judgePrint = barPrint.bactchPrintPalletByModel(filePath, palletListToArray(pallet, mandUnionFieldTypeList));;
             if (judgePrint)
             {
                 //printQ.savePrintRecord(ctcodeEntity);
@@ -138,6 +139,38 @@ namespace CTCodePrint
                 return;
             }
 
+        }
+
+
+        private Dictionary<string, string> palletListToArray(Pallet pallet, List<MandUnionFieldType> mandUnionFieldTypeList)
+        {
+
+            PropertyInfo[] propertyInfoARR = pallet.GetType().GetProperties();
+            Dictionary<string, string> property = new Dictionary<string, string>();
+            foreach (PropertyInfo propertyInfo in propertyInfoARR)
+            {
+                Object propertyVal = pallet.GetType().GetProperty(propertyInfo.Name).GetValue(pallet, null);
+                if (propertyVal != null)
+                {
+                    property.Add(propertyInfo.Name.ToUpper(), propertyVal.ToString());
+                }
+            }
+
+            Dictionary<string, string> palletDict = new Dictionary<string, string>();
+            foreach (MandUnionFieldType mandUnionFieldType in mandUnionFieldTypeList)
+            {
+                string fieldName = mandUnionFieldType.FieldName.ToUpper();
+                if (property.ContainsKey(fieldName))
+                {
+                    palletDict.Add(fieldName, property[fieldName]);
+                }
+                else
+                {
+                    palletDict.Add(fieldName, mandUnionFieldType.FieldValue);
+                }
+            }
+
+            return palletDict;
         }
 
     }

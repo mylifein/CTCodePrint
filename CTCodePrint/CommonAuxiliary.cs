@@ -4,16 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using System.Media;
 
 namespace Common
 {
-    public static class Auxiliary
+    public static class CommonAuxiliary
     {
+
+        private static SoundPlayer successSoundPlayer;
+        private static SoundPlayer failSoundPlayer;
         public static string Get_SQLConnStr()
         {
             string SQLConnStr = ConfigurationManager.ConnectionStrings["ConnectionMySqlString"].ConnectionString.ToString();     //讀<connectionStrings>節中的ConnectionString鍵的值
             return SQLConnStr;
         }
+
+
 
         public static string Get_UserName()
         {
@@ -100,5 +106,24 @@ namespace Common
         }
 
 
+
+        public static void playSuccess()
+        {
+            if(successSoundPlayer == null)
+            {
+                successSoundPlayer = new SoundPlayer(CTCodePrint.Properties.Resources.success);
+            }
+            successSoundPlayer.Play();
+        }
+
+
+        public static void playFail()
+        {
+            if (failSoundPlayer == null)
+            {
+                failSoundPlayer = new SoundPlayer(CTCodePrint.Properties.Resources.warning);
+            }
+            failSoundPlayer.Play();
+        }
     }
 }

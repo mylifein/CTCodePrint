@@ -20,6 +20,7 @@ namespace Model
         private string modelNo;
         private string datecode;
         private string remark;
+        private int checkNum;
         private string opuser;
         private string createtime;
         private string updateser;
@@ -244,6 +245,19 @@ namespace Model
             set
             {
                 remark = value;
+            }
+        }
+
+        public int CheckNum
+        {
+            get
+            {
+                return checkNum;
+            }
+
+            set
+            {
+                checkNum = value;
             }
         }
     }

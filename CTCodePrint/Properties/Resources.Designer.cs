@@ -59,5 +59,23 @@ namespace CTCodePrint.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查找类似于 System.IO.MemoryStream 的 System.IO.UnmanagedMemoryStream 类型的本地化资源。
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream success {
+            get {
+                return ResourceManager.GetStream("success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似于 System.IO.MemoryStream 的 System.IO.UnmanagedMemoryStream 类型的本地化资源。
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream warning {
+            get {
+                return ResourceManager.GetStream("warning", resourceCulture);
+            }
+        }
     }
 }

@@ -36,5 +36,7 @@ namespace BLL
             return cusRuleDao.queryCusRuleByConds(cusNo,delMatno,boundType);
         }
 
+
+
     }
 }

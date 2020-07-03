@@ -33,11 +33,7 @@ namespace BLL
 
         public MandRelDel queryManNoByDel(string cusNo,string delMatno,string boudType)
         {
-            MandRelDel mandRelDel = new MandRelDel();
-            mandRelDel.CusNo = cusNo;
-            mandRelDel.BoundType = boudType;
-            mandRelDel.DelMatno = delMatno;
-            return mandRelDelDao.queryManNoByDel(mandRelDel);
+            return mandRelDelDao.queryManNoByDel(cusNo,delMatno,boudType);
         }
 
 

@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -157,7 +158,7 @@ namespace CTCodePrint
             {
                 initCTSeq(carton);
             }
-            bool judgePrint = barPrint.printCatonByModel(filePath, carton, mandUnionFieldTypeList);
+            bool judgePrint = barPrint.bactchPrintPalletByModel(filePath, cartonToDic(carton, mandUnionFieldTypeList));
             if (judgePrint)
             {
                 //printQ.savePrintRecord(ctcodeEntity);
@@ -212,6 +213,40 @@ namespace CTCodePrint
                 }
 
             }
+        }
+
+
+
+
+        private Dictionary<string, string> cartonToDic(Carton carton, List<MandUnionFieldType> mandUnionFieldTypeList)
+        {
+
+            PropertyInfo[] propertyInfoARR = carton.GetType().GetProperties();
+            Dictionary<string, string> property = new Dictionary<string, string>();
+            foreach (PropertyInfo propertyInfo in propertyInfoARR)
+            {
+                Object propertyVal = carton.GetType().GetProperty(propertyInfo.Name).GetValue(carton, null);
+                if (propertyVal != null)
+                {
+                    property.Add(propertyInfo.Name.ToUpper(), propertyVal.ToString());
+                }
+            }
+
+            Dictionary<string, string> cartonDict = new Dictionary<string, string>();
+            foreach (MandUnionFieldType mandUnionFieldType in mandUnionFieldTypeList)
+            {
+                string fieldName = mandUnionFieldType.FieldName.ToUpper();
+                if (property.ContainsKey(fieldName))
+                {
+                    cartonDict.Add(fieldName, property[fieldName]);
+                }
+                else
+                {
+                    cartonDict.Add(fieldName, mandUnionFieldType.FieldValue);
+                }
+            }
+
+            return cartonDict;
         }
     }
 }

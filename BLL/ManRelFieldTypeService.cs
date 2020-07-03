@@ -10,7 +10,9 @@ namespace BLL
 {
     public class ManRelFieldTypeService
     {
-        ManRelFieldTypeDao manRelFieldTypeDao = new ManRelFieldTypeDao();
+        private readonly ManRelFieldTypeDao manRelFieldTypeDao = new ManRelFieldTypeDao();
+        private readonly MandRelDelDao mandRelDelDao = new MandRelDelDao();
+
 
         /// <summary>
         /// Union表查詢
@@ -20,6 +22,16 @@ namespace BLL
         public List<MandUnionFieldType> queryMandUnionFieldTypeList(string manNo)
         {
             return manRelFieldTypeDao.queryMandUnionFieldTypeList(manNo);
+        }
+
+        public List<MandUnionFieldType> queryFieldListByCond(string cusNo, string delMatno, string boudType)
+        {
+            MandRelDel mandRelDel =  mandRelDelDao.queryManNoByDel(cusNo, delMatno, boudType);
+            if(mandRelDel != null)
+            {
+                return manRelFieldTypeDao.queryMandUnionFieldTypeList(mandRelDel.ManNo);
+            }
+            return null;
         }
 
 

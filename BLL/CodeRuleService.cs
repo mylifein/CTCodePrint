@@ -11,6 +11,7 @@ namespace BLL
     public class CodeRuleService
     {
         private readonly CodeRuleDao codeRuleDao = new CodeRuleDao();
+        private readonly CusRuleDao cusRuleDao = new CusRuleDao();
 
 
         /// <summary>
@@ -33,6 +34,19 @@ namespace BLL
             return codeRuleDao.queryRuleById(ruleNo);
         }
 
+
+
+        public CodeRule queryRuleByCond(string cusNo, string delMatno, string boundType)
+        {
+            CodeRule codeRule = null;
+            CusRule cusRule = cusRuleDao.queryCusRuleByConds(cusNo, delMatno, boundType);
+            if(cusRule != null)
+            {
+                codeRule = codeRuleDao.queryRuleById(cusRule.Ruleno);
+            }
+
+            return codeRule;
+        }
 
 
         /// <summary>

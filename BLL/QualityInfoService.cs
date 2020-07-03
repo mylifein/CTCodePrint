@@ -100,5 +100,11 @@ namespace BLL
             return reQualityInfo;
         }
 
+
+        public int queryCheckNum(string woNo)
+        {
+            return qualityInfoDao.queryCheckNum(woNo);
+        }
+
     }
 }

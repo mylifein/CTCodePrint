@@ -332,5 +332,12 @@ namespace CTCodePrint
             reprintPallet.MdiParent = this;
             reprintPallet.Show();
         }
+
+        private void externalMenu_Click(object sender, EventArgs e)
+        {
+            CtExternalprint ctExternalprint = new CtExternalprint();
+            ctExternalprint.MdiParent = this;
+            ctExternalprint.Show();
+        }
     }
 }

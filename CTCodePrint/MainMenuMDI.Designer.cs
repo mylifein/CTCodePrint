@@ -70,6 +70,7 @@
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.externalMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -94,6 +95,7 @@
             this.fileMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctToolStripMenuItem,
             this.reprintCTtoolStripMenuItem,
+            this.externalMenu,
             this.cartonToolStripMenuItem,
             this.singCartonToolStripMenuItem,
             this.reprintCartonToolStripMenuItem,
@@ -393,6 +395,13 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // externalMenu
+            // 
+            this.externalMenu.Name = "externalMenu";
+            this.externalMenu.Size = new System.Drawing.Size(239, 26);
+            this.externalMenu.Text = "外条码打印";
+            this.externalMenu.Click += new System.EventHandler(this.externalMenu_Click);
+            // 
             // MainMenuMDI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -459,6 +468,7 @@
         private System.Windows.Forms.ToolStripMenuItem ReprintPalletMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 品质首件质检标签ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 工单首件检验ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem externalMenu;
     }
 }
 

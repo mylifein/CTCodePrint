@@ -20,8 +20,8 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_qualityInfo (uuid,qualiatyNo,woNo,status,op_user,create_time,deliverMan)");
-            strSql.Append("values(@uuid,@qualiatyNo,@woNo,@status,@opuser,@createtime,@deliverMan)");
+            strSql.Append("insert into t_qualityInfo (uuid,qualiatyNo,woNo,status,op_user,create_time,deliverMan,checkNum)");
+            strSql.Append("values(@uuid,@qualiatyNo,@woNo,@status,@opuser,@createtime,@deliverMan,@checkNum)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@qualiatyNo", MySqlDbType.VarChar, 900),
@@ -29,7 +29,8 @@ namespace DAL
                 new MySqlParameter("@status", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@deliverMan", MySqlDbType.VarChar, 900)
+                new MySqlParameter("@deliverMan", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@checkNum", MySqlDbType.Int16, 900)
             };
             parameters[0].Value = qualityInfo.Uuid;
             parameters[1].Value = qualityInfo.QualiatyNo;
@@ -38,6 +39,7 @@ namespace DAL
             parameters[4].Value = qualityInfo.Opuser;
             parameters[5].Value = qualityInfo.Createtime;
             parameters[6].Value = qualityInfo.DeliverMan;
+            parameters[7].Value = qualityInfo.CheckNum;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {
@@ -265,6 +267,20 @@ namespace DAL
                 saveMark = false;
             }
             return saveMark;
+        }
+
+
+        public int queryCheckNum(string woNo)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from t_qualityInfo where woNo=@woNo and del_flag is null");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@woNo", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = woNo;
+            int rows = int.Parse(SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters).ToString().Trim());
+
+            return rows;
         }
 
     }

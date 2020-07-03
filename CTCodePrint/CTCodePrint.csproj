@@ -76,7 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Auxiliary.cs" />
+    <Compile Include="CommonAuxiliary.cs" />
     <Compile Include="BoundModelParam.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,6 +94,12 @@
     </Compile>
     <Compile Include="BoundCapacity.Designer.cs">
       <DependentUpon>BoundCapacity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CtExternalprint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CtExternalprint.Designer.cs">
+      <DependentUpon>CtExternalprint.cs</DependentUpon>
     </Compile>
     <Compile Include="QualityCheckPrint.cs">
       <SubType>Form</SubType>
@@ -272,6 +278,9 @@
     <EmbeddedResource Include="BoundCapacity.resx">
       <DependentUpon>BoundCapacity.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CtExternalprint.resx">
+      <DependentUpon>CtExternalprint.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="QualityCheckPrint.resx">
       <DependentUpon>QualityCheckPrint.cs</DependentUpon>
     </EmbeddedResource>
@@ -428,6 +437,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="20190903115541809_easyicon_net_48.ico" />
+    <None Include="Resources\warning.wav" />
+    <None Include="Resources\success.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

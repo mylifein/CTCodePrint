@@ -39,6 +39,7 @@ namespace Model
         private string _delflag;
         private string _vehicleNo;
         private ProdLine _prodLine;
+        private string _prodId;
         private List<String> ctCodeList;
         private string _datecode;
         private string _ct1;
@@ -641,6 +642,19 @@ namespace Model
             set
             {
                 _vehicleNo = value;
+            }
+        }
+
+        public string ProdId
+        {
+            get
+            {
+                return _prodId;
+            }
+
+            set
+            {
+                _prodId = value;
             }
         }
     }

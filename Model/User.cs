@@ -14,6 +14,7 @@ namespace Model
         private string _password;
         private string _userdesc;
         private string _department;
+        private string _prodLine;
         private string _opuser;
         private string _createtime;
         private string _updatetime;
@@ -148,6 +149,19 @@ namespace Model
             set
             {
                 _opuser = value;
+            }
+        }
+
+        public string ProdLine
+        {
+            get
+            {
+                return _prodLine;
+            }
+
+            set
+            {
+                _prodLine = value;
             }
         }
     }

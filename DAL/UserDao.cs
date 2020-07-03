@@ -74,7 +74,7 @@ namespace DAL
             {
                 Model.User user = null;
                 StringBuilder strSql = new StringBuilder();
-                strSql.Append("SELECT uuid,user_id,username,password,userdesc,department,op_user,create_time FROM t_user where username=@username");
+                strSql.Append("SELECT uuid,user_id,username,password,userdesc,department,prodline_id,op_user,create_time FROM t_user where username=@username");
                 MySqlParameter[] parameters = {
                 new MySqlParameter("@username", MySqlDbType.VarChar, 900),
             };
@@ -89,6 +89,7 @@ namespace DAL
                     user.Password = ds.Tables[0].Rows[0]["password"].ToString();
                     user.Userdesc = ds.Tables[0].Rows[0]["userdesc"].ToString();
                     user.Department = ds.Tables[0].Rows[0]["department"].ToString();
+                    user.ProdLine = ds.Tables[0].Rows[0]["prodline_id"] == null ? null : ds.Tables[0].Rows[0]["prodline_id"].ToString();
                     user.Opuser = ds.Tables[0].Rows[0]["op_user"].ToString();
                     user.Createtime = ds.Tables[0].Rows[0]["create_time"].ToString();
                 }
@@ -105,8 +106,8 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_user (uuid,username,password,userdesc,department,op_user,create_time)");
-            strSql.Append("values(@uuid,@username,@password,@userdesc,@department,@opuser,@createtime)");
+            strSql.Append("insert into t_user (uuid,username,password,userdesc,department,op_user,create_time,prodline_id)");
+            strSql.Append("values(@uuid,@username,@password,@userdesc,@department,@opuser,@createtime,@prodId)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@username", MySqlDbType.VarChar, 900),
@@ -114,7 +115,8 @@ namespace DAL
                 new MySqlParameter("@userdesc", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@department", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@opuser", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900)
+                new MySqlParameter("@createtime", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@prodId", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = user.Uuid;
             parameters[1].Value = user.Username;
@@ -123,6 +125,7 @@ namespace DAL
             parameters[4].Value = user.Department;
             parameters[5].Value = user.Opuser;
             parameters[6].Value = user.Createtime;
+            parameters[7].Value = user.ProdLine;
             int rows = SQLHelper.ExecuteNonQuery(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {

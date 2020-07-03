@@ -42,6 +42,52 @@ namespace BLL
             return cartonDao.saveCarton(carton);
         }
 
+
+        public bool saveCartonByTrans(Carton carton)
+        {
+            //1.获得数据库连接.
+            MySqlConnection conn = new MySqlConnection(SQLHelper.ConnectionString);
+
+            //2.打开数据库连接
+            if (conn.State != ConnectionState.Open)
+            {
+                conn.Open();
+            }
+            //3.开启事务.
+            MySqlTransaction mysqlTrans = conn.BeginTransaction();
+            bool mark = true;
+            carton.Uuid = Auxiliary.Get_UUID();
+            carton.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            carton.Opuser = Auxiliary.loginName;
+            if (carton.PackType.Equals("0"))
+            {
+                foreach (string ctcode in carton.CtCodeList)
+                {
+                    CtRelCarton ctRelCarton = new CtRelCarton();
+                    ctRelCarton.Ctcode = ctcode;
+                    ctRelCarton.CartonNo = carton.CartonNo;
+                    ctRelCarton.Uuid = Auxiliary.Get_UUID();
+                    ctRelCarton.Createtime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    ctRelCarton.Opuser = Auxiliary.loginName;
+                    mark = cartonDao.saveCartonRelationByTrans(ctRelCarton, conn, mysqlTrans);
+                    if (!mark)
+                    {
+                        conn.Close();
+                        return mark;
+                    }
+                }
+            }
+            mark = cartonDao.saveCartonByTrans(carton, conn, mysqlTrans);
+            if (!mark)
+            {
+                conn.Close();
+                return mark;
+            }
+            mysqlTrans.Commit();
+            conn.Close();
+            return mark;
+        }
+
         /// <summary>
         /// TODO 
         /// </summary>
@@ -96,6 +142,18 @@ namespace BLL
             return cartonDao.getCartonQtyByWO(workno);
         }
 
+
+        /// <summary>
+        /// TODO 查询同工单，同PO 已装箱数量
+        /// </summary>
+        /// <param name="workno"></param>
+        /// <param name="cusPo"></param>
+        /// <returns></returns>
+        public string getCartonQtyByWoAndCusPo(string workno,string cusPo)
+        {
+            return cartonDao.getCartonQtyByWoAndCusPo(workno, cusPo);
+        }
+
         /// <summary>
         /// 根據箱號查詢裝箱單信息
         /// </summary>
@@ -124,7 +182,7 @@ namespace BLL
         }
 
         /// <summary>
-        /// 计算已装箱数
+        /// TODO 根据工单查询已装箱数
         /// </summary>
         /// <param name="workno"></param>
         /// <returns></returns>
@@ -132,6 +190,18 @@ namespace BLL
         {
             return cartonDao.getCartonsByWO(workno);
         }
+
+        /// <summary>
+        /// TODO 根据工单和客户PO 查询已装箱数
+        /// </summary>
+        /// <param name="workno"></param>
+        /// <param name="cusPo"></param>
+        /// <returns></returns>
+        public int getCartonsByWoAndCusPo(string workno, string cusPo)
+        {
+            return cartonDao.getCartonsByWoAndCusPo(workno,cusPo);
+        }
+
 
         /// <summary>
         /// 更新裝箱單狀態, 1是已綁定棧板，2是入庫 3是出庫 

@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -131,7 +132,7 @@ namespace CTCodePrint
             }
             string ctcode = this.dataGridView1.Rows[index].Cells["ct_code"].Value.ToString();
             CTCode ctcodeEntity = cTCodeService.queryCTCodeByCtcode(ctcode);
-            bool judge = barPrint.PrintBCByModel(filePath, ctcodeEntity, mandUnionFieldTypeList);
+            bool judge = barPrint.bactchPrintPalletByModel(filePath, ctcodeToDic(ctcodeEntity, mandUnionFieldTypeList));
             if (judge)
             {
                 printQ.savePrintRecord(ctcodeEntity);
@@ -143,6 +144,38 @@ namespace CTCodePrint
                 return;
             }
 
+        }
+
+
+        private Dictionary<string, string> ctcodeToDic(CTCode ctcode, List<MandUnionFieldType> mandUnionFieldTypeList)
+        {
+
+            PropertyInfo[] propertyInfoARR = ctcode.GetType().GetProperties();
+            Dictionary<string, string> property = new Dictionary<string, string>();
+            foreach (PropertyInfo propertyInfo in propertyInfoARR)
+            {
+                Object propertyVal = ctcode.GetType().GetProperty(propertyInfo.Name).GetValue(ctcode, null);
+                if (propertyVal != null)
+                {
+                    property.Add(propertyInfo.Name.ToUpper(), propertyVal.ToString());
+                }
+            }
+
+            Dictionary<string, string> ctDict = new Dictionary<string, string>();
+            foreach (MandUnionFieldType mandUnionFieldType in mandUnionFieldTypeList)
+            {
+                string fieldName = mandUnionFieldType.FieldName.ToUpper();
+                if (property.ContainsKey(fieldName))
+                {
+                    ctDict.Add(fieldName, property[fieldName]);
+                }
+                else
+                {
+                    ctDict.Add(fieldName, mandUnionFieldType.FieldValue);
+                }
+            }
+
+            return ctDict;
         }
     }
 }

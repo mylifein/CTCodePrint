@@ -45,7 +45,7 @@ namespace DAL
             return saveMark;
         }
 
-        public MandRelDel queryManNoByDel(MandRelDel mandRelDel)
+        public MandRelDel queryManNoByDel(string cusNo,string delMatno,string boundType)
         {
             MandRelDel reMandRelDel = null;
             StringBuilder strSql = new StringBuilder();
@@ -55,9 +55,9 @@ namespace DAL
                 new MySqlParameter("@delMatno", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@boundType", MySqlDbType.VarChar, 900)
             };
-            parameters[0].Value = mandRelDel.CusNo;
-            parameters[1].Value = mandRelDel.DelMatno;
-            parameters[2].Value = mandRelDel.BoundType;
+            parameters[0].Value = cusNo;
+            parameters[1].Value = delMatno;
+            parameters[2].Value = boundType;
             DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
@@ -74,6 +74,10 @@ namespace DAL
             }
             return reMandRelDel;
         }
+
+
+
+
 
         public MandRelDel queryMandRelDelById(string uuid)
         {

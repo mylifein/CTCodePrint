@@ -39,7 +39,7 @@ namespace CTCodePrint
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string username = this.textBox1.Text.Trim();
+            string username = this.textBox1.Text.ToUpper().Trim();
             string password = this.textBox2.Text.Trim();
             if(username == "" || password == "")
             {
