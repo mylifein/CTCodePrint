@@ -273,15 +273,15 @@ namespace BLL
 
 
 
-        public List<Carton> getCartonsInfo(string condition, string conditionV)
+        public DataSet getCartonsInfo(string condition, string conditionV)
         {
             if (condition == "1")
             {
-                return cartonDao.querygetCartonsInfoByWorkNo(conditionV);
+                return cartonDao.getCartonsDSByWO(conditionV);
             }
             else
             {
-                return cartonDao.querygetCartonsInfoByCartonNo(conditionV);
+                return cartonDao.getCartonDSByWO(conditionV);
             }
         }
     }

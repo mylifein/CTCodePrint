@@ -95,6 +95,12 @@
     <Compile Include="BoundCapacity.Designer.cs">
       <DependentUpon>BoundCapacity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Confirm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Confirm.Designer.cs">
+      <DependentUpon>Confirm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CtExternalprint.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -277,6 +283,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BoundCapacity.resx">
       <DependentUpon>BoundCapacity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Confirm.resx">
+      <DependentUpon>Confirm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CtExternalprint.resx">
       <DependentUpon>CtExternalprint.cs</DependentUpon>

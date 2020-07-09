@@ -17,10 +17,9 @@ namespace GenerateCTCode
         private readonly static WoBatchService woBatchService = new WoBatchService();
 
 
-        public static Carton generateCartonNo(Carton carton)
+        public static Carton generateCartonNo(Carton carton, CodeRule codeRule, DateTime currentTime)
         {
             StringBuilder cartonNo = new StringBuilder();
-            CodeRule codeRule = codeRuleService.queryRuleById(carton.Ruleno);
             if(codeRule != null)
             {
                 foreach(RuleItem ruleItem in codeRule.RuleItem){
@@ -37,11 +36,10 @@ namespace GenerateCTCode
                             {
                                 poOrWorkNo = carton.Workno;
                             }
-                            cartonNo.Append(poOrWorkNo.Substring(0, ruleInt));
-                          
+                            cartonNo.Append(poOrWorkNo.Substring(0, ruleInt));                         
                             break;
                         case "T002":
-                            cartonNo.Append(GenerateTimeCode(ruleInt));
+                            cartonNo.Append(GenerateTimeCode(ruleInt,currentTime));
                             break;
                         case "T003":
                             cartonNo.Append(carton.Cusmatno.Trim().Substring(0, ruleInt));
@@ -50,14 +48,14 @@ namespace GenerateCTCode
                             string assistT004 = carton.Offino.Trim().Substring(0, ruleInt);
                             cartonNo.Append(assistT004);
                             break;
-                        case "T005":
-                            string assistT005 = "A10";
-                            if (carton.Verno.Length > ruleInt)
-                            {
-                                assistT005 = carton.Verno.Trim().Substring(0, ruleInt);
-                            }
-                            cartonNo.Append(assistT005);
-                            break;
+                        //case "T005":
+                        //    string assistT005 = "A10";
+                        //    if (carton.Verno.Length > ruleInt)
+                        //    {
+                        //        assistT005 = carton.Verno.Trim().Substring(0, ruleInt);
+                        //    }
+                        //    cartonNo.Append(assistT005);
+                        //    break;
                         case "T006":        //流水碼34進制
                             break;
                         case "T007":
@@ -72,7 +70,7 @@ namespace GenerateCTCode
                             cartonNo.Append(carton.Delmatno.Substring(2, 5));
                             break;
                         case "T010":
-                            cartonNo.Append(prodLineService.queryProdLineById(carton.ProdLine.ProdlineId).ProdlineName);
+                            cartonNo.Append(carton.ProdLineVal);
                             break;
                         case "T011":
                             //流水码十六进制
@@ -146,7 +144,7 @@ namespace GenerateCTCode
 
                             break;
                         case "T015":                //年月日進制表示
-                            cartonNo.Append(getInsuprTime());      
+                            cartonNo.Append(getInsuprTime(currentTime));      
                             break;
                         case "T016":                        //浪潮批次号                        
                             string woBatchNo = woBatchService.getBatchNoByWO(carton.Workno);            //查询工单批次号 
@@ -159,7 +157,7 @@ namespace GenerateCTCode
                             }
                             else
                             {
-                                string queryCond = getInsuprTime() + "Q";
+                                string queryCond = getInsuprTime(currentTime) + "Q";
                                 List<String> batchNos = woBatchService.queryBatchNos(queryCond); 
                                 if(batchNos != null && batchNos.Count > 0)
                                 {
@@ -366,51 +364,49 @@ namespace GenerateCTCode
         };
 
 
-        public static string getInsuprTime()
+        public static string getInsuprTime(DateTime currentTime)
         {
             StringBuilder inspurTime = new StringBuilder();
-            string inspurYearString = DateTime.Now.Year.ToString();
+            string inspurYearString = currentTime.Year.ToString();
             int inspurYearInt = int.Parse(inspurYearString.Substring(inspurYearString.Length - 2)); //獲取兩位年
-            int inspurmonthInt = DateTime.Now.Month;
-            string dd2 = DateTime.Now.ToString("dd");                       //获得两位日
+            int inspurmonthInt = currentTime.Month;
+            string dd2 = currentTime.ToString("dd");                       //获得两位日
             inspurTime.Append(Base33Code[inspurYearInt]);
             inspurTime.Append(Base33Code[inspurmonthInt]);
             inspurTime.Append(dd2);
             return inspurTime.ToString();
         }
 
-        public static string GenerateTimeCode(int length)
+        public static string GenerateTimeCode(int length, DateTime currentTime)
         {
 
-            System.Text.StringBuilder timeString = new System.Text.StringBuilder(10);
-
-
+            StringBuilder timeString = new StringBuilder(10);
             switch (length)
             {
                 case 2:
                     //若为2位，只取周别
-                    timeString.Append(getWeek());
+                    timeString.Append(getWeek(currentTime));
                     break;
                 case 3:
                     //若为3位，年周别，分别为1位，2位
-                    string yearString = DateTime.Now.Year.ToString();
+                    string yearString = currentTime.Year.ToString();
                     timeString.Append(yearString.Substring(yearString.Length - 1));
-                    timeString.Append(getWeek());
+                    timeString.Append(getWeek(currentTime));
                     break;
                 case 4:
                     //获得4位，年周别，分别为2位
-                    timeString.Append(DateTime.Now.ToString("yy"));
-                    timeString.Append(getWeek());
+                    timeString.Append(currentTime.ToString("yy"));
+                    timeString.Append(getWeek(currentTime));
                     break;
                 case 6:
                     //获得6位,获得年、月、日
-                    timeString.Append(DateTime.Now.ToString("yyMMdd"));
+                    timeString.Append(currentTime.ToString("yyMMdd"));
                     break;
                 case 7:
                     //获得7位,获得4位年，2位周别,1位日
-                    timeString.Append(DateTime.Now.ToString("yyyy"));
-                    timeString.Append(getWeek());
-                    timeString.Append(IntConvert(DateTime.Now.Day));
+                    timeString.Append(currentTime.ToString("yyyy"));
+                    timeString.Append(getWeek(currentTime));
+                    timeString.Append(IntConvert(currentTime.Day));
                     break;
             }
             return timeString.ToString();
@@ -439,11 +435,11 @@ namespace GenerateCTCode
             return result;
         }
 
-        public static string getWeek()
+        public static string getWeek(DateTime currentTime)
         {
             GregorianCalendar gc = new GregorianCalendar();
             string weekString = "";
-            int week = gc.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+            int week = gc.GetWeekOfYear(currentTime, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
             if (week.ToString().Length < 2)
             {
                 weekString = "0" + week.ToString();

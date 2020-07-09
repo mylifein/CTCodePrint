@@ -12,15 +12,12 @@ namespace GenerateCTCode
     {
 
         private readonly static PalletService palletService = new PalletService();
-        private readonly static CodeRuleService codeRuleService = new CodeRuleService();
-        private readonly static ProdLineService prodLineService = new ProdLineService();
         private readonly static WoBatchService woBatchService = new WoBatchService();
 
 
-        public static Pallet generatePalletNo(Pallet pallet)
+        public static Pallet generatePalletNo(Pallet pallet, CodeRule codeRule)
         {
-            StringBuilder palletNo = new StringBuilder();
-            CodeRule codeRule = codeRuleService.queryRuleById(pallet.Ruleno);
+            StringBuilder palletNo = new StringBuilder();        
             if (codeRule != null)
             {
                 foreach (RuleItem ruleItem in codeRule.RuleItem)

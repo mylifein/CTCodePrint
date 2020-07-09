@@ -304,6 +304,19 @@ namespace DAL
         }
 
 
+        public DataSet getCartonsDSByWO(string workNo)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT uuid,cartonNo,cartonQty,carton_status,capacity_no,packType,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,so_order,box_No,special_Field,union_Field,prodLine_val,date_code,batchNo,op_user,create_time,update_user,update_time FROM t_carton_info where work_no =@workno and del_flag is null order by cartonNo");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@workno", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = workNo;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
+        }
+
+
         public List<Carton> querygetCartonsInfoByCartonNo(string cartonNo)
         {
             List<Carton> cartons = null;
@@ -354,6 +367,20 @@ namespace DAL
                 }
             }
             return cartons;
+        }
+
+
+
+        public DataSet getCartonDSByWO(string cartonNo)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT uuid,cartonNo,cartonQty,carton_status,capacity_no,packType,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,so_order,box_No,special_Field,union_Field,prodLine_val,date_code,batchNo,op_user,create_time,update_user,update_time  FROM t_carton_info where cartonNo =@cartonNo");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@cartonNo", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = cartonNo;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            return ds;
         }
 
         /// <summary>

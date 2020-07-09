@@ -290,9 +290,12 @@ namespace CTCodePrint
             carton.Cuspo = this.comboBox3.Text == null ? "" : this.comboBox3.Text.ToString().Trim();            //Cuspo
             carton.ProdId = this.comboBox2.SelectedValue.ToString();
             carton.Modelno = fileRelDel.FileNo;                                      //TYPE= 1 為裝箱單模板
-            carton.CapacityNo = capacity.Capacityno;
+            if (capacity != null)
+            {
+                carton.CapacityNo = capacity.Capacityno;
+            }
             carton.CartonStatus = "0";
-            carton = GenerateCarton.generateCartonNo(carton);
+            carton = GenerateCarton.generateCartonNo(carton,codeRule, dateTimePicker1.Value);
             //顯示箱號：
             this.textBox10.Text = carton.CartonNo; ;
             this.textBox3.Text = carton.BatchNo;
@@ -359,8 +362,7 @@ namespace CTCodePrint
                 }
             }
 
-            bool judgePrint = true;
-            judgePrint = barPrint.bactchPrintCartonByModel(filePath, cartonListToArray(carton, mandUnionFieldTypeList, (int)this.numericUpDown3.Value));
+            bool judgePrint = barPrint.bactchPrintCartonByModel(filePath, cartonListToArray(carton, mandUnionFieldTypeList, (int)this.numericUpDown3.Value));
             if (judgePrint)
             {
                 if (isSave)

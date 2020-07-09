@@ -188,8 +188,15 @@ namespace CTCodePrint
                             CommonAuxiliary.playFail();
                             return;
                         }
-
+                        //4.查询标准栈板容量
+                        capacity = capacityService.queryByRelation(carton.Cusno, carton.Delmatno, "2");
                         pallet = new Pallet();
+                        if (capacity != null)
+                        {
+                            pallet.CapacityNo = capacity.Capacityno;
+                            this.textBox12.Text = capacity.Capacitydesc;
+                            this.textBox14.Text = capacity.Capacityqty.ToString();
+                        }                      
                         firstCarton = carton;
                         this.textBox2.Text = carton.Workno;
                         int index = this.dataGridView1.Rows.Add();
@@ -229,14 +236,7 @@ namespace CTCodePrint
                         //    string pictureFile = barPrint.PreviewPrintBC(filePath);
                         //    this.pictureBox1.Load(pictureFile);
                         //}
-
-                        capacity = capacityService.queryByRelation(firstCarton.Cusno, firstCarton.Delmatno, "2");
-                        if (capacity != null)
-                        {
-                            pallet.CapacityNo = capacity.Capacityno;
-                            this.textBox12.Text = capacity.Capacitydesc;
-                            this.textBox14.Text = capacity.Capacityqty.ToString();
-                        }
+                        CommonAuxiliary.playSuccess();
                     }
                     else
                     {
@@ -252,6 +252,12 @@ namespace CTCodePrint
                                     this.textBox3.Text = this.dataGridView1.Rows.Count.ToString();
                                     this.textBox5.Text = countQty(cartonList).ToString();
                                     CommonAuxiliary.playSuccess();
+                                }else
+                                {
+                                    this.textBox1.Text = "";
+                                    this.textBox1.Focus();
+                                    CommonAuxiliary.playFail();
+                                    return;
                                 }
                             }
                             else
@@ -272,6 +278,13 @@ namespace CTCodePrint
                                 this.textBox3.Text = this.dataGridView1.Rows.Count.ToString();
                                 this.textBox5.Text = countQty(cartonList).ToString();
                                 CommonAuxiliary.playSuccess();
+                            }
+                            else
+                            {
+                                this.textBox1.Text = "";
+                                this.textBox1.Focus();
+                                CommonAuxiliary.playFail();
+                                return;
                             }
                         }
                     }
@@ -377,7 +390,7 @@ namespace CTCodePrint
             {
                 pallet.CartonList = cartonList;
                 pallet.PalletQty = countQty(cartonList);
-                pallet = GeneratePallet.generatePalletNo(pallet);
+                pallet = GeneratePallet.generatePalletNo(pallet,codeRule);
                 bool judgePrint = barPrint.bactchPrintPalletByModel(filePath,palletListToArray(pallet,mandUnionFieldTypeList));
                 if (judgePrint)
                 {
@@ -387,7 +400,6 @@ namespace CTCodePrint
                         return;
                     }
                     clearAll();
-
                 }
                 else
                 {
@@ -426,7 +438,6 @@ namespace CTCodePrint
                     property.Add(propertyInfo.Name.ToUpper(), propertyVal.ToString());
                 }
             }
-
             Dictionary<string, string> palletDict = new Dictionary<string, string>();
             foreach (MandUnionFieldType mandUnionFieldType in mandUnionFieldTypeList)
             {

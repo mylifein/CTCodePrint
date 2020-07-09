@@ -59,7 +59,6 @@ namespace CTCodePrint
             {
                 this.dataGridView1.DataSource = pallets;
 
-
                 //DGV 改變列名,列寬
                 this.dataGridView1.Columns[0].Visible = false;
                 this.dataGridView1.Columns[0].Width = 0;
@@ -113,13 +112,7 @@ namespace CTCodePrint
                 return;
             }
             //查詢打印模板的打印字段
-            MandRelDel mandRelDel = mandRelDelService.queryManNoByDel(cusNo, delMatno, "2");
-            if (mandRelDel == null)
-            {
-                MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            List<MandUnionFieldType> mandUnionFieldTypeList = manRelFieldTypeService.queryMandUnionFieldTypeList(mandRelDel.ManNo);
+            List<MandUnionFieldType> mandUnionFieldTypeList = manRelFieldTypeService.queryFieldListByCond(cusNo, delMatno, "2");
             if (mandUnionFieldTypeList == null)
             {
                 MessageBox.Show("未找到該客戶出貨料號對應的打印字段規則信息，請維護相關信息", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -131,7 +124,6 @@ namespace CTCodePrint
             if (judgePrint)
             {
                 //printQ.savePrintRecord(ctcodeEntity);
-
             }
             else
             {
