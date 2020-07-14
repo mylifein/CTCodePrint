@@ -65,7 +65,6 @@ namespace CTCodePrint
             User user = userService.queryByUsername(Auxiliary.loginName);
             if (user.ProdLine != null && !("").Equals(user.ProdLine))
             {
-
                 this.comboBox1.Enabled = false;
                 userProdLine = prodLineService.queryProdLineById(user.ProdLine);
                 if (userProdLine != null)
@@ -332,7 +331,7 @@ namespace CTCodePrint
                 {
                     if (mandTYpe.FieldValue.ToUpper().Equals("WorkQty".ToUpper()))                                     //当特殊字段为 四位工单流水 +  P + 4位工单数量
                     {
-                        int currentNumber = cartonService.currentBoxQtyByCuspo(carton.Cuspo, carton.Delmatno);
+                        int currentNumber = cartonService.currentBoxQtyByCuspo(carton.Cuspo, carton.Delmatno,carton.Workno);
                         currentNumber = currentNumber == 0 ? 1 : (currentNumber + 1);
                         string tempStr = "";
                         for (int i = currentNumber.ToString().Length; i < 4; i++)
@@ -341,7 +340,7 @@ namespace CTCodePrint
                         }
                         string prefix = tempStr + currentNumber.ToString();
                         string tempStr2 = "";
-                        for (int i = carton.Woquantity.Length; i < 4; i++)
+                        for (int i = carton.Orderqty.Length; i < 4; i++)
                         {
                             tempStr2 = tempStr2 + "0";
                         }

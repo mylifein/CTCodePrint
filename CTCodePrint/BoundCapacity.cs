@@ -46,6 +46,7 @@ namespace CTCodePrint
             rowType = itemTable2.NewRow();
             rowType["Name"] = "CT";
             rowType["Value"] = "0";
+            itemTable2.Rows.Add(rowType);
             rowType = itemTable2.NewRow();
             rowType["Name"] = "裝箱";
             rowType["Value"] = "1";

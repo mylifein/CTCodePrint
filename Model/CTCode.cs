@@ -11,6 +11,8 @@ namespace Model
         private string _uuid;
         private string _ctcode;
         private string _ruleno;
+        private int quantity;
+        private string capacityNo; 
         private string _workno;
         private string _cusno;
         private string _cusname;
@@ -301,6 +303,32 @@ namespace Model
             set
             {
                 _updateUser = value;
+            }
+        }
+
+        public int Quantity
+        {
+            get
+            {
+                return quantity;
+            }
+
+            set
+            {
+                quantity = value;
+            }
+        }
+
+        public string CapacityNo
+        {
+            get
+            {
+                return capacityNo;
+            }
+
+            set
+            {
+                capacityNo = value;
             }
         }
     }

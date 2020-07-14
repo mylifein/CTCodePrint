@@ -51,8 +51,8 @@ namespace DAL
         {
             bool saveMark = true;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into t_code_info (uuid,ct_code,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,op_user,create_time,so_order)");
-            strSql.Append("values(@uuid,@ctcode,@ruleno,@workno,@cusno,@cusname,@cuspo,@poqty,@cusmatno,@delmatno,@offino,@verno,@woquantity,@model_no,@opuser,@createtime,@soOrder)");
+            strSql.Append("insert into t_code_info (uuid,ct_code,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,op_user,create_time,so_order,quantity,capacity_no)");
+            strSql.Append("values(@uuid,@ctcode,@ruleno,@workno,@cusno,@cusname,@cuspo,@poqty,@cusmatno,@delmatno,@offino,@verno,@woquantity,@model_no,@opuser,@createtime,@soOrder,@quantity,@capacityNo)");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@uuid", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@ctcode", MySqlDbType.VarChar, 900),
@@ -70,7 +70,9 @@ namespace DAL
                 new MySqlParameter("@model_no", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@poqty", MySqlDbType.VarChar, 900),
                 new MySqlParameter("@soOrder", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@cusname", MySqlDbType.VarChar, 900)
+                new MySqlParameter("@cusname", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@quantity", MySqlDbType.Int32, 900),
+                new MySqlParameter("@capacityNo", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = ctCode.Uuid;
             parameters[1].Value = ctCode.Ctcode;
@@ -89,6 +91,8 @@ namespace DAL
             parameters[14].Value = ctCode.Orderqty;
             parameters[15].Value = ctCode.SoOrder;
             parameters[16].Value = ctCode.Cusname;
+            parameters[17].Value = ctCode.Quantity;
+            parameters[18].Value = ctCode.CapacityNo;
             int rows = SQLHelper.ExecuteNonQueryTrans(conn, mysqlTrans, CommandType.Text, strSql.ToString(), parameters);
             if (rows > 0)
             {

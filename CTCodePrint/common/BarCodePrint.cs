@@ -298,7 +298,7 @@ namespace CTCodePrint.common
                 {
                     for (int i = 1; i <= doc.Variables.FormVariables.Count; i++)
                     {
-                        string variableName = doc.Variables.FormVariables.Item(i).Name.ToString().ToUpper();
+                        string variableName = doc.Variables.FormVariables.Item(i).Name.ToString();
                         doc.Variables.FormVariables.Item(i).Value = ctDict[variableName];
                     }
                     int Num = 1;

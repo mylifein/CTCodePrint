@@ -255,9 +255,9 @@ namespace BLL
         }
 
 
-        public int currentBoxQtyByCuspo(String cusPo,String delMatno)
+        public int currentBoxQtyByCuspo(string cusPo,string delMatno,string woNo)
         {
-            return cartonDao.currentBoxQtyByCuspo(cusPo,delMatno);
+            return cartonDao.currentBoxQtyByCuspo(cusPo,delMatno,woNo);
         }
 
 

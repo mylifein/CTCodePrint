@@ -757,7 +757,7 @@ namespace DAL
             return carton;
         }
 
-        public string queryInspurMaxBox(string cartonNo, String cusNo)
+        public string queryInspurMaxBox(string cartonNo, string cusNo)
         {
             string maxCtCode = null;
             StringBuilder strSql = new StringBuilder();
@@ -798,17 +798,19 @@ namespace DAL
         }
 
 
-        public int currentBoxQtyByCuspo(String cusPo, String delMatno)
+        public int currentBoxQtyByCuspo(string cusPo, string delMatno,string woNo)
         {
 
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select count(1) from t_carton_info where cus_po=@cusPo and del_matno=@delMatno and del_flag is null");
+            strSql.Append("select count(1) from t_carton_info where cus_po=@cusPo and del_matno=@delMatno and work_no=@woNo and del_flag is null");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@cusPo", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@delMatno", MySqlDbType.VarChar, 900)
+                new MySqlParameter("@delMatno", MySqlDbType.VarChar, 900),
+                new MySqlParameter("@woNo", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = cusPo;
             parameters[1].Value = delMatno;
+            parameters[2].Value = woNo;
             int boxNo = int.Parse(SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters).ToString().Trim());
 
             return boxNo;
