@@ -39,5 +39,11 @@ namespace BLL
         {
             return fieldTypeDao.queryFieldTypeList(fieldNo);
         }
+
+
+        public FieldType queryFieldType(string fieldNo)
+        {
+            return fieldTypeDao.queryFieldType(fieldNo);
+        }
     }
 }

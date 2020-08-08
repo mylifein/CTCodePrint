@@ -75,7 +75,6 @@ namespace CTCodePrint
             comboBox8.SelectedIndex = 0;
 
             this.numericUpDown2.Value = 1;
-            this.numericUpDown2.Minimum = 1;
 
         }
 
@@ -149,19 +148,20 @@ namespace CTCodePrint
                         this.textBox11.Text = workOrderInfos[0].CustId;                                            //客戶編號     隨客戶PO 改變
                         this.textBox2.Text = workOrderInfos[0].OrderQty;                                          //PO數量        隨客戶PO改變
                         this.textBox7.Text = ctCodeService.getGeneratedCTCount(workno);                           //工單已產生CT碼數量  ，不隨工單改變
-                        if (workOrderInfos[0].CusItemNum != null && workOrderInfos[0].CusItemNum.Trim() != "")
+                        this.textBox17.Text = workOrderInfos[0].SoOrder;
+                        if (workOrderInfos[0].CusItemNum != null)                                                // && workOrderInfos[0].CusItemNum.Trim() != ""
                         {
                             this.textBox18.Text = workOrderInfos[0].CusItemNum;                                  //客戶料號，       隨客戶PO 改變
                         }
-                        else
-                        {
-                            List<CusMatInfo> cusMatInfos = queryB.getCusMatInfo(workno);
-                            if (cusMatInfos != null && cusMatInfos.Count > 0)
-                            {
-                                this.textBox18.Text = cusMatInfos[0].CusItemCode;
-                                this.textBox14.Text = cusMatInfos[0].CusItemDesc;
-                            }
-                        }
+                        //else
+                        //{
+                        //    List<CusMatInfo> cusMatInfos = queryB.getCusMatInfo(workno);
+                        //    if (cusMatInfos != null && cusMatInfos.Count > 0)
+                        //    {
+                        //        this.textBox18.Text = cusMatInfos[0].CusItemCode;
+                        //        this.textBox14.Text = cusMatInfos[0].CusItemDesc;
+                        //    }
+                        //}
 
                         this.textBox8.Text = ctCodeService.getGeneratedCTCountByPO(workno, workOrderInfos[0].CustPO);       //工單、客戶PO已產生CT數量，  隨客戶PO改變   
 
@@ -194,7 +194,7 @@ namespace CTCodePrint
                                 ctCodeInfo.Delmatno = this.comboBox6.SelectedValue.ToString();
                             }
                         }
-                        ctCodeInfo.Workno = workno;                                     //工單號
+                        ctCodeInfo.Workno = workOrderInfos[0].WorkNo;                                     //工單號
                         ctCodeInfo.Woquantity = workOrderInfos[0].StartQty;             //工單數量
                         ctCodeInfo.Delmatno = workOrderInfos[0].ItemCode;               //出貨料號
                         ctCodeInfo.Cusno = workOrderInfos[0].CustId;                    //customer number 
@@ -403,7 +403,13 @@ namespace CTCodePrint
             int countBoxs = (int)Math.Ceiling((double)surplus / capacity);
 
             //this.numericUpDown2.Maximum = countBoxs;
-            this.numericUpDown1.Value = countBoxs;
+            if(countBoxs > 0)
+            {
+                this.numericUpDown1.Value = countBoxs;
+            }else
+            {
+                this.numericUpDown1.Value = 1;
+            }
             this.textBox15.Text = poRecord.ToString();                                                         //计算工单，PO 已产生CT条码数
             this.textBox16.Text = countBoxs.ToString();
             if (surplus > capacity)
@@ -419,7 +425,7 @@ namespace CTCodePrint
                     this.numericUpDown2.Value = surplus;
                 }else
                 {
-                    this.numericUpDown2.Value = 0;
+                    this.numericUpDown2.Value = 1;
                 }
             }
 

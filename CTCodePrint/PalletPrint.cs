@@ -199,8 +199,7 @@ namespace CTCodePrint
                         }                      
                         firstCarton = carton;
                         this.textBox2.Text = carton.Workno;
-                        int index = this.dataGridView1.Rows.Add();
-                        initRow(index, carton);
+                        initRow(carton);
                         //初始化信息
                         this.textBox3.Text = this.dataGridView1.Rows.Count.ToString();
                         this.textBox4.Text = firstCarton.Woquantity;
@@ -247,8 +246,7 @@ namespace CTCodePrint
                             {
                                 if (!checkRepeat(carton.CartonNo))
                                 {
-                                    int index = this.dataGridView1.Rows.Add();
-                                    initRow(index, carton);
+                                    initRow(carton);
                                     this.textBox3.Text = this.dataGridView1.Rows.Count.ToString();
                                     this.textBox5.Text = countQty(cartonList).ToString();
                                     CommonAuxiliary.playSuccess();
@@ -273,8 +271,7 @@ namespace CTCodePrint
                             //混棧板  只檢查箱號是否重複
                             if (!checkRepeat(carton.CartonNo))
                             {
-                                int index = this.dataGridView1.Rows.Add();
-                                initRow(index, carton);
+                                initRow(carton);
                                 this.textBox3.Text = this.dataGridView1.Rows.Count.ToString();
                                 this.textBox5.Text = countQty(cartonList).ToString();
                                 CommonAuxiliary.playSuccess();
@@ -323,15 +320,19 @@ namespace CTCodePrint
         /// </summary>
         /// <param name="index"></param>
         /// <param name="ctcode"></param>
-        public void initRow(int index, Carton carton)
+        public void initRow(Carton carton)
         {
-            this.dataGridView1.Rows[index].Cells[0].Value = carton.CartonNo;
-            this.dataGridView1.Rows[index].Cells[1].Value = carton.Delmatno;
-            this.dataGridView1.Rows[index].Cells[2].Value = carton.Cusname;
-            this.dataGridView1.Rows[index].Cells[3].Value = carton.Cusno;
-            this.dataGridView1.Rows[index].Cells[4].Value = carton.Workno;
-            this.dataGridView1.Rows[index].Cells[5].Value = carton.Woquantity;
-            this.dataGridView1.Rows[index].Cells[6].Value = carton.Cusmatno;
+            DataGridViewRow dr = new DataGridViewRow();
+            dr.CreateCells(dataGridView1);
+            dr.Cells[0].Value = carton.CartonNo;
+            dr.Cells[1].Value = carton.Delmatno;
+            dr.Cells[2].Value = carton.Cusname;
+            dr.Cells[3].Value = carton.Cusno;
+            dr.Cells[4].Value = carton.Workno;
+            dr.Cells[5].Value = carton.Woquantity;
+            dr.Cells[6].Value = carton.Cusmatno;
+            this.dataGridView1.Rows.Insert(0, dr);
+            this.dataGridView1.Rows[0].Selected = true;
             this.textBox1.Text = "";
             cartonList.Add(carton);
 

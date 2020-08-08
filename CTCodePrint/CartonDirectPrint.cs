@@ -43,7 +43,7 @@ namespace CTCodePrint
 
         private string filePath = null;
         private ProdLine userProdLine = null;
-
+        private string workNo = "";
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -131,20 +131,21 @@ namespace CTCodePrint
                     this.textBox8.Text = workOrderInfos[0].ItemCode;
                     this.textBox13.Text = workOrderInfos[0].OrderQty;
                     this.textBox17.Text = workOrderInfos[0].SoOrder;
+                    workNo = workOrderInfos[0].WorkNo;
                     this.textBox5.Text = cartonService.getCartonQtyByWO(workno);
-                    if (workOrderInfos[0].CusItemNum != null && workOrderInfos[0].CusItemNum.Trim() != "")
+                    if (workOrderInfos[0].CusItemNum != null)                                   // && workOrderInfos[0].CusItemNum.Trim() != ""
                     {
                         this.textBox9.Text = workOrderInfos[0].CusItemNum;
                     }
-                    else
-                    {
-                        List<CusMatInfo> cusMatInfos = queryB.getCusMatInfo(workno);
-                        if (cusMatInfos != null && cusMatInfos.Count > 0)
-                        {
-                            this.textBox9.Text = cusMatInfos[0].CusItemCode;
-                            this.textBox11.Text = cusMatInfos[0].CusItemDesc;
-                        }
-                    }
+                    //else
+                    //{
+                    //    List<CusMatInfo> cusMatInfos = queryB.getCusMatInfo(workno);
+                    //    if (cusMatInfos != null && cusMatInfos.Count > 0)
+                    //    {
+                    //        this.textBox9.Text = cusMatInfos[0].CusItemCode;
+                    //        this.textBox11.Text = cusMatInfos[0].CusItemDesc;
+                    //    }
+                    //}
                     this.comboBox4.DisplayMember = "Revision";
                     this.comboBox4.ValueMember = "Revision";
                     this.comboBox4.DataSource = queryB.getRevisionInfo(workno);
@@ -240,8 +241,16 @@ namespace CTCodePrint
                 }
                 else
                 {
-                    this.numericUpDown1.Maximum = surplus;
-                    this.numericUpDown1.Value = surplus;
+                    if (surplus > 0)
+                    {
+                        this.numericUpDown1.Maximum = surplus;
+                        this.numericUpDown1.Value = surplus;
+                    }else
+                    {
+                        this.numericUpDown1.Maximum = capacity;
+                        this.numericUpDown1.Value = capacity;
+                    }
+                   
                 }
             }
         }
@@ -277,7 +286,7 @@ namespace CTCodePrint
             carton.CartonQty = (int)this.numericUpDown1.Value;                        //裝箱單數量
             carton.Datecode = dateTimePicker1.Value.ToString(comboBox6.Text);
             carton.Ruleno = codeRule.Ruleno;
-            carton.Workno = this.textBox1.Text.Trim().ToUpper();
+            carton.Workno = workNo;
             carton.Delmatno = this.textBox8.Text;
             carton.Cusmatno = this.textBox9.Text;
             carton.Cusno = this.textBox7.Text;
@@ -340,11 +349,23 @@ namespace CTCodePrint
                         }
                         string prefix = tempStr + currentNumber.ToString();
                         string tempStr2 = "";
-                        for (int i = carton.Orderqty.Length; i < 4; i++)
+                        string suffix = "";
+                        if (int.Parse(carton.Woquantity) < int.Parse(carton.Orderqty))
                         {
-                            tempStr2 = tempStr2 + "0";
+                            for (int i = carton.Woquantity.Length; i < 4; i++)
+                            {
+                                tempStr2 = tempStr2 + "0";
+                            }
+                            suffix = tempStr2 + carton.Woquantity;
                         }
-                        string suffix = tempStr2 + carton.Orderqty;
+                        else
+                        {
+                            for (int i = carton.Orderqty.Length; i < 4; i++)
+                            {
+                                tempStr2 = tempStr2 + "0";
+                            }
+                            suffix = tempStr2 + carton.Orderqty;
+                        }
                         carton.BoxNo = prefix + "P/" + suffix;
                     }
                     else

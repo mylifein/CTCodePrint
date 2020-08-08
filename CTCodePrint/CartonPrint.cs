@@ -30,7 +30,7 @@ namespace CTCodePrint
         private CodeRule codeRule;
         private FileRelDel fileRelDel;
         private List<MandUnionFieldType> mandUnionFieldTypeList;
-        private List<String> ctCodeList = new List<string>();
+        private List<CTCode> ctCodeList = new List<CTCode>();
         CartonService cartonService = new CartonService();
         private readonly CTCodeService ctCodeService = new CTCodeService();
         private readonly GenerateCarton generateCarton = new GenerateCarton();
@@ -186,6 +186,9 @@ namespace CTCodePrint
             }
             this.ctCodeList.RemoveAt(this.dataGridView1.SelectedRows[0].Index);
             this.dataGridView1.Rows.RemoveAt(this.dataGridView1.SelectedRows[0].Index);
+            this.textBox3.Text = this.dataGridView1.Rows.Count.ToString();
+            this.label18.Text = this.dataGridView1.Rows.Count.ToString();
+            this.textBox14.Text = countQty(ctCodeList).ToString();
         }
 
 
@@ -196,25 +199,30 @@ namespace CTCodePrint
         /// </summary>
         /// <param name="index"></param>
         /// <param name="ctcode"></param>
-        public void initRow(int index, CTCode ctcode)
+        public void initRow(CTCode ctcode)
         {
-            this.dataGridView1.Rows[index].Cells[0].Value = ctcode.Ctcode;
-            this.dataGridView1.Rows[index].Cells[1].Value = ctcode.Delmatno;
-            this.dataGridView1.Rows[index].Cells[2].Value = ctcode.Cusname;
-            this.dataGridView1.Rows[index].Cells[3].Value = ctcode.Cusno;
-            this.dataGridView1.Rows[index].Cells[4].Value = ctcode.Workno;
-            this.dataGridView1.Rows[index].Cells[5].Value = ctcode.Woquantity;
-            this.dataGridView1.Rows[index].Cells[6].Value = ctcode.Cusmatno;
+            DataGridViewRow dr = new DataGridViewRow();
+            dr.CreateCells(dataGridView1);
+
+            dr.Cells[0].Value = ctcode.Ctcode;
+            dr.Cells[1].Value = ctcode.Delmatno;
+            dr.Cells[2].Value = ctcode.Cusname;
+            dr.Cells[3].Value = ctcode.Cusno;
+            dr.Cells[4].Value = ctcode.Workno;
+            dr.Cells[5].Value = ctcode.Woquantity;
+            dr.Cells[6].Value = ctcode.Cusmatno;
             this.textBox1.Text = "";
-            ctCodeList.Add(ctcode.Ctcode);
+            this.dataGridView1.Rows.Insert(0, dr);
+            this.dataGridView1.Rows[0].Selected = true;
+            ctCodeList.Add(ctcode);
 
         }
 
         public bool checkRepeat(string ctCode)
         {
-            foreach (string compareValue in ctCodeList)
+            foreach (CTCode ctcode in ctCodeList)
             {
-                if (compareValue.Equals(ctCode))
+                if (ctcode.Ctcode.Equals(ctCode))
                 {
                     return true;
                 }
@@ -230,7 +238,7 @@ namespace CTCodePrint
         /// TODO 將集合中的CT碼 賦值到carton中
         /// </summary>
         /// <param name="ctcodeList"></param>
-        private void initCTSeq(List<String> ctcodeList,Carton carton)
+        private void initCTSeq(List<CTCode> ctcodeList,Carton carton)
         {
             List<String> ctList = new List<string>();
             for (int i = 0; i < ctcodeList.Count; i++)
@@ -238,37 +246,37 @@ namespace CTCodePrint
                 switch (i)
                 {
                     case 0:
-                        carton.Ct1 = ctcodeList[i];
+                        carton.Ct1 = ctcodeList[i].Ctcode;
                         break;
                     case 1:
-                        carton.Ct2 = ctcodeList[i];
+                        carton.Ct2 = ctcodeList[i].Ctcode;
                         break;
                     case 2:
-                        carton.Ct3 = ctcodeList[i];
+                        carton.Ct3 = ctcodeList[i].Ctcode;
                         break;
                     case 3:
-                        carton.Ct4 = ctcodeList[i];
+                        carton.Ct4 = ctcodeList[i].Ctcode;
                         break;
                     case 4:
-                        carton.Ct5 = ctcodeList[i];
+                        carton.Ct5 = ctcodeList[i].Ctcode;
                         break;
                     case 5:
-                        carton.Ct6 = ctcodeList[i];
+                        carton.Ct6 = ctcodeList[i].Ctcode;
                         break;
                     case 6:
-                        carton.Ct7 = ctcodeList[i];
+                        carton.Ct7 = ctcodeList[i].Ctcode;
                         break;
                     case 7:
-                        carton.Ct8 = ctcodeList[i];
+                        carton.Ct8 = ctcodeList[i].Ctcode;
                         break;
                     case 8:
-                        carton.Ct9 = ctcodeList[i];
+                        carton.Ct9 = ctcodeList[i].Ctcode;
                         break;
                     case 9:
-                        carton.Ct10 = ctcodeList[i];
+                        carton.Ct10 = ctcodeList[i].Ctcode;
                         break;
                 }
-                ctList.Add(ctcodeList[i]);
+                ctList.Add(ctcodeList[i].Ctcode);
             }
             carton.CtCodeList = ctList;
         }
@@ -332,7 +340,7 @@ namespace CTCodePrint
                 }
                 carton.ProdId = this.comboBox2.SelectedValue.ToString();                  //打印時 獲得線別編號
                 carton.ProdLineVal = this.comboBox2.Text;
-                carton.CartonQty = Convert.ToInt32(this.textBox3.Text.Trim());                         //裝箱單數量
+                carton.CartonQty = countQty(ctCodeList);                         //裝箱單數量
                 initCTSeq(ctCodeList,carton);
                 carton.Datecode = dateTimePicker1.Value.ToString(comboBox3.Text);
                 carton = GenerateCarton.generateCartonNo(carton, codeRule, dateTimePicker1.Value);
@@ -377,11 +385,22 @@ namespace CTCodePrint
                             }
                             string prefix = tempStr + currentNumber.ToString();
                             string tempStr2 = "";
-                            for (int i = carton.Orderqty.Length; i < 4; i++)
+                            string suffix = "";
+                            if (int.Parse(carton.Woquantity) < int.Parse(carton.Orderqty))
                             {
-                                tempStr2 = tempStr2 + "0";
-                            }
-                            string suffix = tempStr2 + carton.Orderqty;
+                                for (int i = carton.Woquantity.Length; i < 4; i++)
+                                {
+                                    tempStr2 = tempStr2 + "0";
+                                }
+                                suffix = tempStr2 + carton.Woquantity;
+                            }else
+                            {
+                                for (int i = carton.Orderqty.Length; i < 4; i++)
+                                {
+                                    tempStr2 = tempStr2 + "0";
+                                }
+                                suffix = tempStr2 + carton.Orderqty;
+                            }                           
                             carton.BoxNo = prefix + "P/" + suffix;
                         }
                         else
@@ -426,7 +445,7 @@ namespace CTCodePrint
             //mandUnionFieldTypeList = null;
             //codeRule = null;
             //fileRelDel = null;
-            ctCodeList = new List<string>();
+            ctCodeList = new List<CTCode>();
             this.dataGridView1.Rows.Clear();
             this.textBox1.Text = "";
             this.textBox2.Text = "";
@@ -440,6 +459,7 @@ namespace CTCodePrint
             this.textBox10.Text = "";
             this.textBox11.Text = "";
             this.textBox12.Text = "";
+            this.textBox14.Text = "";
             this.label18.Text = "0";
         }
 
@@ -513,8 +533,7 @@ namespace CTCodePrint
                         //下載模板並預覽   1.查询模板是否存在， 若存在不下载  2.若不存在下载模板
                         filePath = modelInfoService.previewModelFile(fileRelDel.FileNo);
                     }
-                    int index = this.dataGridView1.Rows.Add();
-                    initRow(index, ctcode);
+                    initRow(ctcode);
                     //初始化信息
                     this.textBox2.Text = ctcode.Workno;
                     this.textBox4.Text = ctcode.Woquantity;
@@ -525,6 +544,7 @@ namespace CTCodePrint
                     this.textBox9.Text = ctcode.Cusmatno;
                     this.textBox13.Text = codeRule.RuleDesc;
                     this.textBox5.Text = cartonService.getCartonQtyByWO(ctcode.Workno);
+                    this.textBox14.Text = ctcode.Quantity.ToString();
                     this.textBox3.Text = this.dataGridView1.Rows.Count.ToString();
                     this.label18.Text = this.dataGridView1.Rows.Count.ToString();
                     CommonAuxiliary.playSuccess();
@@ -541,10 +561,10 @@ namespace CTCodePrint
                     {
                         if (!checkRepeat(ctcode.Ctcode))
                         {
-                            int index = this.dataGridView1.Rows.Add();
-                            initRow(index, ctcode);
+                            initRow(ctcode);
                             this.textBox3.Text = this.dataGridView1.Rows.Count.ToString();
                             this.label18.Text = this.dataGridView1.Rows.Count.ToString();
+                            this.textBox14.Text = countQty(ctCodeList).ToString();
                             CommonAuxiliary.playSuccess();
                         }
                         else
@@ -564,8 +584,8 @@ namespace CTCodePrint
                 }
                 if (capacity != null)
                 {
-                    //扫码数量等于容量时打印标签
-                    if (this.dataGridView1.Rows.Count == capacity.Capacityqty)
+                    //扫码包装数量等于容量时打印标签
+                    if (countQty(ctCodeList) == capacity.Capacityqty)
                     {
                         printCarton();
                     }
@@ -605,6 +625,17 @@ namespace CTCodePrint
                 cartonList.Add(cartonDict);
             }
             return cartonList;
+        }
+
+
+        public int countQty(List<CTCode> ctcodeList)
+        {
+            int countResult = 0;
+            foreach (CTCode ctCode in ctcodeList)
+            {
+                countResult = countResult + ctCode.Quantity;
+            }
+            return countResult;
         }
 
     }

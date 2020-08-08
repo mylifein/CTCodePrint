@@ -27,12 +27,6 @@ namespace CTCodePrint
                 this.textBox1.Focus();
                 return;
             }
-            if (this.textBox2.Text == null || this.textBox2.Text.Trim() == "")
-            {
-                MessageBox.Show("字段值不能為空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.textBox2.Focus();
-                return;
-            }
             if (this.textBox3.Text == null || this.textBox3.Text.Trim() == "")
             {
                 MessageBox.Show("字段描述不能為空！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);

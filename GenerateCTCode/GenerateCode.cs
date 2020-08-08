@@ -141,7 +141,7 @@ namespace GenerateCTCode
                             break;
                         case "T006":
                             judgeSerial = true;
-                            string maxCode = printM.getMaxCTCode(ctCode.ToString(), ctCodeInfo.Delmatno);
+                            string maxCode = printM.getMaxCTCode(ctCode.ToString());
                             string prefixCT = ctCode.ToString();
                             if (maxCode == null || maxCode == "")
                             {
@@ -226,7 +226,7 @@ namespace GenerateCTCode
                             break;
                         case "T013":                //十進制流水碼
                             judgeSerial = true;
-                            string maxTenCode = printM.getMaxCTCode(ctCode.ToString(), ctCodeInfo.Delmatno);
+                            string maxTenCode = printM.getMaxCTCode(ctCode.ToString());
                             string prefixTenCT = ctCode.ToString();
                             if (maxTenCode == null || maxTenCode == "")
                             {

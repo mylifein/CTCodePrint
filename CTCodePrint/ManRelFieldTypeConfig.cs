@@ -30,7 +30,7 @@ namespace CTCodePrint
 
         private void displayList(string manNo)
         {
-            this.dataGridView1.DataSource = manRelFieldTypeService.queryMandUnionFieldTypeList(manNo);;
+            this.dataGridView1.DataSource = manRelFieldTypeService.queryMandUnionFieldTypeList(manNo);
             if (this.dataGridView1.DataSource != null)
             {
                 this.dataGridView1.Columns[0].HeaderText = "UUID";
@@ -73,7 +73,8 @@ namespace CTCodePrint
             ManRelFieldType manRelFieldType = new ManRelFieldType();
             manRelFieldType.ManNo = this.textBox3.Text.ToString().Trim();
             manRelFieldType.FieldNo = this.comboBox1.SelectedValue.ToString().Trim();
-            if (!manRelFieldTypeService.checkAdd(manRelFieldType))
+
+            if (!manRelFieldTypeService.checkAdd(manRelFieldType) && checkFieldNameRepeat(manRelFieldType.FieldNo))
             {
                 if (manRelFieldTypeService.saveManRelFieldType(manRelFieldType) != null)
                 {
@@ -132,6 +133,32 @@ namespace CTCodePrint
                 this.comboBox2.Focus();
                 return;
             }
+        }
+
+        public bool checkFieldNameRepeat(string fieldNo)
+        {
+            FieldType fieldType = fieldTypeService.queryFieldType(fieldNo);
+            if (fieldType == null)
+            {
+                return false;
+            }
+            else
+            {
+                if (this.dataGridView1.DataSource == null)
+                {
+                    return true;
+                }
+                List<MandUnionFieldType> mandUnionFieldTypes = (List<MandUnionFieldType>)this.dataGridView1.DataSource;
+                foreach(MandUnionFieldType mandUnionFieldType in mandUnionFieldTypes)
+                {
+                    if (fieldType.FieldName.Equals(mandUnionFieldType.FieldName))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
         }
     }
 }

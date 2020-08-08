@@ -68,6 +68,8 @@
             this.label24 = new System.Windows.Forms.Label();
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             this.label18 = new System.Windows.Forms.Label();
+            this.textBox14 = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             this.SuspendLayout();
@@ -391,8 +393,7 @@
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Enabled = false;
-            this.dateTimePicker1.Location = new System.Drawing.Point(88, 208);
+            this.dateTimePicker1.Location = new System.Drawing.Point(88, 207);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(158, 25);
             this.dateTimePicker1.TabIndex = 60;
@@ -409,7 +410,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(1, 218);
+            this.label16.Location = new System.Drawing.Point(1, 217);
             this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(82, 15);
@@ -439,7 +440,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(296, 218);
+            this.label24.Location = new System.Drawing.Point(296, 217);
             this.label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(82, 15);
@@ -448,7 +449,7 @@
             // 
             // numericUpDown3
             // 
-            this.numericUpDown3.Location = new System.Drawing.Point(382, 208);
+            this.numericUpDown3.Location = new System.Drawing.Point(382, 207);
             this.numericUpDown3.Margin = new System.Windows.Forms.Padding(4);
             this.numericUpDown3.Maximum = new decimal(new int[] {
             10000,
@@ -463,18 +464,39 @@
             // 
             this.label18.Font = new System.Drawing.Font("微软雅黑", 72F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label18.ForeColor = System.Drawing.Color.Red;
-            this.label18.Location = new System.Drawing.Point(1064, 218);
+            this.label18.Location = new System.Drawing.Point(1027, 218);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(272, 206);
+            this.label18.Size = new System.Drawing.Size(389, 206);
             this.label18.TabIndex = 86;
             this.label18.Text = "0";
             this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // textBox14
+            // 
+            this.textBox14.Location = new System.Drawing.Point(619, 207);
+            this.textBox14.Margin = new System.Windows.Forms.Padding(4);
+            this.textBox14.Name = "textBox14";
+            this.textBox14.ReadOnly = true;
+            this.textBox14.Size = new System.Drawing.Size(110, 25);
+            this.textBox14.TabIndex = 88;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(541, 217);
+            this.label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(82, 15);
+            this.label19.TabIndex = 87;
+            this.label19.Text = "包装数量：";
             // 
             // CartonPrint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1466, 880);
+            this.Controls.Add(this.textBox14);
+            this.Controls.Add(this.label19);
             this.Controls.Add(this.label18);
             this.Controls.Add(this.label24);
             this.Controls.Add(this.numericUpDown3);
@@ -568,5 +590,7 @@
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.NumericUpDown numericUpDown3;
         private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox textBox14;
+        private System.Windows.Forms.Label label19;
     }
 }

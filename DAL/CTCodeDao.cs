@@ -17,7 +17,7 @@ namespace DAL
         {
             CTCode cTCode = null;
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT uuid,ct_code,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,so_order,op_user,create_time FROM t_code_info where ct_code=@ctcode");
+            strSql.Append("SELECT uuid,ct_code,quantity,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,so_order,op_user,create_time FROM t_code_info where ct_code=@ctcode");
             MySqlParameter[] parameters = {
                 new MySqlParameter("@ctcode", MySqlDbType.VarChar, 900),
             };
@@ -27,7 +27,8 @@ namespace DAL
             {
                 cTCode = new CTCode();
                 cTCode.Uuid = ds.Tables[0].Rows[0]["uuid"].ToString();
-                cTCode.Ctcode = ds.Tables[0].Rows[0]["ct_code"].ToString();
+                cTCode.Ctcode = ds.Tables[0].Rows[0]["ct_code"].ToString(); 
+                cTCode.Quantity = (int)ds.Tables[0].Rows[0]["quantity"];
                 cTCode.Ruleno = ds.Tables[0].Rows[0]["rule_no"].ToString();
                 cTCode.Workno = ds.Tables[0].Rows[0]["work_no"].ToString();
                 cTCode.Cusno = ds.Tables[0].Rows[0]["cus_no"].ToString();

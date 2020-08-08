@@ -53,17 +53,15 @@ namespace DAL
         /// </summary>
         /// <param name="ctCode"></param>
         /// <returns></returns>
-        public string queryCodeNo(string ctCode, string delMatno)
+        public string queryCodeNo(string ctCode)
         {
             string maxCtCode = "";
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select MAX(ct_code) from t_code_info where ct_code like @ctCode AND del_matno=@delMatno");
+            strSql.Append("select MAX(ct_code) from t_code_info where ct_code like @ctCode");
             MySqlParameter[] parameters = {
-                new MySqlParameter("@ctCode", MySqlDbType.VarChar, 900),
-                new MySqlParameter("@delMatno", MySqlDbType.VarChar, 900)
+                new MySqlParameter("@ctCode", MySqlDbType.VarChar, 900)
             };
             parameters[0].Value = "%" + ctCode + "%"; ;
-            parameters[1].Value = delMatno;
             Object maxCode = SQLHelper.ExecuteScalar(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
             if (maxCode != null && maxCode != DBNull.Value)
             {

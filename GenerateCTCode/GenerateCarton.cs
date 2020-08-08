@@ -255,6 +255,34 @@ namespace GenerateCTCode
                         case "T021":                         
                             cartonNo.Append(carton.Ct1);
                             break;
+                        case "T022":                                            // 顺达标准-流水号
+                            string maxBoxNo = cartonService.getMaxCartonNo("103100");
+                            string prefixCartonNo = cartonNo.ToString();
+                            if (maxBoxNo == null || maxBoxNo == "")
+                            {
+                                string seqCode = "1";
+                                for (int numLength = seqCode.Length; numLength < Convert.ToInt32(ruleItem.Rulelength); numLength++)
+                                {
+                                    seqCode = "0" + seqCode;
+                                }
+                                cartonNo.Append(seqCode);
+                            }
+                            else
+                            {
+                                //獲取流水號
+                                string subCode10 = maxBoxNo.Substring(prefixCartonNo.Length, Convert.ToInt32(ruleItem.Rulelength));
+                                int cartonSeq10 = int.Parse(subCode10);
+                                string carton10Code = (cartonSeq10 + 1).ToString();
+                                string seqNo = "";
+                                for (int i = carton10Code.Length; i < Convert.ToInt32(ruleItem.Rulelength); i++)
+                                {
+                                    seqNo += 0;
+                                }
+                                carton10Code = seqNo + carton10Code;
+                                cartonNo.Append(carton10Code);
+
+                            }
+                            break;
                     }
                 }
             }

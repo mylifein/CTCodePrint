@@ -21,9 +21,9 @@ namespace BLL
         /// </summary>
         /// <param name="ctCode"></param>
         /// <returns></returns>
-        public string getMaxCTCode(string ctCode,string delMatno)
+        public string getMaxCTCode(string ctCode)
         {
-            return printM.queryCodeNo(ctCode, delMatno);
+            return printM.queryCodeNo(ctCode);
         }
 
 

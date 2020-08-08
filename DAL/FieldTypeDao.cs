@@ -49,6 +49,30 @@ namespace DAL
             return saveMark;
         }
 
+        public FieldType queryFieldType(string fieldNo)
+        {
+            FieldType fieldType = null;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT uuid,field_no,field_name,field_value,field_desc,op_user,create_time FROM t_field_type where field_no=@fieldNo AND del_flag is null");
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@fieldNo", MySqlDbType.VarChar, 900)
+            };
+            parameters[0].Value = fieldNo;
+            DataSet ds = SQLHelper.ExecuteDataset(SQLHelper.ConnectionString, CommandType.Text, strSql.ToString(), parameters);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                fieldType = new FieldType();
+                fieldType.Uuid = ds.Tables[0].Rows[0]["uuid"].ToString();
+                fieldType.FieldNo = ds.Tables[0].Rows[0]["field_no"].ToString();
+                fieldType.FieldName = ds.Tables[0].Rows[0]["field_name"].ToString();
+                fieldType.FieldValue = ds.Tables[0].Rows[0]["field_value"].ToString();
+                fieldType.FieldDesc = ds.Tables[0].Rows[0]["field_desc"].ToString();
+                fieldType.OpUser = ds.Tables[0].Rows[0]["op_user"].ToString();
+                fieldType.CreateTime = ds.Tables[0].Rows[0]["create_time"].ToString();
+            }
+            return fieldType;
+        }
+
         /// <summary>
         /// 根據ID查詢字段類型信息
         /// </summary>
