@@ -210,10 +210,10 @@ namespace GenerateCTCode
                             break;
                         case "T018":                //年月日進制表示
                             StringBuilder h3cTime = new StringBuilder();
-                            string h3cYearString = DateTime.Now.Year.ToString();
+                            string h3cYearString = currentTime.Year.ToString();
                             int h3cYearInt = int.Parse(h3cYearString.Substring(h3cYearString.Length - 2)); //獲取兩位年
-                            int h3cInt = DateTime.Now.Month;
-                            string h3cDD = DateTime.Now.ToString("dd");                       //获得两位日
+                            int h3cInt = currentTime.Month;
+                            string h3cDD = currentTime.ToString("dd");                       //获得两位日
                             h3cTime.Append(h3cYearInt);
                             h3cTime.Append(Base33Code[h3cInt]);
                             h3cTime.Append(h3cDD);

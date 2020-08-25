@@ -81,7 +81,26 @@ namespace CTCodePrint
                     }
                 }
             }
-
+            string deptId = this.comboBox1.SelectedValue.ToString();
+            List<ProdLine> prodLineList = prodLineService.queryPLByDeptId(deptId);
+            this.comboBox2.ValueMember = "ProdlineId";
+            this.comboBox2.DisplayMember = "ProdlineName";
+            this.comboBox2.DataSource = prodLineList;
+            this.comboBox2.SelectedIndex = 0;
+            if (userProdLine != null)
+            {
+                this.comboBox2.Enabled = false;
+                var items = this.comboBox2.Items;
+                for (int i = 0; i < items.Count; i++)
+                {
+                    ProdLine iteratorProdLine = items[i] as ProdLine;
+                    if (userProdLine.ProdlineId.Equals(iteratorProdLine.ProdlineId))
+                    {
+                        this.comboBox2.SelectedItem = iteratorProdLine;
+                        break;
+                    }
+                }
+            }
             DataTable itemTable2 = new DataTable();   // construct selects value
             DataColumn columnType;
             DataRow rowType;
